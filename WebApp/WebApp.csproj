@@ -259,16 +259,49 @@
     <Compile Include="Migrations\201905222056072_InitialMigration.Designer.cs">
       <DependentUpon>201905222056072_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201905280728582_KreiranjeModela.cs" />
+    <Compile Include="Migrations\201905280728582_KreiranjeModela.Designer.cs">
+      <DependentUpon>201905280728582_KreiranjeModela.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905280748312_KreiranjeModelaBezDayTime.cs" />
+    <Compile Include="Migrations\201905280748312_KreiranjeModelaBezDayTime.Designer.cs">
+      <DependentUpon>201905280748312_KreiranjeModelaBezDayTime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905280750250_KreiranjeModelaBezDateTime.cs" />
+    <Compile Include="Migrations\201905280750250_KreiranjeModelaBezDateTime.Designer.cs">
+      <DependentUpon>201905280750250_KreiranjeModelaBezDateTime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905280751044_KreiranjeModelaBezDateTime2.cs" />
+    <Compile Include="Migrations\201905280751044_KreiranjeModelaBezDateTime2.Designer.cs">
+      <DependentUpon>201905280751044_KreiranjeModelaBezDateTime2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905280752215_KreiranjeModelaSaDateTime.cs" />
+    <Compile Include="Migrations\201905280752215_KreiranjeModelaSaDateTime.Designer.cs">
+      <DependentUpon>201905280752215_KreiranjeModelaSaDateTime.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905280758349_KreiranjeModelaSaDateTime2.cs" />
+    <Compile Include="Migrations\201905280758349_KreiranjeModelaSaDateTime2.Designer.cs">
+      <DependentUpon>201905280758349_KreiranjeModelaSaDateTime2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201905280759174_KreiranjeModelaSaDayType.cs" />
+    <Compile Include="Migrations\201905280759174_KreiranjeModelaSaDayType.Designer.cs">
+      <DependentUpon>201905280759174_KreiranjeModelaSaDayType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Address.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
+    <Compile Include="Models\DayType.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Line.cs" />
+    <Compile Include="Models\PassengerType.cs" />
+    <Compile Include="Models\Pricelist.cs" />
     <Compile Include="Models\Station.cs" />
     <Compile Include="Models\Ticket.cs" />
+    <Compile Include="Models\TicketPrices.cs" />
+    <Compile Include="Models\TicketType.cs" />
     <Compile Include="Models\Timetable.cs" />
+    <Compile Include="Models\Vehicle.cs" />
     <Compile Include="Persistence\ApplicationDbContext.cs" />
     <Compile Include="Persistence\Repository\IRepository.cs" />
     <Compile Include="Persistence\Repository\Repository.cs" />
@@ -374,6 +407,27 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201905222056072_InitialMigration.resx">
       <DependentUpon>201905222056072_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905280728582_KreiranjeModela.resx">
+      <DependentUpon>201905280728582_KreiranjeModela.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905280748312_KreiranjeModelaBezDayTime.resx">
+      <DependentUpon>201905280748312_KreiranjeModelaBezDayTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905280750250_KreiranjeModelaBezDateTime.resx">
+      <DependentUpon>201905280750250_KreiranjeModelaBezDateTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905280751044_KreiranjeModelaBezDateTime2.resx">
+      <DependentUpon>201905280751044_KreiranjeModelaBezDateTime2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905280752215_KreiranjeModelaSaDateTime.resx">
+      <DependentUpon>201905280752215_KreiranjeModelaSaDateTime.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905280758349_KreiranjeModelaSaDateTime2.resx">
+      <DependentUpon>201905280758349_KreiranjeModelaSaDateTime2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201905280759174_KreiranjeModelaSaDayType.resx">
+      <DependentUpon>201905280759174_KreiranjeModelaSaDayType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

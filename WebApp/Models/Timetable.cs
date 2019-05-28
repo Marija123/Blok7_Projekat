@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using static WebApp.Models.Enums;
@@ -9,8 +10,15 @@ namespace WebApp.Models
     public class Timetable
     {
         public int Id { get; set; }
-        public DayType Day { get; set; }
         public string Departures { get; set; }
-        public int Line { get; set; }
+        public List<Vehicle> Vehicles { get; set; }
+
+        [ForeignKey("Line")]
+        public int LineId { get; set; }
+        public Line Line { get; set; }
+
+        [ForeignKey("DayType")]
+        public int DayTypeId { get; set; }
+        public DayType DayType { get; set; }
     }
 }

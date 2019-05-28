@@ -69,7 +69,10 @@ namespace WebApp.App_Start
             // container.RegisterType<IProductRepository, ProductRepository>();
            
             container.RegisterType<DbContext, ApplicationDbContext>(new PerResolveLifetimeManager());
+            //container.RegisterType<IProductRepository, ProductRepository>();
+            //svaki korisnik treba da ima svoj dbkontekst, po requestu
             container.RegisterType<IUnitOfWork, DemoUnitOfWork>();
+            //UnitOfWork - vise izmena i sve ide u jednu transakciju sa bazom
         }
 
         public void Dispose()

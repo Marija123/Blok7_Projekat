@@ -11,6 +11,7 @@ namespace WebApp.Models
         public int Id { get; set; }
         public double Price { get; set; }
 
+        
         [ForeignKey("Pricelist")]
         public int PricelistId { get; set; }
         public Pricelist Pricelist { get; set; }

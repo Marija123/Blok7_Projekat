@@ -11,6 +11,6 @@ namespace WebApp.Models
         public string Name { get; set; }
         public double Coefficient { get; set; }
 
-        public List<ApplicationUser> ApplicationUsers { get; set; }
+        //public List<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

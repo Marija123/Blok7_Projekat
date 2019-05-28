@@ -9,7 +9,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
-using static WebApp.Models.Enums;
 
 namespace WebApp.Models
 {
@@ -26,8 +25,8 @@ namespace WebApp.Models
 
         public List<Ticket> Tickets { get; set;  }
        
-        [ForeignKey("PassengerType")]
-        public int PassengerTypeId { get; set; }
+        //[ForeignKey("PassengerType")]
+        //public int PassengerTypeId { get; set; }
         public PassengerType PassengerType { get; set; }
 
 

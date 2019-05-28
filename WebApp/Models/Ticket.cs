@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
-using static WebApp.Models.Enums;
 
 namespace WebApp.Models
 {
@@ -15,8 +14,8 @@ namespace WebApp.Models
        
         public DateTime? PurchaseTime { get; set; }
 
-        [ForeignKey("TicketType")]
-        public int TicketTypeId { get; set; }
+        //[ForeignKey("TicketType")]
+        //public int TicketTypeId { get; set; }
         public TicketType TicketType { get; set; }
 
         [ForeignKey("TicketPrices")]
@@ -24,7 +23,7 @@ namespace WebApp.Models
         public TicketPrices TicketPrices { get; set; }
 
         [ForeignKey("ApplicationUser")]
-        public int ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
     }
 }

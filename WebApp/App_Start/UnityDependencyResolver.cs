@@ -69,7 +69,16 @@ namespace WebApp.App_Start
             // container.RegisterType<IProductRepository, ProductRepository>();
            
             container.RegisterType<DbContext, ApplicationDbContext>(new PerResolveLifetimeManager());
-            //container.RegisterType<IProductRepository, ProductRepository>();
+            container.RegisterType<IDayTypeRepository, DayTypeRepository>();
+            container.RegisterType<ILineRepository, LineRepository>();
+            container.RegisterType<IPassengerTypeRepository, PassengerTypeRepository>();
+            container.RegisterType<IPricelistRepository, PricelistRepository>();
+            container.RegisterType<IStationRepository, StationRepository>();
+            container.RegisterType<ITicketRepository, TicketRepository>();
+            container.RegisterType<ITicketPricesRepository, TicketPricesRepository>();
+            container.RegisterType<ITicketTypeRepository, TicketTypeRepository>();
+            container.RegisterType<ITimetableRepository, TimetableRepository>();
+            container.RegisterType<IVehicleRepository, VehicleRepository>();
             //svaki korisnik treba da ima svoj dbkontekst, po requestu
             container.RegisterType<IUnitOfWork, DemoUnitOfWork>();
             //UnitOfWork - vise izmena i sve ide u jednu transakciju sa bazom

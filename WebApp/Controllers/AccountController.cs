@@ -328,7 +328,17 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            //var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+
+            var user = new ApplicationUser();
+            user.UserName = model.Email;
+            user.Email = model.Email;
+            user.Activated = false;
+            user.Birthday = DateTime.Parse(model.Birthday);
+            user.Address = model.Address;
+            user.Name = model.Name;
+            user.Surname = model.Surname;
+
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 

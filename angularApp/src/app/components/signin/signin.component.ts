@@ -17,7 +17,27 @@ export class SigninComponent implements OnInit {
   }
 
   onSignIn(loginData: RegModel, form:NgForm){
-    this.authService.signIn(loginData);
+    this.authService.signIn(loginData).subscribe(
+      res => {
+        console.log(res.access_token);
+
+        let jwt = res.access_token;
+        let jwtData = jwt.split('.')[1]
+        let decodedJwtJasonData = window.atob(jwtData)
+        let decodetJwtData = JSON.parse(decodedJwtJasonData)
+
+        let role = decodetJwtData.role
+
+        console.log('jwtData: ' + jwtData)
+        console.log('decodedJwtJsonData: ' + decodedJwtJasonData)
+        console.log(decodetJwtData)
+        console.log('Role: ' + role)
+
+        localStorage.setItem('jwt', jwt)
+        localStorage.setItem('role', role)
+        //window.location.href = "/pricelist"
+      }
+    );
     
   }
 

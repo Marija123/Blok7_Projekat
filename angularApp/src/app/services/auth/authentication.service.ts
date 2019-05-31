@@ -16,7 +16,7 @@ base_url = "http://localhost:52295"
   }
 
   signIn(loginData: any){
-    let data = `username=${loginData.Email}&password=${loginData.password}&grand_type`;
+    let data = `username=${loginData.Email}&password=${loginData.Password}&grant_type=password`;
     let headers = new HttpHeaders();
     headers = headers.append( "Content-type","application/x-www-fore-urlencoded");
 

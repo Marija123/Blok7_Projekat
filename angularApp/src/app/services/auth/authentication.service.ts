@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthenticationService {
+
+  isLoggedIn = false;
 base_url = "http://localhost:52295"
   constructor(private http: Http, private httpClient:HttpClient) { }
 
@@ -21,6 +23,8 @@ base_url = "http://localhost:52295"
     headers = headers.append( "Content-type","application/x-www-fore-urlencoded");
 
     if(!localStorage.jwt){
+      this.isLoggedIn = true;
+      console.log(this.isLoggedIn);
       return this.httpClient.post(this.base_url+"/oauth/token",data,{"headers":headers}) as Observable<any>
     }
     else{
@@ -35,6 +39,12 @@ base_url = "http://localhost:52295"
     // this.http.post(this.base_url+"/oauth/token",data,httpOptions).subscribe(data => {
     //   localStorage.jwt = data.access_token;
     // });
+  }
+
+  logout(): void {
+    this.isLoggedIn = false;
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('role');
   }
 
 }

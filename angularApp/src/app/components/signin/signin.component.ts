@@ -35,7 +35,7 @@ export class SigninComponent implements OnInit {
 
         localStorage.setItem('jwt', jwt)
         localStorage.setItem('role', role)
-        //window.location.href = "/pricelist"
+        window.location.href = "/pricelist"
       }
     );
     

@@ -11,9 +11,15 @@
         <li><a class="nav-link" [routerLink]="['/pricelist']">Pricelist</a></li>
        </ul>
      
-      <ul class="navbar-nav">
-          <li><a class="nav-link" [routerLink]="['/signin']">Sign In</a></li>
+      <ul class="navbar-nav" *ngIf="!loggedIn()" >
+          <li><a class="nav-link" [routerLink]="['/signin']" >Sign In</a></li>
           <li><a class="nav-link" [routerLink]="['/register']">Register</a></li>
+          
+      </ul>
+
+      <ul class = "navbar-nav" *ngIf="loggedIn()" >
+        <li><a class="nav-link" [routerLink]="['/profile']" >Profile</a></li>
+        <li><a class="nav-link" href="/home" (click)="logout()">LogOut</a></li>
       </ul>
       
     </div>

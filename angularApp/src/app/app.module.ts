@@ -15,6 +15,7 @@ import { RegisterComponent } from './components/register/register.component';
 
 import {FormsModule} from'@angular/forms';
 import { HttpModule } from '@angular/http';
+import { ProfileComponent } from './components/profile/profile.component';
 
 const Routes = [
   {
@@ -44,6 +45,10 @@ const Routes = [
   {
     path: "register",
     component: RegisterComponent
+  },
+  {
+    path: "profile",
+    component: ProfileComponent
   }
 ]
 
@@ -57,6 +62,7 @@ const Routes = [
     PricelistComponent,
     SigninComponent,
     RegisterComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,

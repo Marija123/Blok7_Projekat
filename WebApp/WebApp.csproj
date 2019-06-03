@@ -251,6 +251,7 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PassengerTypesController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -262,6 +263,10 @@
     <Compile Include="Migrations\201905281447313_KreiranjeModela.cs" />
     <Compile Include="Migrations\201905281447313_KreiranjeModela.Designer.cs">
       <DependentUpon>201905281447313_KreiranjeModela.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906031037579_DodavanjeRole.cs" />
+    <Compile Include="Migrations\201906031037579_DodavanjeRole.Designer.cs">
+      <DependentUpon>201906031037579_DodavanjeRole.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -405,6 +410,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201905281447313_KreiranjeModela.resx">
       <DependentUpon>201905281447313_KreiranjeModela.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906031037579_DodavanjeRole.resx">
+      <DependentUpon>201906031037579_DodavanjeRole.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -47,4 +47,10 @@ base_url = "http://localhost:52295"
     localStorage.removeItem('role');
   }
 
+  // getVehicleTypes() : Observable<any> {
+  //   return this.getVehicleTypes1();
+  // }
+  getTypes() {
+    return this.httpClient.get("https://localhost:52295/api/Types/GetTypes");
+  }
 }

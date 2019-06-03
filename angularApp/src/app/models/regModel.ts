@@ -6,8 +6,10 @@ export class RegModel{
     Birthday: Date;
     Password: string;
     ConfirmPassword: string;
+    Role: string;
+    PassengerType: string;
 
-    constructor(email: string, name: string, surname: string, address:string, birthday: Date,password: string, confirmPassword: string){
+    constructor(email: string, name: string, surname: string, address:string, birthday: Date,password: string, confirmPassword: string, role: string,passagerType: string){
         this.Email = email;
         this.Name = name;
         this.Address = address
@@ -15,6 +17,8 @@ export class RegModel{
         this.Birthday = birthday
         this.Password = password
         this.ConfirmPassword = confirmPassword
+        this.Role = role;
+        this.PassengerType = passagerType;
     }
 
 }

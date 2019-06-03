@@ -65,6 +65,26 @@ namespace WebApp.Migrations
                 userManager.Create(user);
                 userManager.AddToRole(user.Id, "AppUser");
             }
+
+            if(!context.PassengerTypes.Any(u=> u.Name == "Student"))
+            {
+                var p = new PassengerType("Student");
+                context.PassengerTypes.Add(p);
+
+            }
+            if (!context.PassengerTypes.Any(u => u.Name == "Retiree"))
+            {
+                var p = new PassengerType("Retiree");
+                context.PassengerTypes.Add(p);
+
+            }
+            if (!context.PassengerTypes.Any(u => u.Name == "Regular"))
+            {
+                var p = new PassengerType("Regular");
+                context.PassengerTypes.Add(p);
+
+            }
+
         }
     }
 }

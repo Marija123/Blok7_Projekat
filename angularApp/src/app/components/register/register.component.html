@@ -1,7 +1,28 @@
 <div class="container">
   <h1>Registration</h1>
   <form #registrationForm="ngForm" (ngSubmit)="Button1(registrationForm.value, registrationForm)">
-      <div class="form-group">
+    <div class="form-group">
+      <label for="role">Role</label>
+      <input class="form-check-input" required type="radio" value="User"  (click)="setradio('User')" class="form-control" name="Role"  ngModel>User
+      <input required type="radio" value="Controller" class="form-control" (click)="setradio('Controller')" name="Role"  ngModel> Controller
+      <input required type="radio" value="Admin" class="form-control" (click)="setradio('Admin')" name="Role"  ngModel> Admin
+    </div>  
+    <!-- <div class='form-group' *ngIf="isSelected('User')">
+      <select for class='form-control' name= "PassengerType" [value]='Regular' ngModel>
+        <option value='Regular'>Regular</option>
+        <option value='Student'>Student</option>
+        <option value='Retiree'>Retiree</option>
+      </select>
+    </div> -->
+    <div *ngIf="isSelected('User')">
+      <h4>Type</h4>
+      
+      <select class="form-control" name="PassengerType" ngModel>
+          <option *ngFor="let type of types" value="{{type.Name}}">{{type.Name}}</option>
+        </select>
+      
+    </div>
+    <div class="form-group">
         <label for="email">Email address</label>
         <input required type="email" class="form-control" name="Email" placeholder="Email" ngModel>
 
@@ -37,7 +58,7 @@
           <input required type="password" class="form-control" name="ConfirmPassword" placeholder="Password" ngModel>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" *ngIf="isSelected('User')">
        
           <input type="file" (change)="onFileSelected($event)">  
           <button type="button" class="button" (click)="onUpload()">Upload</button>

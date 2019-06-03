@@ -11,6 +11,23 @@ namespace WebApp.Models
         public string Name { get; set; }
         public double Coefficient { get; set; }
 
+        public PassengerType(string name)
+        {
+            Name = name;
+            if(name == "Student")
+            {
+                Coefficient = 0.6;
+            }
+            else if(name == "Retiree")
+            {
+                Coefficient = 0.8;
+            }
+            else
+            {
+                Coefficient = 1;
+            }
+        }
+
         //public List<ApplicationUser> ApplicationUsers { get; set; }
     }
 }

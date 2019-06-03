@@ -19,7 +19,7 @@
 
       <ul class = "navbar-nav" *ngIf="loggedIn()" >
         <li><a class="nav-link" [routerLink]="['/profile']" >Profile</a></li>
-        <li><a class="nav-link" href="/home" (click)="logout()">LogOut</a></li>
+        <li><a class="nav-link" [routerLink]="['/home']" (click)="logout()">LogOut</a></li>
       </ul>
       
     </div>

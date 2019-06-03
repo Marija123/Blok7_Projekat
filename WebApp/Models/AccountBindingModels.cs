@@ -49,6 +49,13 @@ namespace WebApp.Models
         [Required]
         [Display(Name = "Address")]
         public string Address { get; set; }
+        [Required]
+        [Display(Name = "Role")]
+        public string Role { get; set; }
+
+        [Required]
+        [Display(Name = "PassengerType")]
+        public string PassengerType { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]

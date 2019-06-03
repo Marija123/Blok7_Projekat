@@ -338,7 +338,12 @@ namespace WebApp.Controllers
             user.Address = model.Address;
             user.Name = model.Name;
             user.Surname = model.Surname;
-
+            user.Role = model.Role;
+            user.PassengerType = new PassengerType(model.PassengerType);
+            
+            //UserManager.AddToRole(user.Id, user.Role);
+            
+                
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 

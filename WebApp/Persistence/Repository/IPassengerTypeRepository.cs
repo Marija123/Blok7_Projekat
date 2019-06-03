@@ -9,5 +9,6 @@ namespace WebApp.Persistence.Repository
 {
     public interface IPassengerTypeRepository : IRepository<PassengerType,int>
     {
+        IEnumerable<PassengerType> GetAll(int index, int size);
     }
 }

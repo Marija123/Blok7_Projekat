@@ -10,7 +10,7 @@ import { TypeModel } from 'src/app/models/typeModel';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  private selected: string="User"; 
+  private selected: string=""; 
   types:any = [];
   constructor(private authService: AuthenticationService) {
     authService.getTypes().subscribe(types => {
@@ -21,6 +21,7 @@ export class RegisterComponent implements OnInit {
   }
 
   Button1(regData: RegModel, form: NgForm){
+    
     this.authService.register(regData).subscribe();
   }
 

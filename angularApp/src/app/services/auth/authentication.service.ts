@@ -51,6 +51,6 @@ base_url = "http://localhost:52295"
   //   return this.getVehicleTypes1();
   // }
   getTypes() {
-    return this.httpClient.get("https://localhost:52295/api/Types/GetTypes");
+    return this.httpClient.get(this.base_url+"/api/Types/GetTypes");
   }
 }

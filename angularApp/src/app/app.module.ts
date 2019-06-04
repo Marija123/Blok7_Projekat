@@ -16,7 +16,7 @@ import { RegisterComponent } from './components/register/register.component';
 import {FormsModule} from'@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ProfileComponent } from './components/profile/profile.component';
-
+import {NgxPopper} from 'angular-popper';
 const Routes = [
   {
     path: "",
@@ -70,6 +70,7 @@ const Routes = [
     RouterModule.forRoot(Routes),
     HttpModule,
     HttpClientModule,
+    NgxPopper
     
   ],
  // {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}

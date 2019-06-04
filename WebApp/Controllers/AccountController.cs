@@ -16,6 +16,8 @@ using Microsoft.Owin.Security.OAuth;
 using WebApp.Models;
 using WebApp.Providers;
 using WebApp.Results;
+using WebApp.Persistence.UnitOfWork;
+using System.Linq;
 
 namespace WebApp.Controllers
 {
@@ -25,9 +27,16 @@ namespace WebApp.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private readonly IUnitOfWork unitOfWork;
 
         public AccountController()
         {
+          
+        }
+
+        public AccountController(IUnitOfWork uw)
+        {
+            unitOfWork = uw;
         }
 
         public AccountController(ApplicationUserManager userManager,
@@ -35,6 +44,7 @@ namespace WebApp.Controllers
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
+           
         }
 
         public ApplicationUserManager UserManager
@@ -339,14 +349,28 @@ namespace WebApp.Controllers
             user.Name = model.Name;
             user.Surname = model.Surname;
             user.Role = model.Role;
-            user.PassengerType = new PassengerType(model.PassengerType);
+            if (user.Role == "AppUser")
+            {
+                var p = unitOfWork.PassengerTypes.GetAll();
+                foreach (var k in p)
+                {
+                    if (k.Name == model.PassengerType)
+                    {
+                        user.PassengerTypeId = k.Id;
+                        break;
+                    }
+                }
+            }
+
+           
+           // user.PassengerType = new PassengerType(model.PassengerType);
             
-            //UserManager.AddToRole(user.Id, user.Role);
+          
             
                 
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
+            UserManager.AddToRole(user.Id, user.Role);
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
@@ -387,6 +411,15 @@ namespace WebApp.Controllers
             }
             return Ok();
         }
+
+        [Route("GetUser")]
+        public ApplicationUser GetUser(string email)
+        {
+            ApplicationUser user = UserManager.FindByEmail(email);
+          //  ApplicationUser user = unitOfWork.ApplicationUsers.Find(u => u.Email == email).FirstOrDefault(); /*unitOfWork.ApplicationUsers.Find(u => u.Email == email).FirstOrDefault();*/
+            return user;
+        }
+
 
         protected override void Dispose(bool disposing)
         {

@@ -268,6 +268,14 @@
     <Compile Include="Migrations\201906031037579_DodavanjeRole.Designer.cs">
       <DependentUpon>201906031037579_DodavanjeRole.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906040724395_dodatFKuPassType.cs" />
+    <Compile Include="Migrations\201906040724395_dodatFKuPassType.Designer.cs">
+      <DependentUpon>201906040724395_dodatFKuPassType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906040729578_PTidNullable.cs" />
+    <Compile Include="Migrations\201906040729578_PTidNullable.Designer.cs">
+      <DependentUpon>201906040729578_PTidNullable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -283,7 +291,9 @@
     <Compile Include="Models\Timetable.cs" />
     <Compile Include="Models\Vehicle.cs" />
     <Compile Include="Persistence\ApplicationDbContext.cs" />
+    <Compile Include="Persistence\Repository\ApplicationUserRepository.cs" />
     <Compile Include="Persistence\Repository\DayTypeRepository.cs" />
+    <Compile Include="Persistence\Repository\IApplicationUserRepository.cs" />
     <Compile Include="Persistence\Repository\IDayTypeRepository.cs" />
     <Compile Include="Persistence\Repository\ILineRepository.cs" />
     <Compile Include="Persistence\Repository\IPassengerTypeRepository.cs" />
@@ -413,6 +423,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906031037579_DodavanjeRole.resx">
       <DependentUpon>201906031037579_DodavanjeRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906040724395_dodatFKuPassType.resx">
+      <DependentUpon>201906040724395_dodatFKuPassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906040729578_PTidNullable.resx">
+      <DependentUpon>201906040729578_PTidNullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

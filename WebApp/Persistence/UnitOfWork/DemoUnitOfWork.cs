@@ -37,6 +37,8 @@ namespace WebApp.Persistence.UnitOfWork
         public ITimetableRepository Timetables { get; set; }
         [Dependency]
         public IVehicleRepository Vehicles { get; set; }
+        [Dependency]
+        public IApplicationUserRepository ApplicationUsers { get; set; }
 
         public int Complete()
         {

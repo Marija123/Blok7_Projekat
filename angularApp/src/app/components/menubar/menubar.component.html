@@ -9,8 +9,30 @@
         <li><a class="nav-link" [routerLink]="['/timetable']">Timetable</a></li>
         <li><a class="nav-link" [routerLink]="['/busmaps']">BusMaps</a></li>
         <li><a class="nav-link" [routerLink]="['/pricelist']">Pricelist</a></li>
+        
        </ul>
-     
+      
+
+       <ng-container >
+          <div class="container">
+       <ul class="nav nav-pills">
+         
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown"  role="button" aria-haspopup="true" aria-expanded="true">Dropdown</a>
+              <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#">Action</a>
+                  <a class="dropdown-item" href="#">Another action</a>
+                  <a class="dropdown-item" href="#">Something else here</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="#">Separated link</a>
+              </div>
+          </li>
+         
+      </ul>
+    </div>
+    
+    </ng-container>
+   
       <ul class="navbar-nav" *ngIf="!loggedIn()" >
           <li><a class="nav-link" [routerLink]="['/signin']" >Sign In</a></li>
           <li><a class="nav-link" [routerLink]="['/register']">Register</a></li>
@@ -18,7 +40,7 @@
       </ul>
 
       <ul class = "navbar-nav" *ngIf="loggedIn()" >
-        <li><a class="nav-link" [routerLink]="['/profile']" >Profile</a></li>
+        <li><a class="nav-link" [routerLink]="['/profile']" >{{prom}}</a></li>
         <li><a class="nav-link" [routerLink]="['/home']" (click)="logout()">LogOut</a></li>
       </ul>
       

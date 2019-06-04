@@ -26,7 +26,7 @@ namespace WebApp.Models
         public List<Ticket> Tickets { get; set;  }
        
         //[ForeignKey("PassengerType")]
-        //public int PassengerTypeId { get; set; }
+        public int? PassengerTypeId { get; set; }
         public PassengerType PassengerType { get; set; }
 
 

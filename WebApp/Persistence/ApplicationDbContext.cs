@@ -51,5 +51,7 @@ namespace WebApp.Persistence
         {
             return new ApplicationDbContext();
         }
+
+       
     }
 }

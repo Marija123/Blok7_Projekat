@@ -11,6 +11,8 @@ namespace WebApp.Models
         public string Name { get; set; }
         public double Coefficient { get; set; }
 
+        public PassengerType() { }
+
         public PassengerType(string name)
         {
             Name = name;

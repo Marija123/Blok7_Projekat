@@ -18,7 +18,10 @@ export class RegModel{
         this.Password = password
         this.ConfirmPassword = confirmPassword
         this.Role = role;
+        // if(passagerType != null && passagerType != ""){
+        //     this.PassengerType = passagerType;
+        // }
         this.PassengerType = passagerType;
     }
-
+    
 }

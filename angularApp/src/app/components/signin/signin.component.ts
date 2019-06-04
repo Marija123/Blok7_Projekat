@@ -10,7 +10,7 @@ import { NgForm } from '@angular/forms';
   providers: [AuthenticationService]
 })
 export class SigninComponent implements OnInit {
-
+  
   constructor(private authService: AuthenticationService) { }
 
   ngOnInit() {
@@ -32,10 +32,11 @@ export class SigninComponent implements OnInit {
         console.log('decodedJwtJsonData: ' + decodedJwtJasonData)
         console.log(decodetJwtData)
         console.log('Role: ' + role)
-
+        let a = decodetJwtData.unique_name
         localStorage.setItem('jwt', jwt)
         localStorage.setItem('role', role)
-        window.location.href = "/pricelist"
+        localStorage.setItem('name',a);
+        //window.location.href = "/pricelist"
       }
     );
     

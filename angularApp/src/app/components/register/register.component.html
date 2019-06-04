@@ -3,7 +3,7 @@
   <form #registrationForm="ngForm" (ngSubmit)="Button1(registrationForm.value, registrationForm)">
     <div class="form-group">
       <label for="role">Role</label>
-      <input class="form-check-input" required type="radio" value="User"  (click)="setradio('User')" class="form-control" name="Role"  ngModel>User
+      <input class="form-check-input" required type="radio" value="AppUser"  (click)="setradio('AppUser')" class="form-control" name="Role"  ngModel>User
       <input required type="radio" value="Controller" class="form-control" (click)="setradio('Controller')" name="Role"  ngModel> Controller
       <input required type="radio" value="Admin" class="form-control" (click)="setradio('Admin')" name="Role"  ngModel> Admin
     </div>  
@@ -14,11 +14,11 @@
         <option value='Retiree'>Retiree</option>
       </select>
     </div> -->
-    <div *ngIf="isSelected('User')">
+    <div *ngIf="isSelected('AppUser')">
       <h4>Type</h4>
       
-      <select class="form-control" name="PassengerType" ngModel>
-          <option *ngFor="let type of types" value="{{type.Name}}">{{type.Name}}</option>
+      <select class="form-control" name="PassengerType" [value]="Regular" ngModel>
+          <option *ngFor="let type of types" value="{{type.Name}}" >{{type.Name}}</option>
         </select>
       
     </div>
@@ -58,7 +58,7 @@
           <input required type="password" class="form-control" name="ConfirmPassword" placeholder="Password" ngModel>
         </div>
 
-        <div class="form-group" *ngIf="isSelected('User')">
+        <div class="form-group" *ngIf="isSelected('AppUser')">
        
           <input type="file" (change)="onFileSelected($event)">  
           <button type="button" class="button" (click)="onUpload()">Upload</button>

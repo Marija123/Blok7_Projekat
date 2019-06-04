@@ -7,13 +7,16 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
   styleUrls: ['./menubar.component.css']
 })
 export class MenubarComponent implements OnInit {
-
+  prom: string;
   constructor(public authService: AuthenticationService) { }
 
   ngOnInit() {
   }
 
   loggedIn():string{
+    if(localStorage.jwt){
+      this.prom = localStorage.getItem('name');
+    }
     return localStorage.jwt;
   }
 

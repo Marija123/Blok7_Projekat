@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { MarkerInfo } from 'src/app/models/map/marker-info.model';
+import { Polyline } from 'src/app/models/map/polyliner';
+import { GeoLocation } from 'src/app/models/map/geolocation';
 
 @Component({
   selector: 'app-busmaps',
@@ -7,9 +10,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BusmapsComponent implements OnInit {
 
-  constructor() { }
+ 
+
+
+  constructor(private ngZone: NgZone) { }
 
   ngOnInit() {
-  }
 
+   
+  }
+ 
 }

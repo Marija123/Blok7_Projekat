@@ -252,6 +252,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PassengerTypesController.cs" />
+    <Compile Include="Controllers\StationsController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -275,6 +276,10 @@
     <Compile Include="Migrations\201906040729578_PTidNullable.cs" />
     <Compile Include="Migrations\201906040729578_PTidNullable.Designer.cs">
       <DependentUpon>201906040729578_PTidNullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906041255128_TTidNullable.cs" />
+    <Compile Include="Migrations\201906041255128_TTidNullable.Designer.cs">
+      <DependentUpon>201906041255128_TTidNullable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -429,6 +434,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906040729578_PTidNullable.resx">
       <DependentUpon>201906040729578_PTidNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906041255128_TTidNullable.resx">
+      <DependentUpon>201906041255128_TTidNullable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

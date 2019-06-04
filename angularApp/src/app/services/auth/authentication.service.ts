@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 export class AuthenticationService {
 
   isLoggedIn = false;
-base_url = "http://localhost:52295"
+  base_url = "http://localhost:52295"
   constructor(private http: Http, private httpClient:HttpClient) { }
 
   register(user): Observable<any>{

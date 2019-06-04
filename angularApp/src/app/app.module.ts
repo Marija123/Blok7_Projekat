@@ -17,6 +17,12 @@ import {FormsModule} from'@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ProfileComponent } from './components/profile/profile.component';
 import {NgxPopper} from 'angular-popper';
+import { AddChangeLinesComponent } from './components/add_change/add-change-lines/add-change-lines.component';
+import { AgmCoreModule } from '@agm/core';
+import { AddChangeStationsComponent } from './components/add_change/add-change-stations/add-change-stations.component';
+import { AddChangeTimetableComponent } from './components/add_change/add-change-timetable/add-change-timetable.component';
+import { AddChangePricelistComponent } from './components/add_change/add-change-pricelist/add-change-pricelist.component';
+import { MapComponent } from './components/map/map.component';
 const Routes = [
   {
     path: "",
@@ -49,6 +55,22 @@ const Routes = [
   {
     path: "profile",
     component: ProfileComponent
+  },
+  {
+    path: "add_change_lines",
+    component: AddChangeLinesComponent
+  },
+  {
+    path: "add_change_stations",
+    component: AddChangeStationsComponent
+  },
+  {
+    path: "add_change_timetable",
+    component: AddChangeTimetableComponent
+  },
+  {
+    path: "add_change_pricelist",
+    component: AddChangePricelistComponent
   }
 ]
 
@@ -63,6 +85,11 @@ const Routes = [
     SigninComponent,
     RegisterComponent,
     ProfileComponent,
+    AddChangeLinesComponent,
+    AddChangeStationsComponent,
+    AddChangeTimetableComponent,
+    AddChangePricelistComponent,
+    MapComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,7 +97,8 @@ const Routes = [
     RouterModule.forRoot(Routes),
     HttpModule,
     HttpClientModule,
-    NgxPopper
+    NgxPopper,
+    AgmCoreModule.forRoot({apiKey: 'AIzaSyDnihJyw_34z5S1KZXp90pfTGAqhFszNJk'})
     
   ],
  // {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}

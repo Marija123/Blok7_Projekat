@@ -15,7 +15,7 @@ namespace WebApp.Models
         public DateTime? PurchaseTime { get; set; }
 
         //[ForeignKey("TicketType")]
-        //public int TicketTypeId { get; set; }
+        public int? TicketTypeId { get; set; }
         public TicketType TicketType { get; set; }
 
         [ForeignKey("TicketPrices")]

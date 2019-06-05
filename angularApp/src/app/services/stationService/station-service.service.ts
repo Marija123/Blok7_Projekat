@@ -15,9 +15,18 @@ export class StationServiceService {
     
     return this.httpClient.post(this.base_url+"/api/Stations/Add",station);
   }
+  changeStation(station): Observable<any>{
+    
+    return this.httpClient.put(this.base_url+"/api/Stations/Change",station);
+  }
 
-  getAllStations() : Observable<StationModel[]>{
-    return this.httpClient.get<StationModel[]>(this.base_url+"/api/Stations/GetStations");
+  deleteStation(id){
+    
+    return this.httpClient.delete(this.base_url+"/api/Stations/Delete?id=" + id);
+  }
+
+  getAllStations() {
+    return this.httpClient.get(this.base_url+"/api/Stations/GetStations");
   }
 
 }

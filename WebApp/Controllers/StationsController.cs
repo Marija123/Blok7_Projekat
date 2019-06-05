@@ -108,7 +108,39 @@ namespace WebApp.Controllers
            // return CreatedAtRoute("DefaultApi", new { id = station.Id }, station);
         }
 
+
+
+        [Route("Change")]
+        // POST: api/Stations
+        [ResponseType(typeof(Station))]
+        public IHttpActionResult ChangeStation(Station station)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+            try
+            {
+                unitOfWork.Stations.Update(station);
+                unitOfWork.Complete();
+                return Ok(station.Id);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+            //db.Stations.Add(station);
+            //db.SaveChanges();
+
+            // return CreatedAtRoute("DefaultApi", new { id = station.Id }, station);
+        }
+
+
+
         // DELETE: api/Stations/5
+        [Route("Delete")]
         [ResponseType(typeof(Station))]
         public IHttpActionResult DeleteStation(int id)
         {

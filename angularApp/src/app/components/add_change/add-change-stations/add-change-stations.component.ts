@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { GeoLocation } from 'src/app/models/map/geolocation';
 import { MarkerInfo } from 'src/app/models/map/marker-info.model';
 //import { google } from '@agm/core/services/google-maps-types';
-import { MapsAPILoader } from '@agm/core';
+import { MapsAPILoader, MouseEvent } from '@agm/core';
 import { StationModel } from 'src/app/models/stationModel';
 import { NgForm } from '@angular/forms';
 import { StationServiceService } from 'src/app/services/stationService/station-service.service';
@@ -12,26 +12,26 @@ import { Observable } from 'rxjs/internal/Observable';
   selector: 'app-add-change-stations',
   templateUrl: './add-change-stations.component.html',
   styleUrls: ['./add-change-stations.component.css'],
-  styles: ['agm-map {height: 500px; width: 700px;}'],
-  providers: [StationServiceService]
+  styles: ['agm-map {height: 500px; width: 700px;}']
 })
 export class AddChangeStationsComponent implements OnInit {
   private selected: string="";
   coordinates: GeoLocation = new GeoLocation(0,0); 
   markerInfo: MarkerInfo;
   private geocoder;
+  name: string = "";
   address: string;
-  public allStations: Observable<StationModel[]> ;
-  //iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
+  stati: any = [];
+  id: number;
+  public allStations: any = [];
+  iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
 
   constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader, private statServ: StationServiceService) { 
-    this.allStations = statServ.getAllStations();
-    //.subscribe(data => {
-      //this.allStations = data;
-    //}
-  //);
-
-    
+    this.statServ.getAllStations().subscribe(data => {
+    this.stati = data;
+    }
+   
+  );
   }
 
   ngOnInit() {
@@ -56,6 +56,19 @@ export class AddChangeStationsComponent implements OnInit {
       stationData.Address = this.address;
       console.log(stationData)
       this.statServ.addStation(stationData).subscribe();
+    }
+    else if(this.selected == "Change"){
+      stationData.Latitude = this.coordinates.latitude;
+      stationData.Longitude = this.coordinates.longitude;
+      stationData.Address = this.address;
+      stationData.Name = this.name;
+      stationData.Id = this.id;
+      console.log(":stationdaya:")
+      console.log(stationData)
+      this.statServ.changeStation(stationData).subscribe();
+    }
+    else if(this.selected == "Remove"){
+      this.statServ.deleteStation(this.id).subscribe();
     }
     else{
       console.log("lalallaa")
@@ -105,4 +118,19 @@ export class AddChangeStationsComponent implements OnInit {
     });
     
   }
+
+  markerDragEnd($event: MouseEvent, name:string, id: number) {
+    console.log($event);
+     this.coordinates.latitude = $event.coords.lat;
+     this.coordinates.longitude = $event.coords.lng;
+     this.getAddress(this.coordinates.latitude, this.coordinates.longitude);
+     this.name = name;
+     this.id = id;
+     console.log(id);
+  }
+
+  stationClick(id: number){
+    this.id = id;
+  }
+
 }

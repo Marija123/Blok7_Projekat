@@ -5,6 +5,9 @@ import { MapsAPILoader, MouseEvent } from '@agm/core';
 import { StationServiceService } from 'src/app/services/stationService/station-service.service';
 import { MarkerInfo } from 'src/app/models/map/marker-info.model';
 import { StationModel } from 'src/app/models/stationModel';
+import { NgForm } from '@angular/forms';
+import { LineModel } from 'src/app/models/lineModel';
+import { LineServiceService } from 'src/app/services/lineService/line-service.service';
 
 @Component({
   selector: 'app-add-change-lines',
@@ -20,9 +23,10 @@ export class AddChangeLinesComponent implements OnInit {
   stati: any = [];
   markerInfo: MarkerInfo;
   pomStat: StationModel;
+  selectedStations: StationModel[] = [];
   
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
-  constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader , private statServ: StationServiceService) { 
+  constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader , private statServ: StationServiceService, private lineServ: LineServiceService) { 
     this.statServ.getAllStations().subscribe(data => {
       this.stati = data;
       }
@@ -48,6 +52,7 @@ export class AddChangeLinesComponent implements OnInit {
  
    console.log("pomStat:");
    console.log(this.pomStat);
+   this.selectedStations.push(this.pomStat);
     this.polyline.addLocation(new GeoLocation(this.pomStat.Latitude, this.pomStat.Longitude))
     this.id = id;
   }
@@ -67,5 +72,32 @@ export class AddChangeLinesComponent implements OnInit {
         return (this.selected === name); // if current radio button is selected, return true, else return false  
   } 
 
+  onSubmit(lineData: LineModel, form: NgForm){
+    
+    if(this.selected == "Add")
+    {
+      //this.authService.register(stationData).subscribe();
+      lineData.Stations = this.selectedStations;
+     
+      console.log(lineData)
+      this.lineServ.addLine(lineData).subscribe();
+    }
+    else if(this.selected == "Change"){
+      // stationData.Latitude = this.coordinates.latitude;
+      // stationData.Longitude = this.coordinates.longitude;
+      // stationData.Address = this.address;
+      // stationData.Name = this.name;
+      // stationData.Id = this.id;
+      // console.log(":stationdaya:")
+      // console.log(stationData)
+      // this.statServ.changeStation(stationData).subscribe();
+    }
+    else if(this.selected == "Remove"){
+     // this.statServ.deleteStation(this.id).subscribe();
+    }
+    else{
+      console.log("lalallaa")
+    }
 
+  }
 }

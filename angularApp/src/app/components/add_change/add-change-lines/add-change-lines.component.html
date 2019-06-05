@@ -38,10 +38,18 @@
   <label for="LineNumber">Line number:</label>
   <input required type="text" class="form-control" name="LineNumber" placeholder="Line Number" value={{linenumber}} ngModel>
 
+  
 </div>
-
 
 <button type="submit" class="button" *ngIf="isSelected('Add')">Add</button>
 <button type="submit" class="button" *ngIf="isSelected('Change')">Change</button>
 <button type="submit" class="button" *ngIf="isSelected('Remove')">Remove</button>
 </form>
+<div>
+  <label for="Stations">Selected stations:</label>
+  <div *ngFor="let st of selectedStations">
+      <label><b>{{st.Name}}</b></label><br/>
+      <label>{{st.Address}}</label><br/>
+      <label>************************************</label><br/>
+  </div>
+</div>

@@ -10,18 +10,27 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using WebApp.Models;
 using WebApp.Persistence;
-
+using WebApp.Persistence.UnitOfWork;
+using System.Linq;
 namespace WebApp.Controllers
 {
     [RoutePrefix("api/Stations")]
     public class StationsController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly IUnitOfWork unitOfWork;
 
-        // GET: api/Stations
-        public IQueryable<Station> GetStations()
+        public StationsController(IUnitOfWork uw)
         {
-            return db.Stations;
+            unitOfWork = uw;
+        }
+
+        [Route("GetStations")]
+        // GET: api/Stations
+        public IEnumerable<Station> GetStations()
+        {
+            return unitOfWork.Stations.GetAll().ToList();
+           
         }
 
         // GET: api/Stations/5
@@ -82,10 +91,21 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.Stations.Add(station);
-            db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = station.Id }, station);
+            try
+            {
+                unitOfWork.Stations.Add(station);
+                unitOfWork.Complete();
+                return Ok(station.Id);
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+            //db.Stations.Add(station);
+            //db.SaveChanges();
+
+           // return CreatedAtRoute("DefaultApi", new { id = station.Id }, station);
         }
 
         // DELETE: api/Stations/5

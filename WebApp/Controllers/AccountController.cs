@@ -18,6 +18,8 @@ using WebApp.Providers;
 using WebApp.Results;
 using WebApp.Persistence.UnitOfWork;
 using System.Linq;
+using WebApp.Persistence;
+using System.Data.Entity;
 
 namespace WebApp.Controllers
 {
@@ -27,24 +29,25 @@ namespace WebApp.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        //private readonly DbContext dbContext;
         private readonly IUnitOfWork unitOfWork;
 
-        public AccountController()
-        {
-          
-        }
 
-        public AccountController(IUnitOfWork uw)
-        {
-            unitOfWork = uw;
-        }
+        //public AccountController(ApplicationUserManager userManager,
+        //    ISecureDataFormat<AuthenticationTicket> accessTokenFormat, DbContext dbContext)
+        //{
+        //    UserManager = userManager;
+        //    AccessTokenFormat = accessTokenFormat;
+        //    this.dbContext = dbContext as ApplicationDbContext;
 
+        //}
         public AccountController(ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+            ISecureDataFormat<AuthenticationTicket> accessTokenFormat, IUnitOfWork uw)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
-           
+            unitOfWork = uw;
+
         }
 
         public ApplicationUserManager UserManager
@@ -349,8 +352,12 @@ namespace WebApp.Controllers
             user.Name = model.Name;
             user.Surname = model.Surname;
             user.Role = model.Role;
+
             if (user.Role == "AppUser")
             {
+                //ApplicationDbContext context = dbContext as ApplicationDbContext;
+                //context.Database.
+                // .Any(u => u.UserName == "admin@yahoo.com");
                 var p = unitOfWork.PassengerTypes.GetAll();
                 foreach (var k in p)
                 {
@@ -362,12 +369,12 @@ namespace WebApp.Controllers
                 }
             }
 
-           
-           // user.PassengerType = new PassengerType(model.PassengerType);
-            
-          
-            
-                
+
+            // user.PassengerType = new PassengerType(model.PassengerType);
+
+
+
+
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
             UserManager.AddToRole(user.Id, user.Role);

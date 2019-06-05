@@ -81,6 +81,10 @@ namespace WebApp.App_Start
             container.RegisterType<IVehicleRepository, VehicleRepository>();
             //svaki korisnik treba da ima svoj dbkontekst, po requestu
             container.RegisterType<IUnitOfWork, DemoUnitOfWork>();
+            container.RegisterType<ApplicationUserManager>();
+            container.RegisterType<ISecureDataFormat<AuthenticationTicket>, CustomJwtFormat>(new InjectionConstructor("http://localhost:52295"));
+            container.RegisterType<IUserStore<ApplicationUser>, UserStore<ApplicationUser>>(
+           new InjectionConstructor(typeof(DbContext)));
             //UnitOfWork - vise izmena i sve ide u jednu transakciju sa bazom
         }
 

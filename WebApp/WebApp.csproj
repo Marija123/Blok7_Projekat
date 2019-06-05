@@ -296,9 +296,7 @@
     <Compile Include="Models\Timetable.cs" />
     <Compile Include="Models\Vehicle.cs" />
     <Compile Include="Persistence\ApplicationDbContext.cs" />
-    <Compile Include="Persistence\Repository\ApplicationUserRepository.cs" />
     <Compile Include="Persistence\Repository\DayTypeRepository.cs" />
-    <Compile Include="Persistence\Repository\IApplicationUserRepository.cs" />
     <Compile Include="Persistence\Repository\IDayTypeRepository.cs" />
     <Compile Include="Persistence\Repository\ILineRepository.cs" />
     <Compile Include="Persistence\Repository\IPassengerTypeRepository.cs" />

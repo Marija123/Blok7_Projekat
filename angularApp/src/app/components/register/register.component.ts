@@ -14,7 +14,8 @@ export class RegisterComponent implements OnInit {
   types:any = [];
   constructor(private authService: AuthenticationService) {
     authService.getTypes().subscribe(types => {
-      this.types = types;});
+      this.types = types;
+    });
    }
 
   ngOnInit() {

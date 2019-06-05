@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { StationModel } from 'src/app/models/stationModel';
 
 @Injectable({
   providedIn: 'root'
@@ -14,4 +15,9 @@ export class StationServiceService {
     
     return this.httpClient.post(this.base_url+"/api/Stations/Add",station);
   }
+
+  getAllStations() : Observable<StationModel[]>{
+    return this.httpClient.get<StationModel[]>(this.base_url+"/api/Stations/GetStations");
+  }
+
 }

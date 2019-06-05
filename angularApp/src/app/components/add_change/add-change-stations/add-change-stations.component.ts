@@ -6,12 +6,14 @@ import { MapsAPILoader } from '@agm/core';
 import { StationModel } from 'src/app/models/stationModel';
 import { NgForm } from '@angular/forms';
 import { StationServiceService } from 'src/app/services/stationService/station-service.service';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Component({
   selector: 'app-add-change-stations',
   templateUrl: './add-change-stations.component.html',
   styleUrls: ['./add-change-stations.component.css'],
-  styles: ['agm-map {height: 500px; width: 700px;}']
+  styles: ['agm-map {height: 500px; width: 700px;}'],
+  providers: [StationServiceService]
 })
 export class AddChangeStationsComponent implements OnInit {
   private selected: string="";
@@ -19,12 +21,25 @@ export class AddChangeStationsComponent implements OnInit {
   markerInfo: MarkerInfo;
   private geocoder;
   address: string;
-  constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader, private statServ: StationServiceService) { }
+  public allStations: Observable<StationModel[]> ;
+  //iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
+
+  constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader, private statServ: StationServiceService) { 
+    this.allStations = statServ.getAllStations();
+    //.subscribe(data => {
+      //this.allStations = data;
+    //}
+  //);
+
+    
+  }
 
   ngOnInit() {
+   
     this.markerInfo = new MarkerInfo(new GeoLocation(45.242268, 19.842954), 
     "assets/ftn.png",
     "Jugodrvo" , "" , "http://ftn.uns.ac.rs/691618389/fakultet-tehnickih-nauka");
+    
     this.mapsApiLoader.load().then(() =>{
      
       this.geocoder = new google.maps.Geocoder();

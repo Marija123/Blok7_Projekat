@@ -18,12 +18,10 @@ namespace WebApp.Persistence
         public DbSet<Station> Stations { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Timetable> Timetables { get; set; }
-
         public DbSet<DayType> DayTypes { get; set; }
         public DbSet<PassengerType> PassengerTypes { get; set; }
         public DbSet<Pricelist> Pricelists { get; set; }
         public DbSet<TicketPrices> TicketPrices { get; set; }
-
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
        

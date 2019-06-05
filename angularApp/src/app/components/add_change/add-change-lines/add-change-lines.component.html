@@ -1,3 +1,47 @@
-<p>
-  add-change-lines works!
-</p>
+
+<div>
+<label for="action">Choose action:</label>
+<input class="form-check-input" required type="radio" value="Add"  (click)="setradio('Add')" class="form-control" name="Action"  ngModel>Add
+<input required type="radio" value="Change" class="form-control" (click)="setradio('Change')" name="Action"  ngModel> Change
+<input required type="radio" value="Remove" class="form-control" (click)="setradio('Remove')" name="Action"  ngModel> Remove
+</div> 
+
+<div style="width:50%; height: 50%; margin: 5% 25%">
+<agm-map [latitude]="markerInfo.location.latitude" [longitude]="markerInfo.location.longitude" [zoom]="18">  
+  <agm-marker  *ngFor="let stat of stati" [latitude]="stat.Latitude" [longitude]="stat.Longitude" [title]="stat.Name" [label]="" [iconUrl]="iconPath"
+    (markerClick) = "stationClick(stat.Id)">
+    <agm-info-window [latitude]="stat.Latitude" [longitude]="stat.Longitude" >
+
+      <!-- U info-window stavljamo html -->
+      <span style="font-size: 16px;font-family:'Times New Roman'">{{stat.Name}}</span>
+      <br/>
+      
+      <span style="font-family:'Times New Roman'; color:gray;">{{stat.Address}}</span>
+      
+    </agm-info-window>
+  
+  </agm-marker>
+
+  <agm-polyline [strokeColor]="polyline.color">
+    <agm-polyline-point *ngFor="let point of polyline.path" [latitude]="point.latitude" [longitude]="point.longitude">
+    </agm-polyline-point>
+</agm-polyline>
+
+
+</agm-map>
+</div>
+
+
+<form #stationForm="ngForm" (ngSubmit)="onSubmit(stationForm.value, stationForm)">
+
+<div class="form-group">
+  <label for="LineNumber">Line number:</label>
+  <input required type="text" class="form-control" name="LineNumber" placeholder="Line Number" value={{linenumber}} ngModel>
+
+</div>
+
+
+<button type="submit" class="button" *ngIf="isSelected('Add')">Add</button>
+<button type="submit" class="button" *ngIf="isSelected('Change')">Change</button>
+<button type="submit" class="button" *ngIf="isSelected('Remove')">Remove</button>
+</form>

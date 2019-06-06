@@ -10,23 +10,17 @@
 <agm-map [latitude]="markerInfo.location.latitude" [longitude]="markerInfo.location.longitude" [zoom]="18">  
   <agm-marker  *ngFor="let stat of stati" [latitude]="stat.Latitude" [longitude]="stat.Longitude" [title]="stat.Name" [label]="" [iconUrl]="iconPath"
     (markerClick) = "stationClick(stat.Id)">
-    <agm-info-window [latitude]="stat.Latitude" [longitude]="stat.Longitude" >
-
-      <!-- U info-window stavljamo html -->
-      <span style="font-size: 16px;font-family:'Times New Roman'">{{stat.Name}}</span>
-      <br/>
-      
-      <span style="font-family:'Times New Roman'; color:gray;">{{stat.Address}}</span>
-      
-    </agm-info-window>
-  
+   
   </agm-marker>
 
   <agm-polyline [strokeColor]="polyline.color">
     <agm-polyline-point *ngFor="let point of polyline.path" [latitude]="point.latitude" [longitude]="point.longitude">
     </agm-polyline-point>
 </agm-polyline>
-
+ <agm-polyline *ngFor="let line of allLines" [strokeColor]="red">
+  <agm-polyline-point *ngFor="let station of line.Stations" [latitude]="station.Latitude" [longitude]="station.Longitude">
+  </agm-polyline-point>
+</agm-polyline> 
 
 </agm-map>
 </div>
@@ -43,7 +37,7 @@
 
 <button type="submit" class="button" *ngIf="isSelected('Add')">Add</button>
 <button type="submit" class="button" *ngIf="isSelected('Change')">Change</button>
-<button type="submit" class="button" *ngIf="isSelected('Remove')">Remove</button>
+ <button type="submit" class="button" *ngIf="isSelected('Remove')">Remove</button> 
 </form>
 <div>
   <label for="Stations">Selected stations:</label>

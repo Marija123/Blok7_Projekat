@@ -26,9 +26,14 @@ namespace WebApp.Controllers
         }
 
         // GET: api/Lines
-        public IQueryable<Line> GetLines()
+        [Route("GetLines")]
+        public IEnumerable<Line> GetLines()
         {
-            return db.Lines;
+           
+
+            List<Line> stats = db.Lines.Include(p => p.Stations).ToList();
+           
+            return stats;
         }
 
         // GET: api/Lines/5
@@ -90,11 +95,25 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
+
+            Line l = new Line();
+            l.Stations = new List<Station>();
+            l.LineNumber = line.LineNumber;
+            List<Station> stats = unitOfWork.Stations.GetAll().ToList();
+            foreach(Station s in line.Stations)
+            {
+                Station st = new Station();
+                st = stats.Find(x => x.Id.Equals(s.Id));
+                
+                l.Stations.Add(st);
+            }
+
             try
             {
-                unitOfWork.Lines.Add(line);
+
+                unitOfWork.Lines.Add(l);
                 unitOfWork.Complete();
-                return Ok(line.Id);
+                return Ok(l.Id);
             }
             catch (Exception ex)
             {

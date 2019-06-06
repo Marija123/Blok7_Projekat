@@ -17,7 +17,7 @@ export class StationServiceService {
   }
   changeStation(station): Observable<any>{
     
-    return this.httpClient.put(this.base_url+"/api/Stations/Change",station);
+    return this.httpClient.post(this.base_url+"/api/Stations/Change",station);
   }
 
   deleteStation(id){

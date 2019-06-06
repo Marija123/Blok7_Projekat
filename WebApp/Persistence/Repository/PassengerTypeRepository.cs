@@ -17,6 +17,7 @@ namespace WebApp.Persistence.Repository
         public IEnumerable<PassengerType> GetAll(int index, int size)
         {
             return Context.PassengerTypes.Skip((index - 1) * size).Take(size);
+            
         }
     }
 }

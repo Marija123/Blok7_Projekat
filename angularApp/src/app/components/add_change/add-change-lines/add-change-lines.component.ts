@@ -23,6 +23,7 @@ export class AddChangeLinesComponent implements OnInit {
   stati: any = [];
   markerInfo: MarkerInfo;
   pomStat: StationModel;
+  allLines: LineModel[] = [];
   selectedStations: StationModel[] = [];
   
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
@@ -31,6 +32,13 @@ export class AddChangeLinesComponent implements OnInit {
       this.stati = data;
       }
     );
+
+     this.lineServ.getAllLines().subscribe(data => {
+    this.allLines = data;
+     console.log(data);
+       }
+     
+   );
   }
 
   ngOnInit() {

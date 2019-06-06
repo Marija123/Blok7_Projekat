@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { LineModel } from 'src/app/models/lineModel';
 
 @Injectable({
   providedIn: 'root'
@@ -15,4 +16,9 @@ export class LineServiceService {
     
     return this.httpClient.post(this.base_url+"/api/Lines/Add",line);
   }
+
+  getAllLines() {
+    return this.httpClient.get(this.base_url+"/api/Lines/GetLines");
+  }
+
 }

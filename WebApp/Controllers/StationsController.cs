@@ -29,6 +29,7 @@ namespace WebApp.Controllers
         // GET: api/Stations
         public IEnumerable<Station> GetStations()
         {
+            
             return unitOfWork.Stations.GetAll().ToList();
            
         }
@@ -94,6 +95,7 @@ namespace WebApp.Controllers
 
             try
             {
+                station.Lines = new List<Line>();
                 unitOfWork.Stations.Add(station);
                 unitOfWork.Complete();
                 return Ok(station.Id);

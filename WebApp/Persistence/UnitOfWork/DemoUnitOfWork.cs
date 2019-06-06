@@ -11,7 +11,7 @@ namespace WebApp.Persistence.UnitOfWork
     public class DemoUnitOfWork : IUnitOfWork
     {
         private readonly DbContext _context;
-      
+     
         public DemoUnitOfWork(DbContext context)
         {
             _context = context;

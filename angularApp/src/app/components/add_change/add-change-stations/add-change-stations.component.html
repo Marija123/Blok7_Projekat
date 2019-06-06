@@ -1,12 +1,13 @@
- <div *ngFor="let item of stati">
+ <!-- <div *ngFor="let item of stati">
     {{item.Name}}, {{item.Id}}
   
-  </div> 
+  </div>  -->
+  <!-- class="form-check-input"  class="form-control"  class="form-control" class="form-control" -->
 <div>
   <label for="action">Choose action:</label>
-  <input class="form-check-input" required type="radio" value="Add"  (click)="setradio('Add')" class="form-control" name="Action"  ngModel>Add
-  <input required type="radio" value="Change" class="form-control" (click)="setradio('Change')" name="Action"  ngModel> Change
-  <input required type="radio" value="Remove" class="form-control" (click)="setradio('Remove')" name="Action"  ngModel> Remove
+  <input  required type="radio" value="Add"  (click)="setradio('Add')"  name="Action"  ngModel>Add
+  <input required type="radio" value="Change"  (click)="setradio('Change')" name="Action"  ngModel> Change
+  <input required type="radio" value="Remove"  (click)="setradio('Remove')" name="Action"  ngModel> Remove
 </div> 
 
 <div style="width:50%; height: 50%; margin: 5% 25%">

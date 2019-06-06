@@ -56,6 +56,7 @@ export class AddChangeStationsComponent implements OnInit {
       stationData.Address = this.address;
       console.log(stationData)
       this.statServ.addStation(stationData).subscribe();
+      window.alert("Station successfully added!");
     }
     else if(this.selected == "Change"){
       stationData.Latitude = this.coordinates.latitude;
@@ -66,31 +67,29 @@ export class AddChangeStationsComponent implements OnInit {
       console.log(":stationdaya:")
       console.log(stationData)
       this.statServ.changeStation(stationData).subscribe();
+      window.alert("Station successfully changed!");
     }
     else if(this.selected == "Remove"){
       this.statServ.deleteStation(this.id).subscribe();
+      window.alert("Station successfully removed!");
     }
     else{
       console.log("lalallaa")
     }
-
+    window.location.href = "/add_change_stations";
     
   }
 
   setradio(e: string): void   
   {  
-  
-        this.selected = e;  
-          
+        this.selected = e;      
   }  
 
   isSelected(name: string): boolean   
-  {  
-  
+  { 
         if (!this.selected) { // if no radio button is selected, always return false so every nothing is shown  
             return false;  
         }  
-  
         return (this.selected === name); // if current radio button is selected, return true, else return false  
   } 
 

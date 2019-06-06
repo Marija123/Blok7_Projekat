@@ -49,6 +49,7 @@ namespace WebApp.Controllers
             return Ok(line);
         }
 
+        [Route("Change")]
         // PUT: api/Lines/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutLine(int id, Line line)
@@ -58,16 +59,42 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
+
+
             if (id != line.Id)
             {
                 return BadRequest();
             }
 
-            db.Entry(line).State = EntityState.Modified;
+            //db.Entry(line).State = EntityState.Modified;
 
             try
             {
-                db.SaveChanges();
+
+                var vs = unitOfWork.Lines.GetAll();
+                Line v = vs.ToList<Line>().Where(ve => ve.Id == id).ToList().First();
+                v.Stations = new List<Station>();
+                
+                v.Id = id;
+                v.LineNumber = line.LineNumber;
+                
+                List<Station> stations = unitOfWork.Stations.GetAll().ToList();
+                foreach(Station s in stations)
+                {
+                    foreach(Station k in line.Stations)
+                    {
+                        if(s.Id == k.Id)
+                        {
+                            s.Lines = new List<Line>();
+                           
+                            v.Stations.Add(s);
+                        }
+                    }
+                }
+               
+
+                unitOfWork.Lines.Update(v);
+                unitOfWork.Complete();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -125,7 +152,7 @@ namespace WebApp.Controllers
 
             //return CreatedAtRoute("DefaultApi", new { id = line.Id }, line);
         }
-
+        [Route("Delete")]
         // DELETE: api/Lines/5
         [ResponseType(typeof(Line))]
         public IHttpActionResult DeleteLine(int id)

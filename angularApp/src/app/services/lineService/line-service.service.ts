@@ -21,4 +21,14 @@ export class LineServiceService {
     return this.httpClient.get(this.base_url+"/api/Lines/GetLines");
   }
 
+  deleteLine(id){
+    
+    return this.httpClient.delete(this.base_url+"/api/Lines/Delete?id=" + id);
+  }
+
+  changeLine(id,line): Observable<any>{
+    
+    return this.httpClient.put(this.base_url+"/api/Lines/Change?id=" + id,line);
+  }
+
 }

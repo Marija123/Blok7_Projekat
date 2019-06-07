@@ -19,6 +19,8 @@ namespace WebApp.Persistence.UnitOfWork
         ITicketTypeRepository TicketTypes { get; set; }
         ITimetableRepository Timetables { get; set; }
         IVehicleRepository Vehicles { get; set; }
+        IStationLineRepository StationLines { get; set; }
+
         int Complete();
     }
 }

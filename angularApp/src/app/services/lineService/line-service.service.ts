@@ -12,9 +12,14 @@ export class LineServiceService {
   base_url = "http://localhost:52295"
   constructor(private http: Http, private httpClient:HttpClient) { }
 
-  addLine(line): Observable<any>{
+  addLine(line): any{
     
     return this.httpClient.post(this.base_url+"/api/Lines/Add",line);
+  }
+
+  addSerialNumber(line): Observable<any>{
+    
+    return this.httpClient.post(this.base_url+"/api/Lines/SerialNumber",line);
   }
 
   getAllLines() {

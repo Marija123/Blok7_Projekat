@@ -24,12 +24,25 @@ namespace WebApp.Persistence.Repository
         {
             var line = Context.Lines.Include(l => l.Stations).Where(l => l.Id == lineId).FirstOrDefault();
             line.Stations.Clear();
+            
+           
+            foreach(Station s in stations)
+            {
+                line.Stations.Add(Context.Stations.Find(s.Id));
+            }
+           // stations.Reverse();
 
-            stations.Reverse();
-
-            line.Stations.AddRange(stations);
+           // line.Stations.AddRange(stations);
             
             
         }
+
+        public void Delete(int id)
+        {
+            var l = Context.Lines.Where(q => q.Id == id).Include(p => p.Stations);
+            Context.Lines.RemoveRange(l);
+        
+        }
+
     }
 }

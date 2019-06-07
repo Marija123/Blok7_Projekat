@@ -13,7 +13,7 @@ import { PricelistComponent } from './components/pricelist/pricelist.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { RegisterComponent } from './components/register/register.component';
 
-import {FormsModule} from'@angular/forms';
+import {FormsModule, ReactiveFormsModule} from'@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ProfileComponent } from './components/profile/profile.component';
 import {NgxPopper} from 'angular-popper';
@@ -98,6 +98,7 @@ const Routes = [
     HttpModule,
     HttpClientModule,
     NgxPopper,
+    ReactiveFormsModule,
     AgmCoreModule.forRoot({apiKey: 'AIzaSyDnihJyw_34z5S1KZXp90pfTGAqhFszNJk'})
     
   ],

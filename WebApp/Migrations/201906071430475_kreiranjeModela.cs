@@ -3,7 +3,7 @@ namespace WebApp.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class KreiranjeModela : DbMigration
+    public partial class kreiranjeModela : DbMigration
     {
         public override void Up()
         {
@@ -34,8 +34,11 @@ namespace WebApp.Migrations
                         Address = c.String(),
                         Latitude = c.Double(nullable: false),
                         Longitude = c.Double(nullable: false),
+                        Line_Id = c.Int(),
                     })
-                .PrimaryKey(t => t.Id);
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Lines", t => t.Line_Id)
+                .Index(t => t.Line_Id);
             
             CreateTable(
                 "dbo.PassengerTypes",
@@ -56,6 +59,21 @@ namespace WebApp.Migrations
                         EndOfValidity = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.StationLines",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        SerialNumber = c.Int(nullable: false),
+                        LineId = c.Int(nullable: false),
+                        StationId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Lines", t => t.LineId, cascadeDelete: true)
+                .ForeignKey("dbo.Stations", t => t.StationId, cascadeDelete: true)
+                .Index(t => t.LineId)
+                .Index(t => t.StationId);
             
             CreateTable(
                 "dbo.TicketPrices",
@@ -88,17 +106,17 @@ namespace WebApp.Migrations
                         Id = c.Int(nullable: false, identity: true),
                         Name = c.String(),
                         PurchaseTime = c.DateTime(),
+                        TicketTypeId = c.Int(),
                         TicketPricesId = c.Int(nullable: false),
                         ApplicationUserId = c.String(maxLength: 128),
-                        TicketType_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
                 .ForeignKey("dbo.TicketPrices", t => t.TicketPricesId, cascadeDelete: true)
-                .ForeignKey("dbo.TicketTypes", t => t.TicketType_Id)
+                .ForeignKey("dbo.TicketTypes", t => t.TicketTypeId)
+                .Index(t => t.TicketTypeId)
                 .Index(t => t.TicketPricesId)
-                .Index(t => t.ApplicationUserId)
-                .Index(t => t.TicketType_Id);
+                .Index(t => t.ApplicationUserId);
             
             CreateTable(
                 "dbo.Timetables",
@@ -125,19 +143,6 @@ namespace WebApp.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.StationLines",
-                c => new
-                    {
-                        Station_Id = c.Int(nullable: false),
-                        Line_Id = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => new { t.Station_Id, t.Line_Id })
-                .ForeignKey("dbo.Stations", t => t.Station_Id, cascadeDelete: true)
-                .ForeignKey("dbo.Lines", t => t.Line_Id, cascadeDelete: true)
-                .Index(t => t.Station_Id)
-                .Index(t => t.Line_Id);
-            
-            CreateTable(
                 "dbo.VehicleTimetables",
                 c => new
                     {
@@ -156,9 +161,10 @@ namespace WebApp.Migrations
             AddColumn("dbo.AspNetUsers", "Birthday", c => c.DateTime());
             AddColumn("dbo.AspNetUsers", "Image", c => c.String());
             AddColumn("dbo.AspNetUsers", "Activated", c => c.Boolean(nullable: false));
-            AddColumn("dbo.AspNetUsers", "PassengerType_Id", c => c.Int());
-            CreateIndex("dbo.AspNetUsers", "PassengerType_Id");
-            AddForeignKey("dbo.AspNetUsers", "PassengerType_Id", "dbo.PassengerTypes", "Id");
+            AddColumn("dbo.AspNetUsers", "Role", c => c.String());
+            AddColumn("dbo.AspNetUsers", "PassengerTypeId", c => c.Int());
+            CreateIndex("dbo.AspNetUsers", "PassengerTypeId");
+            AddForeignKey("dbo.AspNetUsers", "PassengerTypeId", "dbo.PassengerTypes", "Id");
         }
         
         public override void Down()
@@ -167,27 +173,30 @@ namespace WebApp.Migrations
             DropForeignKey("dbo.VehicleTimetables", "Vehicle_Id", "dbo.Vehicles");
             DropForeignKey("dbo.Timetables", "LineId", "dbo.Lines");
             DropForeignKey("dbo.Timetables", "DayTypeId", "dbo.DayTypes");
-            DropForeignKey("dbo.Tickets", "TicketType_Id", "dbo.TicketTypes");
+            DropForeignKey("dbo.Tickets", "TicketTypeId", "dbo.TicketTypes");
             DropForeignKey("dbo.Tickets", "TicketPricesId", "dbo.TicketPrices");
             DropForeignKey("dbo.Tickets", "ApplicationUserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUsers", "PassengerType_Id", "dbo.PassengerTypes");
+            DropForeignKey("dbo.AspNetUsers", "PassengerTypeId", "dbo.PassengerTypes");
             DropForeignKey("dbo.TicketPrices", "TicketTypeId", "dbo.TicketTypes");
             DropForeignKey("dbo.TicketPrices", "PricelistId", "dbo.Pricelists");
-            DropForeignKey("dbo.StationLines", "Line_Id", "dbo.Lines");
-            DropForeignKey("dbo.StationLines", "Station_Id", "dbo.Stations");
+            DropForeignKey("dbo.StationLines", "StationId", "dbo.Stations");
+            DropForeignKey("dbo.StationLines", "LineId", "dbo.Lines");
+            DropForeignKey("dbo.Stations", "Line_Id", "dbo.Lines");
             DropIndex("dbo.VehicleTimetables", new[] { "Timetable_Id" });
             DropIndex("dbo.VehicleTimetables", new[] { "Vehicle_Id" });
-            DropIndex("dbo.StationLines", new[] { "Line_Id" });
-            DropIndex("dbo.StationLines", new[] { "Station_Id" });
             DropIndex("dbo.Timetables", new[] { "DayTypeId" });
             DropIndex("dbo.Timetables", new[] { "LineId" });
-            DropIndex("dbo.AspNetUsers", new[] { "PassengerType_Id" });
-            DropIndex("dbo.Tickets", new[] { "TicketType_Id" });
+            DropIndex("dbo.AspNetUsers", new[] { "PassengerTypeId" });
             DropIndex("dbo.Tickets", new[] { "ApplicationUserId" });
             DropIndex("dbo.Tickets", new[] { "TicketPricesId" });
+            DropIndex("dbo.Tickets", new[] { "TicketTypeId" });
             DropIndex("dbo.TicketPrices", new[] { "TicketTypeId" });
             DropIndex("dbo.TicketPrices", new[] { "PricelistId" });
-            DropColumn("dbo.AspNetUsers", "PassengerType_Id");
+            DropIndex("dbo.StationLines", new[] { "StationId" });
+            DropIndex("dbo.StationLines", new[] { "LineId" });
+            DropIndex("dbo.Stations", new[] { "Line_Id" });
+            DropColumn("dbo.AspNetUsers", "PassengerTypeId");
+            DropColumn("dbo.AspNetUsers", "Role");
             DropColumn("dbo.AspNetUsers", "Activated");
             DropColumn("dbo.AspNetUsers", "Image");
             DropColumn("dbo.AspNetUsers", "Birthday");
@@ -195,12 +204,12 @@ namespace WebApp.Migrations
             DropColumn("dbo.AspNetUsers", "Surname");
             DropColumn("dbo.AspNetUsers", "Name");
             DropTable("dbo.VehicleTimetables");
-            DropTable("dbo.StationLines");
             DropTable("dbo.Vehicles");
             DropTable("dbo.Timetables");
             DropTable("dbo.Tickets");
             DropTable("dbo.TicketTypes");
             DropTable("dbo.TicketPrices");
+            DropTable("dbo.StationLines");
             DropTable("dbo.Pricelists");
             DropTable("dbo.PassengerTypes");
             DropTable("dbo.Stations");

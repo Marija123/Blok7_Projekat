@@ -38,7 +38,7 @@ export class AddChangeLinesComponent implements OnInit {
   public latitude: number;
   public longitude: number;
   markerZaDodavanje: StationModel;
-
+  boolic: boolean = false;
 
   
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
@@ -199,7 +199,11 @@ export class AddChangeLinesComponent implements OnInit {
       lineData.Stations = this.selectedStations;
      
       console.log(lineData)
-      this.lineServ.addLine(lineData).subscribe();
+      this.lineServ.addLine(lineData).subscribe(data => {this.boolic = data;});
+      // if(this.boolic){
+      //   this.lineServ.addSerialNumber(lineData).subscribe();
+      // }
+      
       window.alert("Line successfully added!");
     }
     else if(this.selected == "Change"){
@@ -216,6 +220,7 @@ export class AddChangeLinesComponent implements OnInit {
       lineData.LineNumber = this.selektovanaLinijaZaIzmenu.LineNumber;
       console.log(lineData);
       this.lineServ.changeLine(this.selektovanaLinijaZaIzmenu.Id,lineData).subscribe();
+      //this.lineServ.addSerialNumber(lineData).subscribe();
     }
     else if(this.selected == "Remove"){
       this.lineServ.deleteLine(this.idForRemove).subscribe();

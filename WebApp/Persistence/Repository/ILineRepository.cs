@@ -11,6 +11,7 @@ namespace WebApp.Persistence.Repository
     {
         IEnumerable<Line> GetAllLinesWithStations();
         void ReplaceStations(int lineId, IEnumerable<Station> stations);
+        void Delete(int id);
     }
 }
 

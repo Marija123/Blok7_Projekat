@@ -95,7 +95,7 @@ namespace WebApp.Controllers
 
             try
             {
-                station.Lines = new List<Line>();
+               // station.Lines = new List<Line>();
                 unitOfWork.Stations.Add(station);
                 unitOfWork.Complete();
                 return Ok(station.Id);

@@ -262,25 +262,9 @@
     <Compile Include="Migrations\201905222056072_InitialMigration.Designer.cs">
       <DependentUpon>201905222056072_InitialMigration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201905281447313_KreiranjeModela.cs" />
-    <Compile Include="Migrations\201905281447313_KreiranjeModela.Designer.cs">
-      <DependentUpon>201905281447313_KreiranjeModela.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906031037579_DodavanjeRole.cs" />
-    <Compile Include="Migrations\201906031037579_DodavanjeRole.Designer.cs">
-      <DependentUpon>201906031037579_DodavanjeRole.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906040724395_dodatFKuPassType.cs" />
-    <Compile Include="Migrations\201906040724395_dodatFKuPassType.Designer.cs">
-      <DependentUpon>201906040724395_dodatFKuPassType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906040729578_PTidNullable.cs" />
-    <Compile Include="Migrations\201906040729578_PTidNullable.Designer.cs">
-      <DependentUpon>201906040729578_PTidNullable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906041255128_TTidNullable.cs" />
-    <Compile Include="Migrations\201906041255128_TTidNullable.Designer.cs">
-      <DependentUpon>201906041255128_TTidNullable.cs</DependentUpon>
+    <Compile Include="Migrations\201906071430475_kreiranjeModela.cs" />
+    <Compile Include="Migrations\201906071430475_kreiranjeModela.Designer.cs">
+      <DependentUpon>201906071430475_kreiranjeModela.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -291,6 +275,7 @@
     <Compile Include="Models\PassengerType.cs" />
     <Compile Include="Models\Pricelist.cs" />
     <Compile Include="Models\Station.cs" />
+    <Compile Include="Models\StationLines.cs" />
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\TicketPrices.cs" />
     <Compile Include="Models\TicketType.cs" />
@@ -303,6 +288,7 @@
     <Compile Include="Persistence\Repository\IPassengerTypeRepository.cs" />
     <Compile Include="Persistence\Repository\IPricelistRepository.cs" />
     <Compile Include="Persistence\Repository\IRepository.cs" />
+    <Compile Include="Persistence\Repository\IStationLineRepository.cs" />
     <Compile Include="Persistence\Repository\IStationRepository.cs" />
     <Compile Include="Persistence\Repository\ITicketPricesRepository.cs" />
     <Compile Include="Persistence\Repository\ITicketRepository.cs" />
@@ -313,6 +299,7 @@
     <Compile Include="Persistence\Repository\PassengerTypeRepository.cs" />
     <Compile Include="Persistence\Repository\PricelistRepository.cs" />
     <Compile Include="Persistence\Repository\Repository.cs" />
+    <Compile Include="Persistence\Repository\StationLineRepository.cs" />
     <Compile Include="Persistence\Repository\StationRepository.cs" />
     <Compile Include="Persistence\Repository\TicketPricesRepository.cs" />
     <Compile Include="Persistence\Repository\TicketRepository.cs" />
@@ -422,20 +409,8 @@
     <EmbeddedResource Include="Migrations\201905222056072_InitialMigration.resx">
       <DependentUpon>201905222056072_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201905281447313_KreiranjeModela.resx">
-      <DependentUpon>201905281447313_KreiranjeModela.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906031037579_DodavanjeRole.resx">
-      <DependentUpon>201906031037579_DodavanjeRole.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906040724395_dodatFKuPassType.resx">
-      <DependentUpon>201906040724395_dodatFKuPassType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906040729578_PTidNullable.resx">
-      <DependentUpon>201906040729578_PTidNullable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906041255128_TTidNullable.resx">
-      <DependentUpon>201906041255128_TTidNullable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201906071430475_kreiranjeModela.resx">
+      <DependentUpon>201906071430475_kreiranjeModela.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

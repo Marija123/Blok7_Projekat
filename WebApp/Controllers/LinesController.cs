@@ -31,8 +31,19 @@ namespace WebApp.Controllers
         {
 
             //unitOfWork.
+            List<StationLines> sl = unitOfWork.StationLines.GetAll().ToList();
             List<Line> stats = unitOfWork.Lines.GetAllLinesWithStations().ToList();
-           
+           foreach(Line l in stats)
+            {
+                List<Station> ss = l.Stations;
+                l.Stations.Clear();
+                List<StationLines> ll = sl.FindAll(c => c.LineId == l.Id);
+                List<StationLines> ll1 = ll.OrderBy(x => x.SerialNumber).ToList();
+                foreach(StationLines t in ll1)
+                {
+                    l.Stations.Add(unitOfWork.Stations.Get(t.StationId));
+                }
+            }
             return stats;
         }
 
@@ -66,18 +77,29 @@ namespace WebApp.Controllers
                 return BadRequest();
             }
 
-            
+
 
             try
             {
-                
+
                 List<Line> stats = unitOfWork.Lines.GetAllLinesWithStations().ToList();
 
-             
-                unitOfWork.Lines.ReplaceStations(line.Id, line.Stations);
-                unitOfWork.Complete();
 
-           
+                unitOfWork.Lines.ReplaceStations(line.Id, line.Stations);
+                List<StationLines> st = unitOfWork.StationLines.GetAll().Where(sy => sy.LineId == line.Id).ToList();
+                unitOfWork.StationLines.RemoveRange(st);
+                int i = 0;
+                foreach (Station s in line.Stations)
+                {
+                    i++;
+                    StationLines o = new StationLines();
+                    o.LineId = line.Id;
+                    o.StationId = s.Id;
+                    o.SerialNumber = i;
+                    unitOfWork.StationLines.Add(o);
+                   
+                }
+
                 unitOfWork.Complete();
                 
 
@@ -107,9 +129,16 @@ namespace WebApp.Controllers
             l.Stations = new List<Station>();
             l.LineNumber = line.LineNumber;
             List<Station> stats = unitOfWork.Stations.GetAll().ToList();
-            line.Stations.Reverse();
+            //line.Stations.Reverse();
+            int i = 0;
             foreach(Station s in line.Stations)
             {
+                i++;
+                StationLines o = new StationLines();
+                o.LineId = line.Id;
+                o.StationId = s.Id;
+                o.SerialNumber = i;
+                unitOfWork.StationLines.Add(o);
                 //Station st = new Station();
                 //st = stats.Find(x => x.Id.Equals(s.Id));
                 l.Stations.Add(stats.Find(x => x.Id.Equals(s.Id)));
@@ -120,6 +149,7 @@ namespace WebApp.Controllers
 
                 unitOfWork.Lines.Add(l);
                 unitOfWork.Complete();
+                
                 return Ok(l.Id);
             }
             catch (Exception ex)
@@ -132,6 +162,53 @@ namespace WebApp.Controllers
 
             //return CreatedAtRoute("DefaultApi", new { id = line.Id }, line);
         }
+
+        //[Route("SerialNumber")]
+
+        //// POST: api/Lines
+        //[ResponseType(typeof(Line))]
+        //public IHttpActionResult PostSerialNumber(Line line)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+
+        //    List<StationLines> sl = unitOfWork.StationLines.GetAll().ToList();
+
+        //    List<Station> stats = unitOfWork.Stations.GetAll().ToList();
+        //    //line.Stations.Reverse();
+        //    int i = 0;
+        //    foreach (Station s in line.Stations)
+        //    {
+        //        i++;
+        //       var k = sl.Find(x => x.LineId == line.Id && x.StationId == s.Id);
+        //        k.SerialNumber = i;
+        //        unitOfWork.StationLines.Update(k);
+
+        //    }
+
+        //    try
+        //    {
+
+               
+        //        unitOfWork.Complete();
+
+        //        return Ok(line.Id);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    //db.Lines.Add(line);
+        //    //db.SaveChanges();
+
+        //    //return CreatedAtRoute("DefaultApi", new { id = line.Id }, line);
+        //}
+
+
         [Route("Delete")]
         // DELETE: api/Lines/5
         [ResponseType(typeof(Line))]
@@ -143,7 +220,8 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            unitOfWork.Lines.Remove(line);
+            //unitOfWork.Lines.Remove(line);
+            unitOfWork.Lines.Delete(id);
             unitOfWork.Complete();
 
             return Ok(line);

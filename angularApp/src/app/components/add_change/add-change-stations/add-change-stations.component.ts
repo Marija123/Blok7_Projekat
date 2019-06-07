@@ -76,7 +76,7 @@ export class AddChangeStationsComponent implements OnInit {
     else{
       console.log("lalallaa")
     }
-    window.location.href = "/add_change_stations";
+    //window.location.href = "/add_change_stations";
     
   }
 

@@ -9,7 +9,7 @@ namespace WebApp.Persistence.Repository
 {
     public class PassengerTypeRepository : Repository<PassengerType, int>, IPassengerTypeRepository
     {
-        protected ApplicationDbContext Context { get { return ApplicationDbContext.Create(); } }
+        protected ApplicationDbContext Context { get { return context as ApplicationDbContext; } }
         public PassengerTypeRepository(DbContext context) : base(context)
         {
         }

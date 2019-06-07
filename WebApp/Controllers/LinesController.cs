@@ -17,7 +17,7 @@ namespace WebApp.Controllers
     [RoutePrefix("api/Lines")]
     public class LinesController : ApiController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        //private ApplicationDbContext db = new ApplicationDbContext();
         private readonly IUnitOfWork unitOfWork;
 
         public LinesController(IUnitOfWork uw)
@@ -29,25 +29,25 @@ namespace WebApp.Controllers
         [Route("GetLines")]
         public IEnumerable<Line> GetLines()
         {
-           
 
-            List<Line> stats = db.Lines.Include(p => p.Stations).ToList();
+            //unitOfWork.
+            List<Line> stats = unitOfWork.Lines.GetAllLinesWithStations().ToList();
            
             return stats;
         }
 
         // GET: api/Lines/5
-        [ResponseType(typeof(Line))]
-        public IHttpActionResult GetLine(int id)
-        {
-            Line line = db.Lines.Find(id);
-            if (line == null)
-            {
-                return NotFound();
-            }
+        //[ResponseType(typeof(Line))]
+        //public IHttpActionResult GetLine(int id)
+        //{
+        //    Line line = db.Lines.Find(id);
+        //    if (line == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(line);
-        }
+        //    return Ok(line);
+        //}
 
         [Route("Change")]
         // PUT: api/Lines/5
@@ -66,46 +66,26 @@ namespace WebApp.Controllers
                 return BadRequest();
             }
 
-            //db.Entry(line).State = EntityState.Modified;
+            
 
             try
             {
-
-                var vs = unitOfWork.Lines.GetAll();
-                Line v = vs.ToList<Line>().Where(ve => ve.Id == id).ToList().First();
-                v.Stations = new List<Station>();
                 
-                v.Id = id;
-                v.LineNumber = line.LineNumber;
-                
-                List<Station> stations = unitOfWork.Stations.GetAll().ToList();
-                foreach(Station s in stations)
-                {
-                    foreach(Station k in line.Stations)
-                    {
-                        if(s.Id == k.Id)
-                        {
-                            s.Lines = new List<Line>();
-                           
-                            v.Stations.Add(s);
-                        }
-                    }
-                }
-               
+                List<Line> stats = unitOfWork.Lines.GetAllLinesWithStations().ToList();
 
-                unitOfWork.Lines.Update(v);
+             
+                unitOfWork.Lines.ReplaceStations(line.Id, line.Stations);
                 unitOfWork.Complete();
+
+           
+                unitOfWork.Complete();
+                
+
+                return Ok(line.Id);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!LineExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+               
             }
 
             return StatusCode(HttpStatusCode.NoContent);
@@ -127,12 +107,12 @@ namespace WebApp.Controllers
             l.Stations = new List<Station>();
             l.LineNumber = line.LineNumber;
             List<Station> stats = unitOfWork.Stations.GetAll().ToList();
+            line.Stations.Reverse();
             foreach(Station s in line.Stations)
             {
-                Station st = new Station();
-                st = stats.Find(x => x.Id.Equals(s.Id));
-                
-                l.Stations.Add(st);
+                //Station st = new Station();
+                //st = stats.Find(x => x.Id.Equals(s.Id));
+                l.Stations.Add(stats.Find(x => x.Id.Equals(s.Id)));
             }
 
             try
@@ -157,14 +137,14 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Line))]
         public IHttpActionResult DeleteLine(int id)
         {
-            Line line = db.Lines.Find(id);
+            Line line = unitOfWork.Lines.Get(id);
             if (line == null)
             {
                 return NotFound();
             }
 
-            db.Lines.Remove(line);
-            db.SaveChanges();
+            unitOfWork.Lines.Remove(line);
+            unitOfWork.Complete();
 
             return Ok(line);
         }
@@ -173,14 +153,14 @@ namespace WebApp.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                unitOfWork.Dispose();
             }
             base.Dispose(disposing);
         }
 
-        private bool LineExists(int id)
-        {
-            return db.Lines.Count(e => e.Id == id) > 0;
-        }
+        //private bool LineExists(int id)
+        //{
+        //    return db.Lines.Count(e => e.Id == id) > 0;
+        //}
     }
 }

@@ -11,6 +11,7 @@ namespace WebApp.Models
         
         public int Id { get; set; }
         public string LineNumber { get; set; }
+        public string ColorLine { get; set; }
         public List<Station> Stations { get; set; }
 
     }

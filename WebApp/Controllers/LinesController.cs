@@ -30,18 +30,20 @@ namespace WebApp.Controllers
         public IEnumerable<Line> GetLines()
         {
 
-            //unitOfWork.
-            List<StationLines> sl = unitOfWork.StationLines.GetAll().ToList();
-            List<Line> stats = unitOfWork.Lines.GetAllLinesWithStations().ToList();
+
+            List<SerialNumberSL> sl = unitOfWork.SerialNumberSLs.GetAll().ToList();
+            List<Line> stats = unitOfWork.Lines.GetAll().ToList();
            foreach(Line l in stats)
             {
-                List<Station> ss = l.Stations;
-                l.Stations.Clear();
-                List<StationLines> ll = sl.FindAll(c => c.LineId == l.Id);
-                List<StationLines> ll1 = ll.OrderBy(x => x.SerialNumber).ToList();
-                foreach(StationLines t in ll1)
+                //List<Station> ss = l.Stations;
+                //l.Stations.Clear();
+                l.Stations = new List<Station>();
+                List<SerialNumberSL> ll = sl.FindAll(c => c.LineId == l.Id);
+                List<SerialNumberSL> ll1 = ll.OrderBy(x => x.SerialNumber).ToList();
+                foreach(SerialNumberSL t in ll1)
                 {
-                    l.Stations.Add(unitOfWork.Stations.Get(t.StationId));
+                    List<Station> s = unitOfWork.Stations.GetAll().Where(m => m.Id == t.StationId).ToList();
+                    l.Stations.Add(s[0]);
                 }
             }
             return stats;
@@ -82,21 +84,21 @@ namespace WebApp.Controllers
             try
             {
 
-                List<Line> stats = unitOfWork.Lines.GetAllLinesWithStations().ToList();
+                //List<Line> stats = unitOfWork.Lines.GetAllLinesWithStations().ToList();
 
 
                 unitOfWork.Lines.ReplaceStations(line.Id, line.Stations);
-                List<StationLines> st = unitOfWork.StationLines.GetAll().Where(sy => sy.LineId == line.Id).ToList();
-                unitOfWork.StationLines.RemoveRange(st);
+                List<SerialNumberSL> st = unitOfWork.SerialNumberSLs.GetAll().Where(sy => sy.LineId == line.Id).ToList();
+                unitOfWork.SerialNumberSLs.RemoveRange(st);
                 int i = 0;
                 foreach (Station s in line.Stations)
                 {
                     i++;
-                    StationLines o = new StationLines();
+                    SerialNumberSL o = new SerialNumberSL();
                     o.LineId = line.Id;
                     o.StationId = s.Id;
                     o.SerialNumber = i;
-                    unitOfWork.StationLines.Add(o);
+                    unitOfWork.SerialNumberSLs.Add(o);
                    
                 }
 
@@ -128,17 +130,18 @@ namespace WebApp.Controllers
             Line l = new Line();
             l.Stations = new List<Station>();
             l.LineNumber = line.LineNumber;
+            l.ColorLine = line.ColorLine;
             List<Station> stats = unitOfWork.Stations.GetAll().ToList();
             //line.Stations.Reverse();
             int i = 0;
             foreach(Station s in line.Stations)
             {
                 i++;
-                StationLines o = new StationLines();
+                SerialNumberSL o = new SerialNumberSL();
                 o.LineId = line.Id;
                 o.StationId = s.Id;
                 o.SerialNumber = i;
-                unitOfWork.StationLines.Add(o);
+                unitOfWork.SerialNumberSLs.Add(o);
                 //Station st = new Station();
                 //st = stats.Find(x => x.Id.Equals(s.Id));
                 l.Stations.Add(stats.Find(x => x.Id.Equals(s.Id)));

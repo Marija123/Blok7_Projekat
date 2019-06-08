@@ -38,7 +38,7 @@ namespace WebApp.Persistence.UnitOfWork
         [Dependency]
         public IVehicleRepository Vehicles { get; set; }
         [Dependency]
-        public IStationLineRepository StationLines { get; set; }
+        public ISerialNumberSLRepository SerialNumberSLs { get; set; }
 
         public int Complete()
         {

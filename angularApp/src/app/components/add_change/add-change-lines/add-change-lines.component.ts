@@ -21,8 +21,8 @@ import { LineServiceService } from 'src/app/services/lineService/line-service.se
 export class AddChangeLinesComponent implements OnInit {
   public polyline: Polyline;
   public selectedLines: LineModel[] = [];
-  sl: LineModel = new LineModel(0,"",[]);
-  selektovanaLinijaZaIzmenu: LineModel = new LineModel(0,"",[]);
+  sl: LineModel = new LineModel(0,"",[],"");
+  selektovanaLinijaZaIzmenu: LineModel = new LineModel(0,"",[],"");
   selLine: Polyline;
   id: number;
   idForRemove: number;
@@ -108,7 +108,7 @@ export class AddChangeLinesComponent implements OnInit {
     if(this.selectedL == "none" || this.selectedL == "")
     {
       this.selectedLines = [];
-      this.sl = new LineModel(0,"",[]);
+      this.sl = new LineModel(0,"",[],"");
       this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
 
     }
@@ -217,6 +217,7 @@ export class AddChangeLinesComponent implements OnInit {
       // this.statServ.changeStation(stationData).subscribe();
       lineData.Stations = this.selektovanaLinijaZaIzmenu.Stations;
       lineData.Id = this.selektovanaLinijaZaIzmenu.Id;
+      lineData.ColorLine = this.selektovanaLinijaZaIzmenu.ColorLine;
       lineData.LineNumber = this.selektovanaLinijaZaIzmenu.LineNumber;
       console.log(lineData);
       this.lineServ.changeLine(this.selektovanaLinijaZaIzmenu.Id,lineData).subscribe();

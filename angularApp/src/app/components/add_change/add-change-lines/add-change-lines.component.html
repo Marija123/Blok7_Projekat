@@ -41,19 +41,20 @@
  
     </agm-marker>
   </div>
-    <agm-polyline [strokeColor]="polyline.color">
+  <div *ngIf="isSelected('Add')">
+    <agm-polyline [strokeColor]="lineColor">
       <agm-polyline-point *ngFor="let point of polyline.path" [latitude]="point.latitude" [longitude]="point.longitude">
       </agm-polyline-point>
     </agm-polyline>
-
+  </div>
     <!-- *ngFor="let line of selectedLines" -->
     <!-- [editable]="isSelected('Change')" -->
-
-    <agm-polyline   [strokeColor]="selLine.color" >
+<div *ngIf="!isSelected('Add')">
+    <agm-polyline   [strokeColor]="sl.ColorLine" >
       <agm-polyline-point  *ngFor="let point of sl.Stations" [latitude]="point.Latitude" [longitude]="point.Longitude">
       </agm-polyline-point>
     </agm-polyline>
-
+  </div>
     <!-- <agm-marker *ngFor="let point of selLine.path" [latitude]="point.latitude" [longitude]="point.longitude" [iconUrl]="selLine.icon">
      </agm-marker> -->
 
@@ -71,6 +72,10 @@
   <div *ngIf = "!isSelected('Add')" class="form-group">
     <label for="LineNumber">Line number: {{selectedL}} </label>
     
+  </div >
+    
+  <div *ngIf = "isSelected('Add')" class="form-group">
+    <input type="color" name="ColorLine" value="#ff0000" ngModel>
   </div>
 
   <button type="submit" class="button" *ngIf="isSelected('Add')">Add</button>

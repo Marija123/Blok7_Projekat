@@ -24,7 +24,7 @@ namespace WebApp.Persistence
         public DbSet<TicketPrices> TicketPrices { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
-        public DbSet<StationLines> StationLines { get; set; }
+        public DbSet<SerialNumberSL> SerialNumberSLs { get; set; }
        
 
         public ApplicationDbContext()

@@ -3,7 +3,7 @@ namespace WebApp.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class kreiranjeModela : DbMigration
+    public partial class IzmenjenModel : DbMigration
     {
         public override void Up()
         {
@@ -22,6 +22,7 @@ namespace WebApp.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         LineNumber = c.String(),
+                        ColorLine = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
             
@@ -34,11 +35,8 @@ namespace WebApp.Migrations
                         Address = c.String(),
                         Latitude = c.Double(nullable: false),
                         Longitude = c.Double(nullable: false),
-                        Line_Id = c.Int(),
                     })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Lines", t => t.Line_Id)
-                .Index(t => t.Line_Id);
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.PassengerTypes",
@@ -61,7 +59,7 @@ namespace WebApp.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.StationLines",
+                "dbo.SerialNumberSLs",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -143,6 +141,19 @@ namespace WebApp.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
+                "dbo.StationLines",
+                c => new
+                    {
+                        Station_Id = c.Int(nullable: false),
+                        Line_Id = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.Station_Id, t.Line_Id })
+                .ForeignKey("dbo.Stations", t => t.Station_Id, cascadeDelete: true)
+                .ForeignKey("dbo.Lines", t => t.Line_Id, cascadeDelete: true)
+                .Index(t => t.Station_Id)
+                .Index(t => t.Line_Id);
+            
+            CreateTable(
                 "dbo.VehicleTimetables",
                 c => new
                     {
@@ -179,11 +190,14 @@ namespace WebApp.Migrations
             DropForeignKey("dbo.AspNetUsers", "PassengerTypeId", "dbo.PassengerTypes");
             DropForeignKey("dbo.TicketPrices", "TicketTypeId", "dbo.TicketTypes");
             DropForeignKey("dbo.TicketPrices", "PricelistId", "dbo.Pricelists");
-            DropForeignKey("dbo.StationLines", "StationId", "dbo.Stations");
-            DropForeignKey("dbo.StationLines", "LineId", "dbo.Lines");
-            DropForeignKey("dbo.Stations", "Line_Id", "dbo.Lines");
+            DropForeignKey("dbo.SerialNumberSLs", "StationId", "dbo.Stations");
+            DropForeignKey("dbo.SerialNumberSLs", "LineId", "dbo.Lines");
+            DropForeignKey("dbo.StationLines", "Line_Id", "dbo.Lines");
+            DropForeignKey("dbo.StationLines", "Station_Id", "dbo.Stations");
             DropIndex("dbo.VehicleTimetables", new[] { "Timetable_Id" });
             DropIndex("dbo.VehicleTimetables", new[] { "Vehicle_Id" });
+            DropIndex("dbo.StationLines", new[] { "Line_Id" });
+            DropIndex("dbo.StationLines", new[] { "Station_Id" });
             DropIndex("dbo.Timetables", new[] { "DayTypeId" });
             DropIndex("dbo.Timetables", new[] { "LineId" });
             DropIndex("dbo.AspNetUsers", new[] { "PassengerTypeId" });
@@ -192,9 +206,8 @@ namespace WebApp.Migrations
             DropIndex("dbo.Tickets", new[] { "TicketTypeId" });
             DropIndex("dbo.TicketPrices", new[] { "TicketTypeId" });
             DropIndex("dbo.TicketPrices", new[] { "PricelistId" });
-            DropIndex("dbo.StationLines", new[] { "StationId" });
-            DropIndex("dbo.StationLines", new[] { "LineId" });
-            DropIndex("dbo.Stations", new[] { "Line_Id" });
+            DropIndex("dbo.SerialNumberSLs", new[] { "StationId" });
+            DropIndex("dbo.SerialNumberSLs", new[] { "LineId" });
             DropColumn("dbo.AspNetUsers", "PassengerTypeId");
             DropColumn("dbo.AspNetUsers", "Role");
             DropColumn("dbo.AspNetUsers", "Activated");
@@ -204,12 +217,13 @@ namespace WebApp.Migrations
             DropColumn("dbo.AspNetUsers", "Surname");
             DropColumn("dbo.AspNetUsers", "Name");
             DropTable("dbo.VehicleTimetables");
+            DropTable("dbo.StationLines");
             DropTable("dbo.Vehicles");
             DropTable("dbo.Timetables");
             DropTable("dbo.Tickets");
             DropTable("dbo.TicketTypes");
             DropTable("dbo.TicketPrices");
-            DropTable("dbo.StationLines");
+            DropTable("dbo.SerialNumberSLs");
             DropTable("dbo.Pricelists");
             DropTable("dbo.PassengerTypes");
             DropTable("dbo.Stations");

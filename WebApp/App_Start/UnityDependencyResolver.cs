@@ -79,7 +79,7 @@ namespace WebApp.App_Start
             container.RegisterType<ITicketTypeRepository, TicketTypeRepository>();
             container.RegisterType<ITimetableRepository, TimetableRepository>();
             container.RegisterType<IVehicleRepository, VehicleRepository>();
-            container.RegisterType<IStationLineRepository, StationLineRepository>();
+            container.RegisterType<ISerialNumberSLRepository, SerialNumberSLRepository>();
             //svaki korisnik treba da ima svoj dbkontekst, po requestu
             container.RegisterType<IUnitOfWork, DemoUnitOfWork>();
             container.RegisterType<ApplicationUserManager>();

@@ -7,9 +7,9 @@ using WebApp.Models;
 
 namespace WebApp.Persistence.Repository
 {
-    public class StationLineRepository : Repository<StationLines, int>, IStationLineRepository
+    public class SerialNumberSLRepository : Repository<SerialNumberSL, int>, ISerialNumberSLRepository
     {
-        public StationLineRepository(DbContext context) : base(context)
+        public SerialNumberSLRepository(DbContext context) : base(context)
         {
         }
     }

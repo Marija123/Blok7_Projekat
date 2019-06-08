@@ -22,6 +22,8 @@ namespace WebApp.Persistence.Repository
 
         public void ReplaceStations(int lineId, IEnumerable<Station> stations)
         {
+            //var line = Context.Lines.Find(lineId);
+            //line.Stations = new List<Station>();
             var line = Context.Lines.Include(l => l.Stations).Where(l => l.Id == lineId).FirstOrDefault();
             line.Stations.Clear();
             

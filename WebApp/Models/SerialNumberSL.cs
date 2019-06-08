@@ -6,7 +6,7 @@ using System.Web;
 
 namespace WebApp.Models
 {
-    public class StationLines
+    public class SerialNumberSL
     {
         public int Id { get; set; }
         public int SerialNumber { get; set; }

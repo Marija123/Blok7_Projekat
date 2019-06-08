@@ -18,9 +18,11 @@ export class BusmapsComponent implements OnInit {
 
   stati: any = [];
   allLines: any = [];
+  showLines: any =[];
   selectedL: string = "";
-  sl: LineModel = new LineModel(0,"",[]);
+  sl: LineModel = new LineModel(0,"",[],"");
   k: boolean[];
+  colorLines: string[] = [];
   selLine: Polyline;
   myGroup: FormGroup;
   show: boolean = false;
@@ -52,10 +54,51 @@ export class BusmapsComponent implements OnInit {
       
   }
 
+  FieldsChange(event){
+    let ln = event.currentTarget.checked;
+    console.log(ln);
+    console.log(event.currentTarget.value);
+    let lNum = event.currentTarget.value;
+    if(ln)
+    {
+      this.AddLineToShowLines(lNum);
+      console.log(this.showLines);
+    }
+    else{
+      this.RemoveLineFromShowLines(lNum);
+      console.log(this.showLines);
+    }
+    
+  }
+
+  AddLineToShowLines(lNum: string)
+  {
+    this.allLines.forEach(element => {
+      if(element.LineNumber == lNum)
+      {
+        this.showLines.push(element);
+      }
+      
+    });
+  }
+
+  RemoveLineFromShowLines(lNum: string)
+  {
+    let a : LineModel;
+    
+    this.showLines.forEach(element => {
+      if(element.LineNumber == lNum)
+      {
+        a = element;
+      }
+    });
+    const index : number = this.showLines.indexOf(a);
+    this.showLines.splice(index,1);
+  }
 
   private addCheckBoxes(){
     this.allLines.map((o,i)=> {
-      const control = new FormControl(i === 0);
+      const control = new FormControl(false);
       (this.myGroup.controls.allLines as FormArray).push(control);
     });
     console.log("Metoda add checkBoxes");
@@ -87,7 +130,7 @@ export class BusmapsComponent implements OnInit {
     if(this.selectedL == "none" || this.selectedL == "")
     {
     //  this.selectedLines = [];
-      this.sl = new LineModel(0,"",[]);
+      this.sl = new LineModel(0,"",[],"");
       this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
 
     }

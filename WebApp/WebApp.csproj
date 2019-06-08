@@ -262,9 +262,13 @@
     <Compile Include="Migrations\201905222056072_InitialMigration.Designer.cs">
       <DependentUpon>201905222056072_InitialMigration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201906071430475_kreiranjeModela.cs" />
-    <Compile Include="Migrations\201906071430475_kreiranjeModela.Designer.cs">
-      <DependentUpon>201906071430475_kreiranjeModela.cs</DependentUpon>
+    <Compile Include="Migrations\201906081011044_IzmenjenModel.cs" />
+    <Compile Include="Migrations\201906081011044_IzmenjenModel.Designer.cs">
+      <DependentUpon>201906081011044_IzmenjenModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906081119165_VracenStations.cs" />
+    <Compile Include="Migrations\201906081119165_VracenStations.Designer.cs">
+      <DependentUpon>201906081119165_VracenStations.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -275,7 +279,7 @@
     <Compile Include="Models\PassengerType.cs" />
     <Compile Include="Models\Pricelist.cs" />
     <Compile Include="Models\Station.cs" />
-    <Compile Include="Models\StationLines.cs" />
+    <Compile Include="Models\SerialNumberSL.cs" />
     <Compile Include="Models\Ticket.cs" />
     <Compile Include="Models\TicketPrices.cs" />
     <Compile Include="Models\TicketType.cs" />
@@ -288,7 +292,7 @@
     <Compile Include="Persistence\Repository\IPassengerTypeRepository.cs" />
     <Compile Include="Persistence\Repository\IPricelistRepository.cs" />
     <Compile Include="Persistence\Repository\IRepository.cs" />
-    <Compile Include="Persistence\Repository\IStationLineRepository.cs" />
+    <Compile Include="Persistence\Repository\ISerialNumberSLRepository.cs" />
     <Compile Include="Persistence\Repository\IStationRepository.cs" />
     <Compile Include="Persistence\Repository\ITicketPricesRepository.cs" />
     <Compile Include="Persistence\Repository\ITicketRepository.cs" />
@@ -299,7 +303,7 @@
     <Compile Include="Persistence\Repository\PassengerTypeRepository.cs" />
     <Compile Include="Persistence\Repository\PricelistRepository.cs" />
     <Compile Include="Persistence\Repository\Repository.cs" />
-    <Compile Include="Persistence\Repository\StationLineRepository.cs" />
+    <Compile Include="Persistence\Repository\SerialNumberSLRepository.cs" />
     <Compile Include="Persistence\Repository\StationRepository.cs" />
     <Compile Include="Persistence\Repository\TicketPricesRepository.cs" />
     <Compile Include="Persistence\Repository\TicketRepository.cs" />
@@ -409,8 +413,11 @@
     <EmbeddedResource Include="Migrations\201905222056072_InitialMigration.resx">
       <DependentUpon>201905222056072_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906071430475_kreiranjeModela.resx">
-      <DependentUpon>201906071430475_kreiranjeModela.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201906081011044_IzmenjenModel.resx">
+      <DependentUpon>201906081011044_IzmenjenModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906081119165_VracenStations.resx">
+      <DependentUpon>201906081119165_VracenStations.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -85,6 +85,25 @@ namespace WebApp.Migrations
 
             }
 
+            if (!context.DayTypes.Any(u => u.Name == "WorkDay"))
+            {
+                var p = new DayType("WorkDay");
+                context.DayTypes.Add(p);
+
+            }
+            if (!context.DayTypes.Any(u => u.Name == "Saturday"))
+            {
+                var p = new DayType("Saturday");
+                context.DayTypes.Add(p);
+
+            }
+            if (!context.DayTypes.Any(u => u.Name == "Sunday"))
+            {
+                var p = new DayType("Sunday");
+                context.DayTypes.Add(p);
+
+            }
+
         }
     }
 }

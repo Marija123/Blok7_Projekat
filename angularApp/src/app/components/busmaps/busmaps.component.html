@@ -1,4 +1,4 @@
-<h4>Select line you want to change:</h4>
+
 <!-- class="form-control" -->
 <!-- <select  name="lineNumber"  (click)='SelectedLine($event)' ngModel>
   <option value="none">None</option>
@@ -6,7 +6,7 @@
    <option value="ShowAll" >Show all</option> 
   <option *ngFor="let ln of allLines" value="{{ln.LineNumber}}"  >{{ln.LineNumber}}</option>
 </select> -->
-<button (click)="showCheckBoxes()">X</button> <br/>
+<button (click)="showCheckBoxes()">If you want to see lines, click me</button> <br/>
 <div *ngIf="show">
     <form [formGroup]="myGroup" >
         <label formArrayName="allLines" *ngFor="let genre of myGroup.controls.allLines.controls; let i = index">

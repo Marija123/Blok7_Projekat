@@ -250,10 +250,12 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DayTypesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LinesController.cs" />
     <Compile Include="Controllers\PassengerTypesController.cs" />
     <Compile Include="Controllers\StationsController.cs" />
+    <Compile Include="Controllers\TimetablesController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -262,13 +264,9 @@
     <Compile Include="Migrations\201905222056072_InitialMigration.Designer.cs">
       <DependentUpon>201905222056072_InitialMigration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201906081011044_IzmenjenModel.cs" />
-    <Compile Include="Migrations\201906081011044_IzmenjenModel.Designer.cs">
-      <DependentUpon>201906081011044_IzmenjenModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906081119165_VracenStations.cs" />
-    <Compile Include="Migrations\201906081119165_VracenStations.Designer.cs">
-      <DependentUpon>201906081119165_VracenStations.cs</DependentUpon>
+    <Compile Include="Migrations\201906081434213_kreiranjeModela.cs" />
+    <Compile Include="Migrations\201906081434213_kreiranjeModela.Designer.cs">
+      <DependentUpon>201906081434213_kreiranjeModela.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -413,11 +411,8 @@
     <EmbeddedResource Include="Migrations\201905222056072_InitialMigration.resx">
       <DependentUpon>201905222056072_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906081011044_IzmenjenModel.resx">
-      <DependentUpon>201906081011044_IzmenjenModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906081119165_VracenStations.resx">
-      <DependentUpon>201906081119165_VracenStations.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201906081434213_kreiranjeModela.resx">
+      <DependentUpon>201906081434213_kreiranjeModela.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

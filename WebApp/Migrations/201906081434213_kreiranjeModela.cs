@@ -3,7 +3,7 @@ namespace WebApp.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class IzmenjenModel : DbMigration
+    public partial class kreiranjeModela : DbMigration
     {
         public override void Up()
         {

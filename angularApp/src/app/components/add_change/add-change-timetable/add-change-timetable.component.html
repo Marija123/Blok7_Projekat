@@ -1,3 +1,41 @@
-<p>
-  add-change-timetable works!
-</p>
+<div>
+  <label for="action">Choose action:</label>
+  <input  required type="radio" value="Add"  (click)="setradio('Add')"  name="Action"  ngModel>Add
+  <input required type="radio" value="Change"  (click)="setradio('Change')" name="Action"  ngModel> Change/Remove
+</div> 
+
+<div  *ngIf="isSelected('Add') || isSelected('Change')">
+  <h4>Select daytpe:</h4>
+  <!-- class="form-control" -->
+   <select  name="lineNumber" (click)='SelectedDaytype($event)'> 
+      <option value="0">None</option>
+      <!-- <option value="ShowAll" >Show all</option> -->
+      <option *ngFor="let ln of allDayTypes" value="{{ln.Id}}"  >{{ln.Name}}</option>
+    </select>
+  </div>
+  <div  *ngIf="selectedDay">
+    
+        <select  name="lineNumber"  (click)='SelectedLine($event)' ngModel>
+            <option value=0>None</option>
+            <!-- <option value="ShowAll" >Show all</option> -->
+            <option *ngFor="let ln of showList" value="{{ln.Id}}"  >{{ln.LineNumber}}</option>
+          </select>
+   
+  </div>
+
+  <div *ngIf="boolic">
+    <input type="time" name="vreme" [(ngModel)]="myInput">
+    <button name="butoon1" (click)="addTime(myInput)">Add Time</button>
+    <button name="butoon2" (click)="AddTimetable()">Add timetable</button>
+  
+
+  
+      
+      <div *ngFor="let st of stringovi1, let i = index">
+          <label><b>{{i + 1}}. {{st}}</b></label><br/>
+          <button (click)="removeFromTimes(st,i)">X</button> <br/>
+          <label>************************************</label><br/>
+      </div>
+    </div>
+
+

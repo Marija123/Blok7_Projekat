@@ -12,5 +12,13 @@ namespace WebApp.Models
         public string Name { get; set; }
 
         public List<TicketPrices> TicketPrices { get; set; }
+
+        public TicketType() { }
+
+        public TicketType(string s)
+        {
+            Name = s;
+        }
+
     }
 }

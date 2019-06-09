@@ -59,21 +59,6 @@ namespace WebApp.Migrations
                 .PrimaryKey(t => t.Id);
             
             CreateTable(
-                "dbo.SerialNumberSLs",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        SerialNumber = c.Int(nullable: false),
-                        LineId = c.Int(nullable: false),
-                        StationId = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Lines", t => t.LineId, cascadeDelete: true)
-                .ForeignKey("dbo.Stations", t => t.StationId, cascadeDelete: true)
-                .Index(t => t.LineId)
-                .Index(t => t.StationId);
-            
-            CreateTable(
                 "dbo.TicketPrices",
                 c => new
                     {
@@ -96,6 +81,21 @@ namespace WebApp.Migrations
                         Name = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.SerialNumberSLs",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        SerialNumber = c.Int(nullable: false),
+                        LineId = c.Int(nullable: false),
+                        StationId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Lines", t => t.LineId, cascadeDelete: true)
+                .ForeignKey("dbo.Stations", t => t.StationId, cascadeDelete: true)
+                .Index(t => t.LineId)
+                .Index(t => t.StationId);
             
             CreateTable(
                 "dbo.Tickets",
@@ -188,10 +188,10 @@ namespace WebApp.Migrations
             DropForeignKey("dbo.Tickets", "TicketPricesId", "dbo.TicketPrices");
             DropForeignKey("dbo.Tickets", "ApplicationUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUsers", "PassengerTypeId", "dbo.PassengerTypes");
-            DropForeignKey("dbo.TicketPrices", "TicketTypeId", "dbo.TicketTypes");
-            DropForeignKey("dbo.TicketPrices", "PricelistId", "dbo.Pricelists");
             DropForeignKey("dbo.SerialNumberSLs", "StationId", "dbo.Stations");
             DropForeignKey("dbo.SerialNumberSLs", "LineId", "dbo.Lines");
+            DropForeignKey("dbo.TicketPrices", "TicketTypeId", "dbo.TicketTypes");
+            DropForeignKey("dbo.TicketPrices", "PricelistId", "dbo.Pricelists");
             DropForeignKey("dbo.StationLines", "Line_Id", "dbo.Lines");
             DropForeignKey("dbo.StationLines", "Station_Id", "dbo.Stations");
             DropIndex("dbo.VehicleTimetables", new[] { "Timetable_Id" });
@@ -204,10 +204,10 @@ namespace WebApp.Migrations
             DropIndex("dbo.Tickets", new[] { "ApplicationUserId" });
             DropIndex("dbo.Tickets", new[] { "TicketPricesId" });
             DropIndex("dbo.Tickets", new[] { "TicketTypeId" });
-            DropIndex("dbo.TicketPrices", new[] { "TicketTypeId" });
-            DropIndex("dbo.TicketPrices", new[] { "PricelistId" });
             DropIndex("dbo.SerialNumberSLs", new[] { "StationId" });
             DropIndex("dbo.SerialNumberSLs", new[] { "LineId" });
+            DropIndex("dbo.TicketPrices", new[] { "TicketTypeId" });
+            DropIndex("dbo.TicketPrices", new[] { "PricelistId" });
             DropColumn("dbo.AspNetUsers", "PassengerTypeId");
             DropColumn("dbo.AspNetUsers", "Role");
             DropColumn("dbo.AspNetUsers", "Activated");
@@ -221,9 +221,9 @@ namespace WebApp.Migrations
             DropTable("dbo.Vehicles");
             DropTable("dbo.Timetables");
             DropTable("dbo.Tickets");
+            DropTable("dbo.SerialNumberSLs");
             DropTable("dbo.TicketTypes");
             DropTable("dbo.TicketPrices");
-            DropTable("dbo.SerialNumberSLs");
             DropTable("dbo.Pricelists");
             DropTable("dbo.PassengerTypes");
             DropTable("dbo.Stations");

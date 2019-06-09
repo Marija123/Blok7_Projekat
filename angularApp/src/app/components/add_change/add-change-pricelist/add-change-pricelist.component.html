@@ -1,3 +1,31 @@
-<p>
-  add-change-pricelist works!
-</p>
+<!-- *ngIf="priceList"
+*ngIf="priceList" -->
+<h4>Nema pricelist!!!!</h4>
+<h4 *ngIf="priceList" >Od: {{priceList.StartOfValidity}}</h4> 
+<h4 *ngIf="priceList">Do: {{priceList.EndOfValidity}}</h4><br/>
+<label>Trenutno aktuelne cene:</label>
+<form #ticketPricesForm="ngForm" (ngSubmit)="onSubmit1(ticketPricesForm.value,ticketPricesForm)">
+    <div *ngIf="validPrices">
+      <label>Hourly ticket:</label>
+      <input type="number" name="Hourly"   [(ngModel)] = "validPrices.Hourly"> <br/>
+      <label>Daily ticket:</label>
+      <input type="number" name="Daily"  [(ngModel)] = "validPrices.Daily"><br/>
+      <label>Monthly ticket:</label>
+      <input type="number" name="Monthly"  [(ngModel)] = "validPrices.Monthly"><br/>
+      <label>Yearly ticket:</label>
+      <input type="number" name="Yearly"  [(ngModel)] = "validPrices.Yearly"><br/>
+      <button *ngIf="!datumVazenjaBool" type="submit" class="button">Add new prices</button>
+    </div>
+  </form>
+  <div *ngIf="datumVazenjaBool">
+      <form #pricelistForm="ngForm" (ngSubmit)="onSubmit(pricelistForm.value,pricelistForm)">
+          <div>
+            <label>Start of validity:</label>
+            <input type="date" name="StartOfValidity" ngModel><br/>
+            <label>End of validity:</label>
+            <input type="date" name="EndOfValidity" ngModel><br/>
+            <button type="submit" class="button">Add validity of pricelist</button>
+          </div>
+        </form>
+  </div>
+

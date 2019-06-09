@@ -10,5 +10,6 @@ namespace WebApp.Models
         public int Id { get; set; }
         public DateTime? StartOfValidity { get; set; }
         public DateTime? EndOfValidity { get; set; }
+        public List<TicketPrices> TicketPricess { get; set; }
     }
 }

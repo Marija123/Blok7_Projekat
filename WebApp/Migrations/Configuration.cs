@@ -104,6 +104,32 @@ namespace WebApp.Migrations
 
             }
 
+
+            if (!context.TicketTypes.Any(u => u.Name == "Hourly"))
+            {
+                var p = new TicketType("Hourly");
+                context.TicketTypes.Add(p);
+
+            }
+            if (!context.TicketTypes.Any(u => u.Name == "Daily"))
+            {
+                var p = new TicketType("Daily");
+                context.TicketTypes.Add(p);
+
+            }
+            if (!context.TicketTypes.Any(u => u.Name == "Monthly"))
+            {
+                var p = new TicketType("Monthly");
+                context.TicketTypes.Add(p);
+
+            }
+            if (!context.TicketTypes.Any(u => u.Name == "Yearly"))
+            {
+                var p = new TicketType("Yearly");
+                context.TicketTypes.Add(p);
+
+            }
+
         }
     }
 }

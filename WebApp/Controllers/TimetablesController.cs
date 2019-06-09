@@ -46,39 +46,38 @@ namespace WebApp.Controllers
         }
 
         // PUT: api/Timetables/5
-        //[ResponseType(typeof(void))]
-        //public IHttpActionResult PutTimetable(int id, Timetable timetable)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [Route("Change")]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutTimetable(int id, Timetable timetable)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    if (id != timetable.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+            if (id != timetable.Id)
+            {
+                return BadRequest();
+            }
 
-        //    db.Entry(timetable).State = EntityState.Modified;
+            try
+            {
+                unitOfWork.Timetables.Get(id).Departures = timetable.Departures;
 
-        //    try
-        //    {
-        //        db.SaveChanges();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TimetableExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+                unitOfWork.Complete();
 
-        //    return StatusCode(HttpStatusCode.NoContent);
-        //}
+
+                return Ok(timetable.Id);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
+
+
+        }
 
         // POST: api/Timetables
         [Route("Add")]
@@ -112,22 +111,22 @@ namespace WebApp.Controllers
 
 
         }
+        [Route("Delete")]
+        // DELETE: api/Timetables/5
+        [ResponseType(typeof(Timetable))]
+        public IHttpActionResult DeleteTimetable(int id)
+        {
+            Timetable timetable = unitOfWork.Timetables.Get(id);
+            if (timetable == null)
+            {
+                return NotFound();
+            }
 
-        //// DELETE: api/Timetables/5
-        //[ResponseType(typeof(Timetable))]
-        //public IHttpActionResult DeleteTimetable(int id)
-        //{
-        //    Timetable timetable = db.Timetables.Find(id);
-        //    if (timetable == null)
-        //    {
-        //        return NotFound();
-        //    }
+            unitOfWork.Timetables.Remove(timetable);
+            unitOfWork.Complete();
 
-        //    db.Timetables.Remove(timetable);
-        //    db.SaveChanges();
-
-        //    return Ok(timetable);
-        //}
+            return Ok(timetable);
+        }
 
         protected override void Dispose(bool disposing)
         {

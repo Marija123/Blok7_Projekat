@@ -1,3 +1,24 @@
-<p>
-  timetable works!
-</p>
+<div >
+    <h4>Select daytpe:</h4>
+    <!-- class="form-control" -->
+    <select  name="lineNumber" (click)='SelectedDaytype($event)' ngModel> 
+        <option value="0">None</option>
+        <!-- <option value="ShowAll" >Show all</option> -->
+        <option *ngFor="let ln of allDayTypes" value={{ln.Id}} >{{ln.Name}}</option>
+    </select>
+</div>
+<div  *ngIf="selectedDay">
+      
+   <select  name="lineNumber"  (click)='SelectedLine($event)' ngModel>
+      <option value=0>None</option>    
+      <option *ngFor="let ln of showList" value={{ln.Id}}  >{{ln.LineNumber}}</option>
+    </select>
+     
+</div>
+  
+<div *ngIf="boolic">
+  <div *ngFor="let st of stringovi1, let i = index">
+    <label><b>{{i + 1}}. {{st}}</b></label><br/>
+    <label>************************************</label><br/>
+  </div>
+</div>

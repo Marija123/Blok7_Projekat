@@ -21,7 +21,8 @@ br: number = 0;
 dayTypeChosen : number;
 lineIdChoosen: number;
 boolic: boolean = false;
-stringovi: string[] = [];
+duzinaStringovi: boolean = false;
+stringovi: string[]  = [];
 stringovi1: string[] = [];
 depart: string = "";
 ttZaDodavanje : TimetableModel = new TimetableModel("", 0, 0,0);
@@ -50,11 +51,11 @@ ttZaDodavanje : TimetableModel = new TimetableModel("", 0, 0,0);
   setradio(e: string): void   
   {  
         this.selected = e;  
+        this.boolic = false;
+        this.selectedDay = false;
        
   }  
    
-
-
   isSelected(name: string): boolean   
   {  
         if (!this.selected) { 
@@ -68,37 +69,118 @@ ttZaDodavanje : TimetableModel = new TimetableModel("", 0, 0,0);
     this.dt = event.target.value;
     console.log(this.dt);
     if(this.dt == 0){
-      console.log("none selektovan")
       this.selectedDay = false;
     }else{
-      console.log("Udje")
       this.selectedDay = true;
-      this.getLineIds();
+      if(this.selected == "Add")
+      {
+        this.getLineIds();
+      }
+      if(this.selected == "Change")
+      {
+        this.getLineIdsForChange();
+      }
+     
     }
   }
+
+getLineIdsForChange()
+{
+  let ll: any =[];
+  let k : boolean = false;
+  this.showList = [];
+  if(this.allTimetables === void 0){
+
+    this.showList = [];
+  }
+  else{
+   
+    this.allTimetables.forEach(element => {
+     
+      if(element.DayTypeId == this.dt)
+      {
+        ll.push(element);
+      }
+    });
+
+    if(ll === void 0 || ll == [])
+    {
+      this.showList = [];
+    }
+    else {
+      this.allLines.forEach(element => {
+        k = false;
+        // k = ll.find( g =>{
+        //   g.LineId == element.Id;
+        // });
+  
+        ll.forEach(d => {
+          if(d.LineId == element.Id)
+          {
+            k = true;
+          }
+        });
+    
+       if(k ) {
+          this.showList.push(element);
+       }
+      
+      });
+    }
+
+  }
+}
   
 getLineIds(){
   let list: any = [];
-  let k: any;
+  let k: boolean = false;
   let ll: any =[];
-  if(this.allTimetables === void 0){
-   console.log("udje u kad nema elemenata u timetables");
-    ll = this.allTimetables.find(u =>{
-      u.DayTypeId == this.dt;
-    });
-    this.allLines.forEach(element => {
-      
-      k = ll.find(g =>{
-        g.LineId == element.Id;
-      });
   
-     if(k==null) {
-        this.showList.push(element);
-     }
-    });
+  if(this.allTimetables === void 0){
+
+    this.showList = this.allLines;
   }
   else{
-    this.showList = this.allLines;
+   
+    //ovo vraca undefined
+    // ll = this.allTimetables.find(u =>{
+    //   u.DayTypeId == this.dt;
+    // });
+
+    this.allTimetables.forEach(element => {
+     
+      if(element.DayTypeId == this.dt)
+      {
+        ll.push(element);
+      }
+    });
+   
+    if(ll === void 0 || ll == [])
+    {
+      this.showList = this.allLines;
+    }
+    else {
+
+    this.showList = [];
+    this.allLines.forEach(element => {
+      k = false;
+      // k = ll.find( g =>{
+      //   g.LineId == element.Id;
+      // });
+
+      ll.forEach(d => {
+        if(d.LineId == element.Id)
+        {
+          k = true;
+        }
+      });
+  
+     if(!k ) {
+        this.showList.push(element);
+     }
+    
+    });
+  }
   }
   
 }
@@ -107,9 +189,33 @@ SelectedLine(event: any): void
 {
   this.lineIdChoosen = event.target.value;
   if(event.target.value != 0){
+ 
+    
     this.boolic = true;
+    if(this.selected == "Change")
+    {
+      this.SplitDepartures();
+    }
   }
   
+}
+
+SplitDepartures(){
+
+  this.stringovi1 = [];
+  this.ttZaDodavanje = new TimetableModel("",0,0,0);
+  this.allTimetables.forEach(element => {
+    if(element.LineId == this.lineIdChoosen && element.DayTypeId == this.dt)
+    {
+      this.ttZaDodavanje = element;
+    }
+    
+  });
+
+  this.stringovi1= this.ttZaDodavanje.Departures.split(";");
+  this.stringovi1.splice(this.stringovi1.length-1,1);
+  this.stringovi = this.stringovi1;
+
 }
 addTime(n:any){
  
@@ -117,7 +223,21 @@ addTime(n:any){
   this.stringovi.push(n);
   this.stringovi.sort((a,b)=> a.localeCompare(b));
   this.stringovi1 = this.stringovi;
+  
 }
+
+ChangeTimetable()
+{
+  this.ttZaDodavanje.DayTypeId = this.dt;
+  this.ttZaDodavanje.LineId = this.lineIdChoosen;
+  let stringZaDodavanje : string = "";
+  this.stringovi1.forEach(x => {
+    stringZaDodavanje = stringZaDodavanje + x + ";";
+  });
+  this.ttZaDodavanje.Departures = stringZaDodavanje;
+  this.timetableServ.changeTimetable(this.ttZaDodavanje.Id,this.ttZaDodavanje).subscribe();
+}
+
 AddTimetable(){
   this.ttZaDodavanje.DayTypeId = this.dt;
   this.ttZaDodavanje.LineId = this.lineIdChoosen;
@@ -133,6 +253,10 @@ removeFromTimes(st,i){
   this.stringovi1.splice(i,1);
   this.stringovi = this.stringovi1;
   
+}
+DeleteTimetable()
+{
+  this.timetableServ.deleteTimetable(this.ttZaDodavanje.Id).subscribe();
 }
 
 }

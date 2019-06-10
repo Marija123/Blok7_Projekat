@@ -24,4 +24,7 @@ export class MenubarComponent implements OnInit {
     this.authService.logout();
     
   }
+  get user(): any {
+    return localStorage.getItem('role');
+}
 }

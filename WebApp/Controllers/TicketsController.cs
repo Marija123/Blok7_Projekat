@@ -103,6 +103,7 @@ namespace WebApp.Controllers
         //}
 
         // POST: api/Tickets
+        [Route("Add")]
         [ResponseType(typeof(Ticket))]
         public IHttpActionResult PostTicket(Ticket ticket)
         {
@@ -147,6 +148,50 @@ namespace WebApp.Controllers
 
         //    return Ok(ticket);
         //}
+
+
+        [Route("SendMail")]
+        public string SendMail(Ticket ticket)
+        {
+           
+                //if (!ModelState.IsValid)
+                //{
+                //    return BadRequest(ModelState).ToString();
+                //}
+            //Get user data, and update activated to true
+
+            try
+            {
+               // Ticket t = new Ticket();
+               // t.PurchaseTime = ticket.PurchaseTime;
+               // t.TicketPricesId = unitOfWork.TicketPrices.Get(ticket.TicketPricesId).Id;
+               // t.TicketTypeId = unitOfWork.TicketTypes.Get((int)ticket.TicketTypeId).Id;
+               // t.Name = "Karta";
+               ////  t.ApplicationUserId = "unknown";
+
+               // unitOfWork.Tickets.Add(ticket);
+               // unitOfWork.Complete();
+                try
+                {
+                    string subject = "Ticket purchase";
+                    string desc = $"Dear {ticket.Name}, Your purchase is successfull.\n Ticket price: {unitOfWork.TicketPrices.Get(ticket.TicketPricesId).Price}\n " +
+                $"Ticket type:{unitOfWork.TicketTypes.Get((int)ticket.TicketTypeId).Name}\n" +
+                $"Time of purchase: {ticket.PurchaseTime}\n" +
+                $"Ticket is valid for the next hour.\n\n" +
+                $"Thank you.";
+                    var email = ticket.Name;
+                    unitOfWork.Tickets.NotifyViaEmail(email, subject, desc);
+                }
+                catch { }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest().ToString();
+            }
+            
+                return "Ok";
+            
+        }
 
         protected override void Dispose(bool disposing)
         {

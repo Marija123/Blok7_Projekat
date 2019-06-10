@@ -13,7 +13,7 @@ import { PricelistComponent } from './components/pricelist/pricelist.component';
 import { SigninComponent } from './components/signin/signin.component';
 import { RegisterComponent } from './components/register/register.component';
 
-import {FormsModule, ReactiveFormsModule} from'@angular/forms';
+import {FormsModule, ReactiveFormsModule, ControlContainer} from'@angular/forms';
 import { HttpModule } from '@angular/http';
 import { ProfileComponent } from './components/profile/profile.component';
 import {NgxPopper} from 'angular-popper';
@@ -24,6 +24,9 @@ import { AddChangeTimetableComponent } from './components/add_change/add-change-
 import { AddChangePricelistComponent } from './components/add_change/add-change-pricelist/add-change-pricelist.component';
 import { MapComponent } from './components/map/map.component';
 import { BuyATicketComponent } from './components/buy-a-ticket/buy-a-ticket.component';
+import { UserSignedInGuard } from './guard/userSignedIn-guar';
+import { CanActivateViaAuthGuard } from './guard/auth-guard';
+import { ControlorGuard } from './guard/controler-guards';
 const Routes = [
   {
     path: "",
@@ -55,23 +58,28 @@ const Routes = [
   },
   {
     path: "profile",
-    component: ProfileComponent
+    component: ProfileComponent,
+    canActivate: [UserSignedInGuard]
   },
   {
     path: "add_change_lines",
-    component: AddChangeLinesComponent
+    component: AddChangeLinesComponent,
+    canActivate: [CanActivateViaAuthGuard]
   },
   {
     path: "add_change_stations",
-    component: AddChangeStationsComponent
+    component: AddChangeStationsComponent,
+    canActivate: [CanActivateViaAuthGuard]
   },
   {
     path: "add_change_timetable",
-    component: AddChangeTimetableComponent
+    component: AddChangeTimetableComponent,
+    canActivate: [CanActivateViaAuthGuard]
   },
   {
     path: "add_change_pricelist",
-    component: AddChangePricelistComponent
+    component: AddChangePricelistComponent,
+    canActivate: [CanActivateViaAuthGuard]
   },
   {
     path: "buy_a_ticket",
@@ -109,7 +117,11 @@ const Routes = [
     
   ],
  // {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}],
+  providers: [ CanActivateViaAuthGuard,
+    UserSignedInGuard,
+    ControlorGuard,{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
+    
+  ],
   bootstrap: [AppComponent]
 })
 

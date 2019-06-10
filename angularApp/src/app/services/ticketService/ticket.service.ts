@@ -21,5 +21,8 @@ export class TicketService {
     
     return this.httpClient.post(this.base_url+"/api/Tickets/Add",ticket);
   }
-
+  SendMail(ticket): Observable<any>{
+    
+    return this.httpClient.post(this.base_url+"/api/Tickets/SendMail",ticket);
+  }
 }

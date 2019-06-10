@@ -20,6 +20,10 @@ using WebApp.Persistence.UnitOfWork;
 using System.Linq;
 using WebApp.Persistence;
 using System.Data.Entity;
+using System.Net;
+using System.IO;
+using System.Drawing;
+using System.Text;
 
 namespace WebApp.Controllers
 {
@@ -29,6 +33,7 @@ namespace WebApp.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        public static string path = "";
         //private readonly DbContext dbContext;
         private readonly IUnitOfWork unitOfWork;
 
@@ -355,6 +360,7 @@ namespace WebApp.Controllers
             user.Name = model.Name;
             user.Surname = model.Surname;
             user.Role = model.Role;
+            user.Image = path;
 
             if (user.Role == "AppUser")
             {
@@ -440,6 +446,110 @@ namespace WebApp.Controllers
 
         }
 
+
+        [AllowAnonymous]
+        [Route("PostImage")]
+        public async Task<HttpResponseMessage> PostImage()
+        {
+          
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+
+                foreach (string file in httpRequest.Files)
+                {
+                    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created);
+
+                    var postedFile = httpRequest.Files[file];
+                    if (postedFile != null && postedFile.ContentLength > 0)
+                    {
+
+                        int MaxContentLength = 1024 * 1024 * 1; //Size = 1 MB  
+
+                        IList<string> AllowedFileExtensions = new List<string> { ".jpg", ".gif", ".png", ".img", ".jpeg" };
+                        var ext = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.'));
+                        var extension = ext.ToLower();
+                        if (!AllowedFileExtensions.Contains(extension))
+                        {
+
+                            var message = string.Format("Please Upload image of type .jpg,.gif,.png,.img,.jpeg.");
+
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, message);
+                        }
+                        else if (postedFile.ContentLength > MaxContentLength)
+                        {
+                            var message = string.Format("Please Upload a file upto 1 mb.");
+
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, message);
+                        }
+                        else
+                        {
+                            if (!Directory.Exists(HttpContext.Current.Server.MapPath("/Content/Images")))
+                                Directory.CreateDirectory(HttpContext.Current.Server.MapPath("/Content/Images"));
+
+                            var filePath = HttpContext.Current.Server.MapPath("/Content/Images/" + postedFile.FileName);
+                            //postedFile as .SaveAs(filePath);
+
+                            Bitmap bmp = new Bitmap(postedFile.InputStream);
+                            Image img = (Image)bmp;
+                            byte[] imagebytes = ImageToByteArray(img);
+                            byte[] cryptedBytes = EncryptBytes(imagebytes, "password", "asdasd");
+                            File.WriteAllBytes(filePath, cryptedBytes);
+
+                            path = "/Content/Images/" + postedFile.FileName;
+                            var message = string.Format("/Content/Images/" + postedFile.FileName);
+                        }
+                    }
+
+                    var message1 = string.Format("Image Updated Successfully.");
+                    //return Request.CreateErrorResponse(HttpStatusCode.Created, message1);
+                }
+
+                var res = string.Format("Please Upload a image.");
+                //return Request.CreateResponse(HttpStatusCode.NotFound, res);
+            }
+            catch (Exception)
+            {
+                var res = string.Format("some Message");
+                dict.Add("error", res);
+                return Request.CreateResponse(HttpStatusCode.NotFound, dict);
+            }
+
+          
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
+
+        public byte[] ImageToByteArray(Image imageIn)
+        {
+            using (var ms = new MemoryStream())
+            {
+                imageIn.Save(ms, imageIn.RawFormat);
+                return ms.ToArray();
+            }
+        }
+
+        public static byte[] EncryptBytes(byte[] inputBytes, string passPhrase, string saltValue)
+        {
+            RijndaelManaged RijndaelCipher = new RijndaelManaged();
+
+            RijndaelCipher.Mode = CipherMode.CBC;
+            byte[] salt = Encoding.ASCII.GetBytes(saltValue);
+            PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, salt, "SHA1", 2);
+
+            ICryptoTransform Encryptor = RijndaelCipher.CreateEncryptor(password.GetBytes(32), password.GetBytes(16));
+
+            MemoryStream memoryStream = new MemoryStream();
+            CryptoStream cryptoStream = new CryptoStream(memoryStream, Encryptor, CryptoStreamMode.Write);
+            cryptoStream.Write(inputBytes, 0, inputBytes.Length);
+            cryptoStream.FlushFinalBlock();
+            byte[] CipherBytes = memoryStream.ToArray();
+
+            memoryStream.Close();
+            cryptoStream.Close();
+
+            return CipherBytes;
+        }
 
         protected override void Dispose(bool disposing)
         {

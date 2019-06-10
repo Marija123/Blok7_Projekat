@@ -12,7 +12,7 @@
         <li><a class="nav-link" [routerLink]="['/buy_a_ticket']">Buy a ticket</a></li>        
       </ul>
       
-          <div class="container">
+      <div *ngIf="user=='Admin'" class="container">
        <ul class="nav nav-pills">
          
           <li class="nav-item dropdown">
@@ -29,13 +29,13 @@
       </ul>
     </div>
     
-      <ul class="navbar-nav" *ngIf="!loggedIn()" >
+      <ul class="navbar-nav"  *ngIf="!loggedIn()" > 
           <li><a class="nav-link" [routerLink]="['/signin']" >SignIn</a></li>
           <li><a class="nav-link" [routerLink]="['/register']">Register</a></li>
           
       </ul>
 
-      <ul class = "navbar-nav" *ngIf="loggedIn()" >
+      <ul class = "navbar-nav"  *ngIf="loggedIn()" > 
         <li><a class="nav-link" [routerLink]="['/profile']" >{{prom}}</a></li>
         <li><a class="nav-link" [routerLink]="['/home']" (click)="logout()">LogOut</a></li>
       </ul>

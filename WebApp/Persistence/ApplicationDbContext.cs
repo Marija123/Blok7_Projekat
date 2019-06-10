@@ -46,6 +46,13 @@ namespace WebApp.Persistence
 
         //}
 
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Ticket>().HasOptional(a => a.ApplicationUser)
+        //                        .WithMany(au => au.Tickets)
+        //                        .HasForeignKey(a => a.ApplicationUserId);
+        //}
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

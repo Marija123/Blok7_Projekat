@@ -58,11 +58,11 @@
           <input required type="password" class="form-control" name="ConfirmPassword" placeholder="Password" ngModel>
         </div>
 
-        <div class="form-group" *ngIf="isSelected('AppUser')">
+        <div class="form-group" >
        
-          <input type="file" (change)="onFileSelected($event)">  
-          <button type="button" class="button" (click)="onUpload()">Upload</button>
-       
+          <input type="file" (change)="onFileSelected($event)" >  
+          <!-- <button type="button" class="button" (click)="onUpload()">Upload</button> -->
+         <label>{{selIm}}</label>
         </div>
       <button type="submit" class="button" >Register</button>
     </form>

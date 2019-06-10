@@ -3,6 +3,7 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
 import { RegModel } from 'src/app/models/regModel';
 import { NgForm } from '@angular/forms';
 import { TypeModel } from 'src/app/models/typeModel';
+import { FileUploadService } from 'src/app/services/fileUploadService/file-upload.service';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +13,10 @@ import { TypeModel } from 'src/app/models/typeModel';
 export class RegisterComponent implements OnInit {
   private selected: string=""; 
   types:any = [];
-  constructor(private authService: AuthenticationService) {
+  selectedImage: any;
+  selIm: string  = "C:/Users/Barbara/Pictures/Screenshots/Untitled.jpg";
+  userBytesImage: any;
+  constructor(private authService: AuthenticationService, private fileUploadService: FileUploadService) {
     authService.getTypes().subscribe(types => {
       this.types = types;
     });
@@ -22,8 +26,17 @@ export class RegisterComponent implements OnInit {
   }
 
   Button1(regData: RegModel, form: NgForm){
-    
-    this.authService.register(regData).subscribe();
+    if (this.selectedImage == undefined){
+           alert("No image selected!");
+          return; 
+        }
+        this.fileUploadService.uploadFile(this.selectedImage)
+       .subscribe(data => {      
+         //alert("Image uploaded.");  
+         this.authService.register(regData).subscribe();
+        }
+       )
+    //this.authService.register(regData).subscribe();
   }
 
         
@@ -44,4 +57,23 @@ export class RegisterComponent implements OnInit {
   
         return (this.selected === name); // if current radio button is selected, return true, else return false  
     }   
+
+    onFileSelected(event){
+      this.selectedImage = event.target.files;
+     
+    }
+  
+    // onUpload(){    
+    //   if (this.selectedImage == undefined){
+    //     alert("No image selected!");
+    //     return; 
+    //   }
+    //   this.fileUploadService.uploadFile(this.selectedImage)
+    //   .subscribe(data => {      
+    //     alert("Image uploaded.");  
+    //   }, 
+    //   error => {
+    //     alert("Image not added, too large!");  
+    //   })
+    // }
 }

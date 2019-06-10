@@ -7,6 +7,7 @@ import { UserProfileService } from 'src/app/services/userService/user-profile.se
 import { TypeModel } from 'src/app/models/typeModel';
 import { TicketModel } from 'src/app/models/ticketModel';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-buy-a-ticket',
@@ -108,6 +109,27 @@ export class BuyATicketComponent implements OnInit {
 
     
     
+  }
+
+  Button1(t:any,form: NgForm ){
+    let ticketMod = new TicketModel("",new Date(),0,"",0,0);
+    ticketMod.PurchaseTime = new Date();
+    ticketMod.TicketTypeId = this.selecetTT;
+    this.priceList.TicketPricess.forEach(element => {
+      if(element.TicketTypeId == this.selecetTT)
+      {
+        ticketMod.TicketPricesId = element.Id;
+      }
+    });
+    ticketMod.Name= t.Email;
+    this.ticketServ.SendMail(ticketMod).subscribe(resp =>{
+      if(resp == 'Ok'){
+        alert("Ticket successfully bought");
+      }
+      else{
+        alert("Something went wrong");
+      }
+    });
   }
 
  

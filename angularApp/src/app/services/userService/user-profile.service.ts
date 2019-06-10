@@ -12,7 +12,10 @@ export class UserProfileService {
   getUserClaims() {
     return this.httpClient.get('http://localhost:52295/api/Account/UserInfo')
   }
-getUserData(email:string) {
-  return this.httpClient.get('http://localhost:52295/api/Account/GetUser?email='+email)
-}
+  getUserData(email:string) {
+    return this.httpClient.get('http://localhost:52295/api/Account/GetUser?email='+email)
+  }
+  // getUserTypes(){
+  //   return this.httpClient.get('http://localhost:52295/api/Account/UserTypes')
+  // }
 }

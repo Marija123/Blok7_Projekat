@@ -1,0 +1,32 @@
+
+<div>
+  <select  name="ticketType"  (click)='SelectedTicketType($event)' ngModel>
+    <option *ngFor="let ln of allTicketTypes" value={{ln.Id}} >{{ln.Name}}</option>
+  </select>
+</div>
+
+<div>
+  <label>Cena bez popusta: </label>
+  <label>{{price}}</label><br/>
+  <label>Popust: </label>
+  <label>{{discount}}</label><br/>
+  <label>Cena sa popustom:</label>
+  <label>{{priceWDiscount}}</label><br/>
+</div>
+<form  #ticketBuyForm="ngForm" (ngSubmit)="Button1(ticketBuyForm.value, ticketBuyForm)">
+<div *ngIf="neregKupVremKartu">
+  <label>Ticket is valid for the next hour from the moment of purchase!</label>
+    <label for="email">Email address:</label>
+    <input required type="email" class="form-control" name="Email" placeholder="Email" ngModel>
+    <button type="submit" class="button" >Buy a ticket</button>
+</div>
+<div *ngIf="!neregKupVremKartu">
+    <label>{{poruka}}</label>
+      
+  </div>
+
+</form>
+
+<div>
+    <button type="submit" class="button" (click)="BuyTicket()" >Buy a ticket</button>
+</div>

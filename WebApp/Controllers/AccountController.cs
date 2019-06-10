@@ -79,6 +79,9 @@ namespace WebApp.Controllers
             };
         }
 
+       
+     
+
         // POST api/Account/Logout
         [Route("Logout")]
         public IHttpActionResult Logout()
@@ -423,8 +426,18 @@ namespace WebApp.Controllers
         public ApplicationUser GetUser(string email)
         {
             ApplicationUser user = UserManager.FindByEmail(email);
+            
+           
           //  ApplicationUser user = unitOfWork.ApplicationUsers.Find(u => u.Email == email).FirstOrDefault(); /*unitOfWork.ApplicationUsers.Find(u => u.Email == email).FirstOrDefault();*/
             return user;
+        }
+        [Route("GetPassengerTypeForUser")]
+        public PassengerType GetPassengerTypeForUser(string email)
+        {
+            ApplicationUser user = UserManager.FindByEmail(email);
+            PassengerType pas = unitOfWork.PassengerTypes.Get((int)user.PassengerTypeId);
+            return pas;
+
         }
 
 

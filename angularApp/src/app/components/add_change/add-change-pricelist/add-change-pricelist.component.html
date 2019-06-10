@@ -1,6 +1,6 @@
 <!-- *ngIf="priceList"
 *ngIf="priceList" -->
-<h4>Nema pricelist!!!!</h4>
+<h4 *ngIf="!priceList">Nema pricelist!!!!</h4>
 <h4 *ngIf="priceList" >Od: {{priceList.StartOfValidity}}</h4> 
 <h4 *ngIf="priceList">Do: {{priceList.EndOfValidity}}</h4><br/>
 <label>Trenutno aktuelne cene:</label>

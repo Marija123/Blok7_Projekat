@@ -21,10 +21,11 @@ export class ProfileComponent implements OnInit {
     this.usersService.getUserClaims().subscribe(claims => {
       this.usersService.getUserData(claims['Email']).subscribe(data => {
         
-          this.user = data;        
-        })
+          this.user = data;    
+          console.log(this.user);    
+        });
      
-      })
+      });
   }
 
 }

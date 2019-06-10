@@ -18,15 +18,15 @@ namespace WebApp.Models
             Name = name;
             if(name == "Student")
             {
-                Coefficient = 0.6;
+                Coefficient = 0.4;
             }
             else if(name == "Retiree")
             {
-                Coefficient = 0.8;
+                Coefficient = 0.3;
             }
             else
             {
-                Coefficient = 1;
+                Coefficient = 0;
             }
         }
 

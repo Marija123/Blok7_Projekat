@@ -1,3 +1,18 @@
-<p>
-  pricelist works!
-</p>
+<h4 *ngIf="priceList" >Od: {{priceList.StartOfValidity}}</h4> 
+<h4 *ngIf="priceList">Do: {{priceList.EndOfValidity}}</h4><br/>
+<label>Trenutno aktuelne cene:</label>
+
+    <div *ngIf="validPrices">
+      <label>Hourly ticket:</label>
+      <label>{{validPrices.Hourly}}</label> <br/>
+      <label>Daily ticket:</label>
+      <label>{{validPrices.Daily}}</label> <br/>
+      <label>Monthly ticket:</label>
+      <label>{{validPrices.Monthly}}</label> <br/>
+      <label>Yearly ticket:</label>
+      <label>{{validPrices.Yearly}}</label> <br/>
+      
+    </div>
+  
+ 
+

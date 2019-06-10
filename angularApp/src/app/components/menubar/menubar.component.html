@@ -9,11 +9,9 @@
         <li><a class="nav-link" [routerLink]="['/timetable']">Timetable</a></li>
         <li><a class="nav-link" [routerLink]="['/busmaps']">BusMaps</a></li>
         <li><a class="nav-link" [routerLink]="['/pricelist']">Pricelist</a></li>
-        
-       </ul>
+        <li><a class="nav-link" [routerLink]="['/buy_a_ticket']">Buy a ticket</a></li>        
+      </ul>
       
-
-       <!-- <ng-container > -->
           <div class="container">
        <ul class="nav nav-pills">
          
@@ -23,16 +21,14 @@
                   <a class="dropdown-item" [routerLink]="['/add_change_stations']">Stations</a>
                   <a class="dropdown-item" [routerLink]="['/add_change_lines']">Lines</a>
                   <a class="dropdown-item" [routerLink]="['/add_change_timetable']">Timetable</a>
-                  <!-- <div class="dropdown-divider"></div> -->
                   <a class="dropdown-item" [routerLink]="['/add_change_pricelist']">Pricelist</a>
+                  <a class="dropdown-item" [routerLink]="['/buy_a_ticket']">Buy a ticket</a>
               </div>
           </li>
          
       </ul>
     </div>
     
-    <!-- </ng-container> -->
-   
       <ul class="navbar-nav" *ngIf="!loggedIn()" >
           <li><a class="nav-link" [routerLink]="['/signin']" >SignIn</a></li>
           <li><a class="nav-link" [routerLink]="['/register']">Register</a></li>

@@ -1,4 +1,5 @@
 export class RegModel{
+    Id: string;
     Email: string;
     Name: string;
     Surname: string;
@@ -9,7 +10,8 @@ export class RegModel{
     Role: string;
     PassengerType: string;
 
-    constructor(email: string, name: string, surname: string, address:string, birthday: Date,password: string, confirmPassword: string, role: string,passagerType: string){
+    constructor(id:string,email: string, name: string, surname: string, address:string, birthday: Date,password: string, confirmPassword: string, role: string,passagerType: string){
+        this.Id = id;
         this.Email = email;
         this.Name = name;
         this.Address = address

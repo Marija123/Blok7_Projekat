@@ -23,6 +23,7 @@ import { AddChangeStationsComponent } from './components/add_change/add-change-s
 import { AddChangeTimetableComponent } from './components/add_change/add-change-timetable/add-change-timetable.component';
 import { AddChangePricelistComponent } from './components/add_change/add-change-pricelist/add-change-pricelist.component';
 import { MapComponent } from './components/map/map.component';
+import { BuyATicketComponent } from './components/buy-a-ticket/buy-a-ticket.component';
 const Routes = [
   {
     path: "",
@@ -71,6 +72,10 @@ const Routes = [
   {
     path: "add_change_pricelist",
     component: AddChangePricelistComponent
+  },
+  {
+    path: "buy_a_ticket",
+    component: BuyATicketComponent
   }
 ]
 
@@ -90,6 +95,7 @@ const Routes = [
     AddChangeTimetableComponent,
     AddChangePricelistComponent,
     MapComponent,
+    BuyATicketComponent
   ],
   imports: [
     BrowserModule,

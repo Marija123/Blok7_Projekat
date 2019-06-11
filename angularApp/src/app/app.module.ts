@@ -28,6 +28,12 @@ import { UserSignedInGuard } from './guard/userSignedIn-guar';
 import { CanActivateViaAuthGuard } from './guard/auth-guard';
 import { ControlorGuard } from './guard/controler-guards';
 import { EditProfileComponent } from './components/profile/edit-profile/edit-profile.component';
+import {
+  ToastrModule,
+  ToastNoAnimation,
+  ToastNoAnimationModule,
+} from 'ngx-toastr';
+import { NotificationsComponent } from './components/notifications/notifications.component';
 const Routes = [
   {
     path: "",
@@ -91,6 +97,10 @@ const Routes = [
   {
     path: "buy_a_ticket",
     component: BuyATicketComponent
+  },
+  {
+    path: "notifications",
+    component: NotificationsComponent
   }
 ]
 
@@ -111,7 +121,8 @@ const Routes = [
     AddChangePricelistComponent,
     MapComponent,
     BuyATicketComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    NotificationsComponent
   ],
   imports: [
     BrowserModule,
@@ -121,7 +132,11 @@ const Routes = [
     HttpClientModule,
     NgxPopper,
     ReactiveFormsModule,
-    AgmCoreModule.forRoot({apiKey: 'AIzaSyDnihJyw_34z5S1KZXp90pfTGAqhFszNJk'})
+    AgmCoreModule.forRoot({apiKey: 'AIzaSyDnihJyw_34z5S1KZXp90pfTGAqhFszNJk'}),
+    ToastNoAnimationModule,
+    ToastrModule.forRoot({
+      toastComponent: ToastNoAnimation,
+    }),
     
   ],
  // {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}

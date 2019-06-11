@@ -20,14 +20,14 @@ export class ProfileComponent implements OnInit {
   }
 
   requestUserInfo(){
-    this.usersService.getUserClaims().subscribe(claims => {
-      this.usersService.getUserData(claims['Email']).subscribe(data => {
+   // this.usersService.getUserClaims().subscribe(claims => {
+      this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
         
           this.user = data;    
           console.log(this.user);    
         });
      
-      });
+    //  });
   }
 
   Edit(){

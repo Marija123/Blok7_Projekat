@@ -24,6 +24,9 @@ using System.Net;
 using System.IO;
 using System.Drawing;
 using System.Text;
+using System.Net.Mail;
+using System.Data.Entity.Infrastructure;
+using WebApp.Models.HelpModels;
 
 namespace WebApp.Controllers
 {
@@ -361,7 +364,7 @@ namespace WebApp.Controllers
             user.Surname = model.Surname;
             user.Role = model.Role;
             user.Image = path;
-
+            path = "";
             if (user.Role == "AppUser")
             {
                 //ApplicationDbContext context = dbContext as ApplicationDbContext;
@@ -415,7 +418,8 @@ namespace WebApp.Controllers
             user.Address = model.Address;
             user.Name = model.Name;
             user.Surname = model.Surname;
-            
+            user.Image = path;
+            path = "";
 
 
 
@@ -589,6 +593,94 @@ namespace WebApp.Controllers
             return CipherBytes;
         }
 
+
+        [Authorize(Roles = "Admin")]
+        [Route("GetAwaitingAdmins")]
+        public List<ApplicationUser> GetAwaitingAdmins()
+        {
+            List<ApplicationUser> u = UserManager.Users.Where(x => (x.Activated == false && x.Role == "Admin")).ToList();
+            return u;
+        }
+        [Authorize(Roles = "Admin")]
+        [Route("GetAwaitingAControllers")]
+        public List<ApplicationUser> GetAwaitingControllers()
+        {
+            List<ApplicationUser> u =  UserManager.Users.Where(x => (x.Activated == false && x.Role == "Controller")).ToList();
+            return u;
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        [Route("AuthorizeAdmin")]
+        public string AuthorizeAdmin([FromBody]ModelHelperAuthorization Id)
+        {
+           
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState).ToString();
+                }
+                //Get user data, and update activated to true
+                ApplicationUser current = UserManager.FindById(Id.Id);
+                current.Activated = true;
+
+                try
+                {
+                IdentityResult result =  UserManager.Update(current);
+
+                try
+                    {
+                        string subject = "Admin approved";
+                        string desc = $"Dear {current.Name}, You have been approved as admin.";
+                        var adminEmail = current.Email;
+                       NotifyViaEmail(adminEmail, subject, desc);
+                    }
+                    catch { }
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return BadRequest().ToString();
+                }
+
+                return "Ok";
+            
+        }
+
+       [Authorize(Roles = "Admin")]
+        [Route("AuthorizeControll")]
+        public string AuthorizeControll([FromBody]ModelHelperAuthorization Id)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState).ToString();
+            }
+            //Get user data, and update activated to true
+            ApplicationUser current = UserManager.FindById(Id.Id);
+            current.Activated = true;
+
+            try
+            {
+                IdentityResult result =  UserManager.Update(current);
+
+                try
+                {
+                    string subject = "Controller approved";
+                    string desc = $"Dear {current.Name}, You have been approved as controller.";
+                    var controllerEmail = current.Email;
+                    NotifyViaEmail(controllerEmail, subject, desc);
+                }
+                catch { }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest().ToString();
+            }
+
+            return "Ok";
+
+        }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)
@@ -598,6 +690,40 @@ namespace WebApp.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+
+        public bool NotifyViaEmail(string targetEmail, string subject, string body)
+        {
+            string mailTo = targetEmail;
+            string mailFrom = "pusgs2019app@gmail.com";
+            string pass = "12345Aa.";
+
+            try
+            {
+                SmtpClient client = new SmtpClient();
+                client.Port = 587;
+                client.Host = "smtp.gmail.com";
+                client.EnableSsl = true;
+                client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                client.Timeout = 10000;
+                client.UseDefaultCredentials = false;
+                client.Credentials = new System.Net.NetworkCredential(mailFrom, pass);
+
+                MailMessage mm = new MailMessage(mailFrom, mailTo);
+                mm.BodyEncoding = UTF8Encoding.UTF8;
+                mm.Subject = subject;
+                mm.Body = body;
+                mm.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
+
+                client.Send(mm);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error, mail did not send");
+                return false;
+            }
         }
 
         #region Helpers

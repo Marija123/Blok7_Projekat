@@ -12,7 +12,12 @@
         <li><a class="nav-link" [routerLink]="['/buy_a_ticket']">Buy a ticket</a></li>        
       </ul>
       
+      <ul *ngIf="user!='AppUser'" class="navbar-nav mr-auto">
+          <li><a class="nav-link" [routerLink]="['/notifications']">Notifications</a></li>
+      </ul>
+
       <div *ngIf="user=='Admin'" class="container">
+         
        <ul class="nav nav-pills">
          
           <li class="nav-item dropdown">

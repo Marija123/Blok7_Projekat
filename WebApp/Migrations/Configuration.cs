@@ -54,7 +54,7 @@ namespace WebApp.Migrations
 
             if (!context.Users.Any(u => u.UserName == "admin@yahoo.com"))
             {
-                var user = new ApplicationUser() { Id = "admin", UserName = "admin@yahoo.com", Email = "admin@yahoo.com", PasswordHash = ApplicationUser.HashPassword("Admin123!") };
+                var user = new ApplicationUser() { Id = "admin", UserName = "admin@yahoo.com", Email = "admin@yahoo.com", PasswordHash = ApplicationUser.HashPassword("Admin123!"), Activated= true };
                 userManager.Create(user);
                 userManager.AddToRole(user.Id, "Admin");
             }

@@ -4,6 +4,7 @@ import { RegisterComponent } from '../../register/register.component';
 import { RegModel } from 'src/app/models/regModel';
 import { NgForm } from '@angular/forms';
 import { ChangePasswordModel } from 'src/app/models/changePassModel';
+import { FileUploadService } from 'src/app/services/fileUploadService/file-upload.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -12,7 +13,8 @@ import { ChangePasswordModel } from 'src/app/models/changePassModel';
 })
 export class EditProfileComponent implements OnInit {
   user : any;
-  constructor(private usersService: UserProfileService) 
+  selectedImage: any;
+  constructor(private usersService: UserProfileService, private fileServ: FileUploadService) 
   { 
     this.requestUserInfo()
   }
@@ -20,8 +22,8 @@ export class EditProfileComponent implements OnInit {
   ngOnInit() {
   }
   requestUserInfo(){
-    this.usersService.getUserClaims().subscribe(claims => {
-      this.usersService.getUserData(claims['Email']).subscribe(data => {
+    //this.usersService.getUserClaims().subscribe(claims => {
+      this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
         
           this.user = data;    
           let str = this.user.Birthday;
@@ -29,17 +31,43 @@ export class EditProfileComponent implements OnInit {
           console.log(this.user);    
       });
      
-    });
+   // });
   }
 
   Button1(userr: RegModel, form: NgForm)
   {
     userr.Id = this.user.Id;
-    this.usersService.edit(userr).subscribe();
+    if(localStorage.getItem('name') != this.user.Email)
+    {
+       localStorage.setItem('name', this.user.Email);
+     }
+    if (this.selectedImage == undefined){
+      this.usersService.edit(userr).subscribe();
+      //data =>{
+       // if(userr.Role != 'AppUser'){
+       //this.notificationServ.sendNotification();
+       // }
+     //  });
+        }else{
+          this.fileServ.uploadFile(this.selectedImage)
+          .subscribe(data => {      
+            //alert("Image uploaded.");  
+            this.usersService.edit(userr).subscribe();
+            //(data =>{
+             //if(regData.Role != 'AppUser'){
+             //this.notificationServ.sendNotification();
+            // }
+            //});
+          });
+        }
+   
   }
   Button2(pass: ChangePasswordModel, form:NgForm )
   {
     this.usersService.editPassword(pass).subscribe();
   }
-
+  onFileSelected(event){
+    this.selectedImage = event.target.files;
+   
+  }
 }

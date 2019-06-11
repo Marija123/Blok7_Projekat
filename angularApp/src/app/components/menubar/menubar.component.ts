@@ -8,9 +8,12 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
 })
 export class MenubarComponent implements OnInit {
   prom: string;
+ 
+  
   constructor(public authService: AuthenticationService) { }
 
   ngOnInit() {
+    
   }
 
   loggedIn():string{

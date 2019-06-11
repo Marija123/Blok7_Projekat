@@ -60,9 +60,9 @@
 
         <div class="form-group" >
        
-          <input type="file" (change)="onFileSelected($event)" >  
+          <input *ngIf="isSelected('AppUser')" type="file" (change)="onFileSelected($event)" >  
           <!-- <button type="button" class="button" (click)="onUpload()">Upload</button> -->
-         <label>{{selIm}}</label>
+         
         </div>
       <button type="submit" class="button" >Register</button>
     </form>

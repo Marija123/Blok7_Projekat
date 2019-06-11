@@ -34,9 +34,12 @@ namespace WebApp.Models
 
     public class RegisterBindingModel
     {
+        
+
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+        
         [Required]
         [Display(Name = "Name")]
         public string Name { get; set; }
@@ -69,7 +72,30 @@ namespace WebApp.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class RegisterExternalBindingModel
+    public class EditBindingModel
+    {
+        [Required]
+        [Display(Name = "Id")]
+        public string Id { get; set; }
+
+        [Required]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+        [Required]
+        [Display(Name = "Name")]
+        public string Name { get; set; }
+        [Required]
+        [Display(Name = "Surname")]
+        public string Surname { get; set; }
+        [Required]
+        [Display(Name = "Birthday")]
+        public string Birthday { get; set; }
+        [Required]
+        [Display(Name = "Address")]
+        public string Address { get; set; }
+    }
+
+        public class RegisterExternalBindingModel
     {
         [Required]
         [Display(Name = "Email")]

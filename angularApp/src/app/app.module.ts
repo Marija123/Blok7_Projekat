@@ -27,6 +27,7 @@ import { BuyATicketComponent } from './components/buy-a-ticket/buy-a-ticket.comp
 import { UserSignedInGuard } from './guard/userSignedIn-guar';
 import { CanActivateViaAuthGuard } from './guard/auth-guard';
 import { ControlorGuard } from './guard/controler-guards';
+import { EditProfileComponent } from './components/profile/edit-profile/edit-profile.component';
 const Routes = [
   {
     path: "",
@@ -59,7 +60,13 @@ const Routes = [
   {
     path: "profile",
     component: ProfileComponent,
-    canActivate: [UserSignedInGuard]
+    canActivate: [UserSignedInGuard],
+    children: [
+      {
+        path:'edit',
+        component: EditProfileComponent,
+        canActivate: [UserSignedInGuard]
+      }]
   },
   {
     path: "add_change_lines",
@@ -103,7 +110,8 @@ const Routes = [
     AddChangeTimetableComponent,
     AddChangePricelistComponent,
     MapComponent,
-    BuyATicketComponent
+    BuyATicketComponent,
+    EditProfileComponent
   ],
   imports: [
     BrowserModule,

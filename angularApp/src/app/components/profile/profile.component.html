@@ -1,9 +1,13 @@
-<div class="container" >
- <h4>Name: {{user?.Name}}</h4>
+<div class="container" *ngIf="!otvorenEdit" >
+ <h4>Name: {{user?.Name}}</h4> 
  <h4>Surname: {{user?.Surname}}</h4>
   <h4>Email: {{user?.Email}}</h4>
   <h4>Birthday: {{user?.Birthday}}</h4> 
   <h4>Address: {{user?.Address}}</h4>
   <h4>Activated: {{user?.Activated}}</h4><br/>
   <h4>Passenger type: {{user?.PassengerType}}</h4>
+  <button type="submit" (click)="Edit()" >Edit profile</button> <br/>
+  <a [routerLink]="['../profile/edit']">Edit</a>
 </div>
+
+<router-outlet></router-outlet>

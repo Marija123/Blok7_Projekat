@@ -395,6 +395,44 @@ namespace WebApp.Controllers
             return Ok();
         }
 
+        [AllowAnonymous]
+        [Route("Edit")]
+        public async Task<IHttpActionResult> Edit(EditBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            //var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+
+
+
+            ApplicationUser user = UserManager.FindById(model.Id);
+            user.UserName = model.Email;
+            user.Email = model.Email;
+            user.Birthday = DateTime.Parse(model.Birthday);
+            user.Address = model.Address;
+            user.Name = model.Name;
+            user.Surname = model.Surname;
+            
+
+
+
+
+
+            IdentityResult result = await UserManager.UpdateAsync(user);
+            //UserManager.AddToRole(user.Id, user.Role);
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
+        }
+
+
+
         // POST api/Account/RegisterExternal
         [OverrideAuthentication]
         [HostAuthentication(DefaultAuthenticationTypes.ExternalBearer)]

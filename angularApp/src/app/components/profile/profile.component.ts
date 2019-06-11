@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserProfileService } from 'src/app/services/userService/user-profile.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -10,7 +11,8 @@ import { UserProfileService } from 'src/app/services/userService/user-profile.se
 export class ProfileComponent implements OnInit {
  
   user: any;
-  constructor(private usersService: UserProfileService) {
+  otvorenEdit: boolean = false;
+  constructor(private usersService: UserProfileService, private router: Router, private route: ActivatedRoute) {
     this.requestUserInfo()
    }
 
@@ -26,6 +28,11 @@ export class ProfileComponent implements OnInit {
         });
      
       });
+  }
+
+  Edit(){
+    this.otvorenEdit = true;
+    this.router.navigate(['../profile/edit'], {relativeTo: this.route});
   }
 
 }

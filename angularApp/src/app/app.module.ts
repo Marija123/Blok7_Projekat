@@ -35,6 +35,11 @@ import {
 } from 'ngx-toastr';
 import { NotificationsComponent } from './components/notifications/notifications.component';
 import { TicketValidationComponent } from './components/ticket-validation/ticket-validation.component';
+
+
+import { AgmDirectionModule } from 'agm-direction';
+import { AddChangeVehicleComponent } from './components/add_change/add-change-vehicle/add-change-vehicle.component';
+
 const Routes = [
   {
     path: "",
@@ -106,6 +111,10 @@ const Routes = [
   {
     path: "validateTicket",
     component: TicketValidationComponent
+  },
+  {
+    path: "add_change_vehicle",
+    component: AddChangeVehicleComponent
   }
 ]
 
@@ -128,7 +137,8 @@ const Routes = [
     BuyATicketComponent,
     EditProfileComponent,
     NotificationsComponent,
-    TicketValidationComponent
+    TicketValidationComponent,
+    AddChangeVehicleComponent
   ],
   imports: [
     BrowserModule,
@@ -138,6 +148,7 @@ const Routes = [
     HttpClientModule,
     NgxPopper,
     ReactiveFormsModule,
+    AgmDirectionModule,
     AgmCoreModule.forRoot({apiKey: 'AIzaSyDnihJyw_34z5S1KZXp90pfTGAqhFszNJk'}),
     ToastNoAnimationModule,
     ToastrModule.forRoot({

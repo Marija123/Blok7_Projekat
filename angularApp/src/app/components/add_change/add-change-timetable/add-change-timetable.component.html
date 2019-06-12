@@ -15,13 +15,21 @@
 </div>
   <div  *ngIf="selectedDay">
     
-        <select  name="lineNumber"  (click)='SelectedLine($event)' ngModel>
+        <select name="lineNumber"  (click)='SelectedLine($event)' ngModel>
             <option value=0>None</option>
             <!-- <option value="ShowAll" >Show all</option> -->
             <option *ngFor="let ln of showList" value={{ln.Id}}  >{{ln.LineNumber}}</option>
         </select>
    
   </div>
+  <div  *ngIf="chooseVehicle && isSelected('Add') ">
+    
+      <select name="vehicleChoice"  (click)='SelectedVehicle($event)' ngModel>
+          <!-- <option value="ShowAll" >Show all</option> -->
+          <option *ngFor="let ln of availableVehicles" value={{ln.Id}}  >{{ln.Id}} - {{ln.Type}}</option>
+      </select>
+ 
+</div>
 
   <div *ngIf="boolic">
     <button name="butoon4" (click)="DeleteTimetable()" *ngIf="isSelected('Change')">Remove timetable</button>

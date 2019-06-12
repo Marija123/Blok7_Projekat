@@ -3,6 +3,9 @@ import { LineServiceService } from 'src/app/services/lineService/line-service.se
 import { TimetableService } from 'src/app/services/timetableService/timetable.service';
 import { TimetableModel } from 'src/app/models/timetableModel';
 import { DayTypeModel } from 'src/app/models/dayTypeModel';
+import { VehicleModel } from 'src/app/models/vehicleModel';
+import { VehicleService } from 'src/app/services/vehicleService/vehicle.service';
+
 
 @Component({
   selector: 'app-add-change-timetable',
@@ -25,8 +28,11 @@ duzinaStringovi: boolean = false;
 stringovi: string[]  = [];
 stringovi1: string[] = [];
 depart: string = "";
+vehicleId: any;
+availableVehicles: any = [];
+chooseVehicle: boolean = false;
 ttZaDodavanje : TimetableModel = new TimetableModel("", 0, 0,0);
-  constructor(private lineServ: LineServiceService, private timetableServ: TimetableService) { 
+  constructor(private lineServ: LineServiceService, private timetableServ: TimetableService,private vehicleServ: VehicleService) { 
     this.lineServ.getAllLines().subscribe(data => {
       this.allLines = data;
       console.log(data);
@@ -189,8 +195,22 @@ SelectedLine(event: any): void
 {
   this.lineIdChoosen = event.target.value;
   if(event.target.value != 0){
- 
+    let k = parseInt(event.target.value,10);
+    this.lineServ.FindVehicleId(k).subscribe(data =>{
     
+        this.vehicleId = data;
+        if(this.vehicleId){
+          this.chooseVehicle = false;
+        }
+        else{
+          this.vehicleServ.GetAllAvailableVehicles().subscribe(data =>{
+            this.availableVehicles = data;
+            this.chooseVehicle = true;
+          });
+        }
+      
+    });
+   
     this.boolic = true;
     if(this.selected == "Change")
     {
@@ -200,6 +220,11 @@ SelectedLine(event: any): void
   
 }
 
+SelectedVehicle(event: any): void
+{
+  this.vehicleId = event.target.value;
+  
+}
 SplitDepartures(){
 
   this.stringovi1 = [];
@@ -246,6 +271,7 @@ AddTimetable(){
     stringZaDodavanje = stringZaDodavanje + x + ";";
   });
   this.ttZaDodavanje.Departures = stringZaDodavanje;
+  this.ttZaDodavanje.Vehicles.push(new VehicleModel(this.vehicleId));
   this.timetableServ.addTimetable(this.ttZaDodavanje).subscribe();
 
 }

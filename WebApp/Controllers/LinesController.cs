@@ -49,18 +49,24 @@ namespace WebApp.Controllers
             return stats;
         }
 
-        // GET: api/Lines/5
-        //[ResponseType(typeof(Line))]
-        //public IHttpActionResult GetLine(int id)
-        //{
-        //    Line line = db.Lines.Find(id);
-        //    if (line == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return Ok(line);
-        //}
+        //GET: api/Lines/5
+        [Route("FindVehicle")]
+      //  [ResponseType(typeof(int))]
+        public Int32 FindVehicle([FromBody]int id)
+        {
+            List<Timetable> list = unitOfWork.Timetables.GetAllTimetablesWithVehicles().ToList();
+            foreach(Timetable t in list)
+            {
+                if(t.LineId == id)
+                {
+                    if(t.Vehicles != null && t.Vehicles.Count != 0)
+                    {
+                        return t.Vehicles.FirstOrDefault().Id;
+                    }
+                }
+            }
+            return -1;
+        }
 
         [Route("Change")]
         // PUT: api/Lines/5
@@ -131,6 +137,7 @@ namespace WebApp.Controllers
             l.Stations = new List<Station>();
             l.LineNumber = line.LineNumber;
             l.ColorLine = line.ColorLine;
+            
             List<Station> stats = unitOfWork.Stations.GetAll().ToList();
             //line.Stations.Reverse();
             int i = 0;

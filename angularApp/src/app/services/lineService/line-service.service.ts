@@ -35,5 +35,7 @@ export class LineServiceService {
     
     return this.httpClient.put(this.base_url+"/api/Lines/Change?id=" + id,line);
   }
-
+  FindVehicleId(id): Observable<any>{
+    return this.httpClient.get(this.base_url+"/api/Lines/FindVehicle?id=" + id)
+  }
 }

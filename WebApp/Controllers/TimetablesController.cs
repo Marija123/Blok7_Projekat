@@ -94,7 +94,7 @@ namespace WebApp.Controllers
 
             t.DayTypeId = unitOfWork.DayTypes.Get(timetable.DayTypeId).Id;
             t.LineId = unitOfWork.Lines.Get(timetable.LineId).Id;
-
+            t.Vehicles.Add(unitOfWork.Vehicles.Get(timetable.Vehicles.FirstOrDefault().Id));
             try
             {
 

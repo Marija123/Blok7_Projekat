@@ -9,5 +9,6 @@ namespace WebApp.Persistence.Repository
 {
     public interface ITimetableRepository : IRepository<Timetable,int>
     {
+        IEnumerable<Timetable> GetAllTimetablesWithVehicles();
     }
 }

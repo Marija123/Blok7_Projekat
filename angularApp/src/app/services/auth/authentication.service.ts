@@ -45,6 +45,7 @@ export class AuthenticationService {
     this.isLoggedIn = false;
     localStorage.removeItem('jwt');
     localStorage.removeItem('role');
+    localStorage.removeItem('name');
   }
 
   // getVehicleTypes() : Observable<any> {

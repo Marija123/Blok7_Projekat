@@ -20,11 +20,21 @@ export class AppComponent {
   constructor(private notificationServ: NotificationService, private _ngZone: NgZone, private toastr: ToastrService) {    
     this.subscribeToEvents();  
     this.canSendMessage = notificationServ.connectionExists; 
+    //this.sendMessage();
 }
 
 showMessage(message: string) {
   this.toastr.success(message, 'New notification!');
 }  
+
+// sendMessage(): void {
+//   // send message to subscribers via observable subject
+// this.notificationServ.sendMessage('Message from app Component to message Component!');   
+// }
+
+// clearMessage():void{
+//   this.notificationServ.clearMessage();
+// }
 
 private subscribeToEvents(): void {   
   this.notificationServ.connectionEstablished.subscribe(() => {  
@@ -35,7 +45,8 @@ private subscribeToEvents(): void {
           this.allMessages = message;
 
           if(!localStorage.jwt) return;
-          if (localStorage.role == "Admin"){
+          if (localStorage.role == "Admin" || localStorage.role == "Controller"){
+            //this.sendMessage();
             this.showMessage(this.allMessages)
           }
       });  

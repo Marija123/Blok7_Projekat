@@ -54,18 +54,26 @@ namespace WebApp.Controllers
         //    return db.Tickets;
         //}
 
-        //// GET: api/Tickets/5
-        //[ResponseType(typeof(Ticket))]
-        //public IHttpActionResult GetTicket(int id)
-        //{
-        //    Ticket ticket = db.Tickets.Find(id);
-        //    if (ticket == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [Route("GetTicket")]
+        // GET: api/Tickets/5
+        [ResponseType(typeof(Ticket))]
+        public IHttpActionResult GetTicket(int id)
+        {
 
-        //    return Ok(ticket);
-        //}
+            Ticket ticket = unitOfWork.Tickets.GetTicketWithInclude(id);
+            
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+            if(ticket.ApplicationUser != null)
+            {
+                ticket.ApplicationUserId = ticket.ApplicationUser.Email;
+            }
+            
+
+            return Ok(ticket);
+        }
 
         //// PUT: api/Tickets/5
         //[ResponseType(typeof(void))]
@@ -117,11 +125,17 @@ namespace WebApp.Controllers
                 Ticket t = new Ticket();
                 t.PurchaseTime = ticket.PurchaseTime;
                 t.TicketPricesId = unitOfWork.TicketPrices.Get(ticket.TicketPricesId).Id;
-                t.TicketTypeId = unitOfWork.TicketTypes.Get((int)ticket.TicketTypeId).Id;
-                t.Name = "Karta";
-                t.ApplicationUserId = UserManager.FindById(ticket.ApplicationUserId).Id;
 
-                unitOfWork.Tickets.Add(ticket);
+                t.TicketTypeId = unitOfWork.TicketTypes.Get(ticket.TicketTypeId.GetValueOrDefault()).Id;
+                t.Name = "Karta";
+                if(ticket.ApplicationUserId  != null)
+                {
+                    t.ApplicationUserId = UserManager.FindById(ticket.ApplicationUserId).Id;
+                }
+               
+                
+
+                unitOfWork.Tickets.Add(t);
                 unitOfWork.Complete();
                 return Ok(t.Id);
             }
@@ -202,9 +216,9 @@ namespace WebApp.Controllers
             base.Dispose(disposing);
         }
 
-        private bool TicketExists(int id)
-        {
-            return db.Tickets.Count(e => e.Id == id) > 0;
-        }
+        //private bool TicketExists(int id)
+        //{
+        //    return db.Tickets.Count(e => e.Id == id) > 0;
+        //}
     }
 }

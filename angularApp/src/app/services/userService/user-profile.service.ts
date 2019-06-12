@@ -29,4 +29,8 @@ export class UserProfileService {
     return this.httpClient.post(this.base_url+"/api/Account/ChangePassword",pass);
   }
 
+  getUserImages(emails:any) {
+    return this.httpClient.post('http://localhost:52295/api/Account/GetUserImages',emails)
+  }
+
 }

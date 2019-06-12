@@ -92,7 +92,10 @@ export class BuyATicketComponent implements OnInit {
   BuyTicket()
   {
     let ticketMod = new TicketModel("",new Date(),0,"",0,0);
-    ticketMod.PurchaseTime = new Date();
+    let b = new Date();
+    b.setHours(b.getHours()+ 2);
+    ticketMod.PurchaseTime = new Date(b);
+    console.log(new Date().getUTCHours());
     ticketMod.TicketTypeId = this.selecetTT;
     this.priceList.TicketPricess.forEach(element => {
       if(element.TicketTypeId == this.selecetTT)
@@ -113,7 +116,9 @@ export class BuyATicketComponent implements OnInit {
 
   Button1(t:any,form: NgForm ){
     let ticketMod = new TicketModel("",new Date(),0,"",0,0);
-    ticketMod.PurchaseTime = new Date();
+    let b = new Date();
+    b.setHours(b.getHours()+ 2);
+    ticketMod.PurchaseTime = new Date(b);
     ticketMod.TicketTypeId = this.selecetTT;
     this.priceList.TicketPricess.forEach(element => {
       if(element.TicketTypeId == this.selecetTT)
@@ -122,14 +127,18 @@ export class BuyATicketComponent implements OnInit {
       }
     });
     ticketMod.Name= t.Email;
-    this.ticketServ.SendMail(ticketMod).subscribe(resp =>{
-      if(resp == 'Ok'){
-        alert("Ticket successfully bought");
-      }
-      else{
-        alert("Something went wrong");
-      }
+    ticketMod.ApplicationUserId = null;
+    this.ticketServ.addTicket(ticketMod).subscribe( data => {
+      this.ticketServ.SendMail(ticketMod).subscribe(resp =>{
+        if(resp == 'Ok'){
+          alert("Ticket successfully bought");
+        }
+        else{
+          alert("Something went wrong");
+        }
+      });
     });
+   
   }
 
  

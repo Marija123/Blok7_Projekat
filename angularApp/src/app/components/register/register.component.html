@@ -7,13 +7,6 @@
       <input required type="radio" value="Controller" class="form-control" (click)="setradio('Controller')" name="Role"  ngModel> Controller
       <input required type="radio" value="Admin" class="form-control" (click)="setradio('Admin')" name="Role"  ngModel> Admin
     </div>  
-    <!-- <div class='form-group' *ngIf="isSelected('User')">
-      <select for class='form-control' name= "PassengerType" [value]='Regular' ngModel>
-        <option value='Regular'>Regular</option>
-        <option value='Student'>Student</option>
-        <option value='Retiree'>Retiree</option>
-      </select>
-    </div> -->
     <div *ngIf="isSelected('AppUser')">
       <h4>Type</h4>
       

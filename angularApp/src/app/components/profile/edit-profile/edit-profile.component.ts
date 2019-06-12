@@ -5,6 +5,7 @@ import { RegModel } from 'src/app/models/regModel';
 import { NgForm } from '@angular/forms';
 import { ChangePasswordModel } from 'src/app/models/changePassModel';
 import { FileUploadService } from 'src/app/services/fileUploadService/file-upload.service';
+import { NotificationService } from 'src/app/services/notificationService/notification.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -14,7 +15,7 @@ import { FileUploadService } from 'src/app/services/fileUploadService/file-uploa
 export class EditProfileComponent implements OnInit {
   user : any;
   selectedImage: any;
-  constructor(private usersService: UserProfileService, private fileServ: FileUploadService) 
+  constructor(private usersService: UserProfileService, private fileServ: FileUploadService, private notificationServ: NotificationService) 
   { 
     this.requestUserInfo()
   }
@@ -52,7 +53,13 @@ export class EditProfileComponent implements OnInit {
           this.fileServ.uploadFile(this.selectedImage)
           .subscribe(data => {      
             //alert("Image uploaded.");  
-            this.usersService.edit(userr).subscribe();
+            this.usersService.edit(userr).subscribe(data =>
+              {
+                if(localStorage.getItem('role') == 'AppUser'){
+                  this.notificationServ.sendNotificationToController();
+                }
+              }
+            );
             //(data =>{
              //if(regData.Role != 'AppUser'){
              //this.notificationServ.sendNotification();

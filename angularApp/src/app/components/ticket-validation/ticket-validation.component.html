@@ -1,0 +1,19 @@
+<label>Ticket ID:</label>
+<input type="number" name="ticketId" [(ngModel)]="myInput">
+<button name="butoon1" (click)="FindTicket(myInput)">Find ticket</button>
+
+<label>{{ticketExists}}</label><br/>
+
+<div *ngIf="ticketForV">
+  <div *ngIf="ticketForV.ApplicationUserId && ticketForV.ApplicationUserId != ''">
+    <label>User email:</label>
+    <input type="text" name="userEmail" [(ngModel)]="myInput1">
+    <button name="butoon2" (click)="ValidateTicket(myInput1)">Validate</button>
+  </div>
+</div>
+
+
+
+<label>{{ticketMessage}}</label>
+
+

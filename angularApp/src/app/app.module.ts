@@ -34,6 +34,7 @@ import {
   ToastNoAnimationModule,
 } from 'ngx-toastr';
 import { NotificationsComponent } from './components/notifications/notifications.component';
+import { TicketValidationComponent } from './components/ticket-validation/ticket-validation.component';
 const Routes = [
   {
     path: "",
@@ -101,6 +102,10 @@ const Routes = [
   {
     path: "notifications",
     component: NotificationsComponent
+  },
+  {
+    path: "validateTicket",
+    component: TicketValidationComponent
   }
 ]
 
@@ -122,7 +127,8 @@ const Routes = [
     MapComponent,
     BuyATicketComponent,
     EditProfileComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    TicketValidationComponent
   ],
   imports: [
     BrowserModule,

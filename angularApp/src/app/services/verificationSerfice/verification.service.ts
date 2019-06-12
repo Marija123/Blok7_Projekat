@@ -28,4 +28,12 @@ export class VerificationService {
     return this.httpClient.post("http://localhost:52295/api/Account/AuthorizeControll", controllerId);
   }
 
+  getAwaitingClients(): Observable<any> {
+    return this.httpClient.get("http://localhost:52295/api/Account/GetAwaitingClients");
+  }
+
+  authorizeUser(userId): Observable<any> {
+    return this.httpClient.post("http://localhost:52295/api/Account/AuthorizeUser",userId);
+  }
+
 }

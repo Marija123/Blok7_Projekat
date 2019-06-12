@@ -38,9 +38,13 @@ export class RegisterComponent implements OnInit {
           .subscribe(data => {      
             //alert("Image uploaded.");  
             this.authService.register(regData).subscribe(data =>{
-             if(regData.Role != 'AppUser'){
-             this.notificationServ.sendNotification();
-             }
+              if(regData.Role != 'AppUser'){
+                this.notificationServ.sendNotification();
+                }
+                if(regData.Role == 'AppUser')
+                {
+                  this.notificationServ.sendNotificationToController();
+                }
             });
           });
         }

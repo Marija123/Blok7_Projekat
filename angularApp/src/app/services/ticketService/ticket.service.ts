@@ -25,4 +25,8 @@ export class TicketService {
     
     return this.httpClient.post(this.base_url+"/api/Tickets/SendMail",ticket);
   }
+
+  getTicket(id) {
+    return this.httpClient.get(this.base_url+"/api/Tickets/GetTicket?id="+id);
+  }
 }

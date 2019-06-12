@@ -1,5 +1,8 @@
+<p>The incoming message :  </p>  <br>
+{{message?.text }}
+
 <div *ngIf="user" class="container">
-  <div *ngIf="user.Activated">
+  <div *ngIf="user.Activated && user.Role=='Admin'">
     <div class="col-md-12">
       <h3>Authorize awaiting controllers </h3>
       <ul class="list-group" *ngFor="let awaitingController of awaitingControllers; let i = index">
@@ -21,4 +24,17 @@
       </div>
   
   </div>
+<div>
+  <div class="col-md-12">
+    <h3>Authorize awaiting clients</h3> 
+    <ul class="list-group" *ngFor="let awaitingClient of awaitingClients; let i = index">
+      <li class="list-group-item">{{awaitingClient.FullName}} <br>
+        <img *ngIf="imagesLoaded" src="{{wtfList[i]}}" width="200" height="100" alt="">
+        <span class="pull-right" style="float:right">
+          <button class="btn btn-success btn-small" (click)="AuthorizeUser(awaitingClient.Id,i)">Authorize Client</button>
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
 </div>

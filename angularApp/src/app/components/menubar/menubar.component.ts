@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
+import { Subscription } from 'rxjs';
+import { NotificationService } from 'src/app/services/notificationService/notification.service';
 
 @Component({
   selector: 'app-menubar',
@@ -8,9 +10,12 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
 })
 export class MenubarComponent implements OnInit {
   prom: string;
- 
+  // message: any = {};
+  // subscription: Subscription;
   
-  constructor(public authService: AuthenticationService) { }
+  constructor(private notServ:NotificationService, public authService: AuthenticationService) {  
+     //this.subscription = this.notServ.getMessage().subscribe(message => { this.message = message; });
+    }
 
   ngOnInit() {
     
@@ -30,4 +35,9 @@ export class MenubarComponent implements OnInit {
   get user(): any {
     return localStorage.getItem('role');
 }
+
+// ngOnDestroy() {
+//   // unsubscribe to ensure no memory leaks
+//   this.subscription.unsubscribe();
+// }
 }

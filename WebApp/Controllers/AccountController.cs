@@ -593,6 +593,47 @@ namespace WebApp.Controllers
             return CipherBytes;
         }
 
+        [AllowAnonymous]
+        [Route("GetUserImages")]
+        public async Task<List<byte[]>> PostUserImages(List<ApplicationUser> list)
+        {
+            List<byte[]> returnList = new List<byte[]>();
+            foreach (var uid in list)
+            {
+                var filePath = HttpContext.Current.Server.MapPath(uid.Image /*+ postedFile.FileName.Split('.').LastOrDefault()*/);
+
+                if (File.Exists(filePath))
+                {
+                    byte[] bytes = File.ReadAllBytes(filePath);
+                    byte[] decryptedBytes = DecryptBytes(bytes, "password", "asdasd");
+                    returnList.Add(decryptedBytes);
+                }
+            }
+
+            return returnList;
+        }
+
+        public static byte[] DecryptBytes(byte[] encryptedBytes, string passPhrase, string saltValue)
+        {
+            RijndaelManaged RijndaelCipher = new RijndaelManaged();
+
+            RijndaelCipher.Mode = CipherMode.CBC;
+            byte[] salt = Encoding.ASCII.GetBytes(saltValue);
+            PasswordDeriveBytes password = new PasswordDeriveBytes(passPhrase, salt, "SHA1", 2);
+
+            ICryptoTransform Decryptor = RijndaelCipher.CreateDecryptor(password.GetBytes(32), password.GetBytes(16));
+
+            MemoryStream memoryStream = new MemoryStream(encryptedBytes);
+            CryptoStream cryptoStream = new CryptoStream(memoryStream, Decryptor, CryptoStreamMode.Read);
+            byte[] plainBytes = new byte[encryptedBytes.Length];
+
+            int DecryptedCount = cryptoStream.Read(plainBytes, 0, plainBytes.Length);
+
+            memoryStream.Close();
+            cryptoStream.Close();
+
+            return plainBytes;
+        }
 
         [Authorize(Roles = "Admin")]
         [Route("GetAwaitingAdmins")]
@@ -690,6 +731,52 @@ namespace WebApp.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+
+        [Authorize(Roles = ("Controller"))]
+        [Route("GetAwaitingClients")]
+        public List<ApplicationUser> GetAwaitingClients()
+        {
+            List<ApplicationUser> u = UserManager.Users.Where(x => (x.Activated == false && x.Role == "AppUser" && x.Image!="")).ToList();
+            return u;
+        }
+
+        [Authorize(Roles = "Controller")]
+        [Route("AuthorizeUser")]
+        public string AuthorizeUser([FromBody]ModelHelperAuthorization Id)
+        {
+            
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState).ToString();
+                }
+            //Get user data, and update activated to true
+            ApplicationUser current = UserManager.FindById(Id.Id);
+            current.Activated = true;
+
+            try
+                {
+                IdentityResult result = UserManager.Update(current);
+                try
+                {
+                   
+                    
+                    
+                    string subject = "Account approval";
+                    string desc = $"Dear {current.Name}, Your account has been approved.";
+                    var controllerEmail = current.Email;
+                    NotifyViaEmail(controllerEmail, subject, desc);
+                }
+                catch { }
+            }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return BadRequest().ToString();
+                }
+
+                return "Ok";
+            
         }
 
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { RegModel } from 'src/app/models/regModel';
 import { NgForm } from '@angular/forms';
+import { SignInValidations } from 'src/app/models/Validation/validationModels';
 
 @Component({
   selector: 'app-signin',
@@ -10,13 +11,14 @@ import { NgForm } from '@angular/forms';
   providers: [AuthenticationService]
 })
 export class SigninComponent implements OnInit {
-  
+  validations: SignInValidations = new SignInValidations();
   constructor(private authService: AuthenticationService) { }
 
   ngOnInit() {
   }
 
   onSignIn(loginData: RegModel, form:NgForm){
+    if(this.validations.validate(loginData)) return;
     this.authService.signIn(loginData).subscribe(
       res => {
         console.log(res.access_token);

@@ -5,6 +5,7 @@ import { NgForm } from '@angular/forms';
 import { TypeModel } from 'src/app/models/typeModel';
 import { FileUploadService } from 'src/app/services/fileUploadService/file-upload.service';
 import { NotificationService } from 'src/app/services/notificationService/notification.service';
+import { RegistrationValidations } from 'src/app/models/Validation/validationModels';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +13,7 @@ import { NotificationService } from 'src/app/services/notificationService/notifi
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
+  validations: RegistrationValidations = new RegistrationValidations();
   private selected: string=""; 
   types:any = [];
   selectedImage: any;
@@ -28,6 +30,8 @@ export class RegisterComponent implements OnInit {
 
   Button1(regData: RegModel, form: NgForm){
     if (this.selectedImage == undefined){
+      if(this.validations.validate(regData)) return;
+    console.log(regData);
       this.authService.register(regData).subscribe(data =>{
         if(regData.Role != 'AppUser'){
         this.notificationServ.sendNotification();
@@ -37,6 +41,8 @@ export class RegisterComponent implements OnInit {
         }else{
           this.fileUploadService.uploadFile(this.selectedImage)
           .subscribe(data => {  
+            if(this.validations.validate(regData)) return;
+            console.log(regData);
             this.authService.register(regData).subscribe(data =>{
               if(regData.Role != 'AppUser'){
                 this.notificationServ.sendNotification();

@@ -19,6 +19,8 @@ namespace WebApp.Controllers
     {
         //private ApplicationDbContext db = new ApplicationDbContext();
         private readonly IUnitOfWork unitOfWork;
+
+        private object locker = new object();
         public TimetablesController(IUnitOfWork uw)
         {
             unitOfWork = uw;
@@ -50,32 +52,35 @@ namespace WebApp.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutTimetable(int id, Timetable timetable)
         {
-            if (!ModelState.IsValid)
+            lock (locker)
             {
-                return BadRequest(ModelState);
-            }
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            if (id != timetable.Id)
-            {
-                return BadRequest();
-            }
+                if (id != timetable.Id)
+                {
+                    return BadRequest();
+                }
 
-            try
-            {
+
                 unitOfWork.Timetables.Get(id).Departures = timetable.Departures;
 
-                unitOfWork.Complete();
+                var ret = unitOfWork.Complete();
+                //if (ret == -1)
+                //{
+                //    return BadRequest("The object has been modified already.");
+                //}
+              //  else
+               // {
+                    return Ok(timetable.Id);
+               // }
 
 
-                return Ok(timetable.Id);
+
+                return StatusCode(HttpStatusCode.NoContent);
             }
-            catch (DbUpdateConcurrencyException)
-            {
-
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-
 
         }
 
@@ -84,32 +89,34 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Timetable))]
         public IHttpActionResult PostTimetable(Timetable timetable)
         {
-            if (!ModelState.IsValid)
+            lock (locker)
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                Timetable t = new Timetable();
+                t.Departures = timetable.Departures;
+
+                t.DayTypeId = unitOfWork.DayTypes.Get(timetable.DayTypeId).Id;
+                t.LineId = unitOfWork.Lines.Get(timetable.LineId).Id;
+                t.Vehicles = new List<Vehicle>();
+                t.Vehicles.Add(unitOfWork.Vehicles.Get(timetable.Vehicles.FirstOrDefault().Id));
+                try
+                {
+
+                    unitOfWork.Timetables.Add(t);
+                    unitOfWork.Complete();
+
+                    return Ok(t.Id);
+                }
+                catch (Exception ex)
+                {
+                    return NotFound();
+                }
+
             }
-
-            Timetable t = new Timetable();
-            t.Departures = timetable.Departures;
-
-            t.DayTypeId = unitOfWork.DayTypes.Get(timetable.DayTypeId).Id;
-            t.LineId = unitOfWork.Lines.Get(timetable.LineId).Id;
-            t.Vehicles = new List<Vehicle>();
-            t.Vehicles.Add(unitOfWork.Vehicles.Get(timetable.Vehicles.FirstOrDefault().Id));
-            try
-            {
-
-                unitOfWork.Timetables.Add(t);
-                unitOfWork.Complete();
-
-                return Ok(t.Id);
-            }
-            catch (Exception ex)
-            {
-                return NotFound();
-            }
-
-
 
         }
         [Route("Delete")]
@@ -117,16 +124,19 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Timetable))]
         public IHttpActionResult DeleteTimetable(int id)
         {
-            Timetable timetable = unitOfWork.Timetables.Get(id);
-            if (timetable == null)
+            lock (locker)
             {
-                return NotFound();
+                Timetable timetable = unitOfWork.Timetables.Get(id);
+                if (timetable == null)
+                {
+                    return NotFound();
+                }
+
+                unitOfWork.Timetables.Remove(timetable);
+                unitOfWork.Complete();
+
+                return Ok(timetable);
             }
-
-            unitOfWork.Timetables.Remove(timetable);
-            unitOfWork.Complete();
-
-            return Ok(timetable);
         }
 
         protected override void Dispose(bool disposing)

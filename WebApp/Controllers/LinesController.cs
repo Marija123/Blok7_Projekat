@@ -20,6 +20,7 @@ namespace WebApp.Controllers
         //private ApplicationDbContext db = new ApplicationDbContext();
         private readonly IUnitOfWork unitOfWork;
 
+        private object locker = new object();
         public LinesController(IUnitOfWork uw)
         {
             unitOfWork = uw;
@@ -73,22 +74,20 @@ namespace WebApp.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutLine(int id, Line line)
         {
-            if (!ModelState.IsValid)
+            lock (locker)
             {
-                return BadRequest(ModelState);
-            }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
 
 
-            if (id != line.Id)
-            {
-                return BadRequest();
-            }
-
-
-
-            try
-            {
+                if (id != line.Id)
+                {
+                    return BadRequest();
+                }
 
                 //List<Line> stats = unitOfWork.Lines.GetAllLinesWithStations().ToList();
 
@@ -105,20 +104,24 @@ namespace WebApp.Controllers
                     o.StationId = s.Id;
                     o.SerialNumber = i;
                     unitOfWork.SerialNumberSLs.Add(o);
-                   
+
                 }
 
-                unitOfWork.Complete();
-                
+                var ret = unitOfWork.Complete();
+                //if (ret == -1)
+                //{
+                //    return BadRequest("The object has been modified already.");
+                //}
+                //else
+                //{
 
-                return Ok(line.Id);
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-               
-            }
+                    return Ok(line.Id);
+              //  }
 
-            return StatusCode(HttpStatusCode.NoContent);
+
+
+                return StatusCode(HttpStatusCode.NoContent);
+            }
         }
 
         [Route("Add")]
@@ -127,50 +130,53 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Line))]
         public IHttpActionResult PostLine(Line line)
         {
-            if (!ModelState.IsValid)
+            lock (locker)
             {
-                return BadRequest(ModelState);
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+
+                Line l = new Line();
+                l.Stations = new List<Station>();
+                l.LineNumber = line.LineNumber;
+                l.ColorLine = line.ColorLine;
+
+                List<Station> stats = unitOfWork.Stations.GetAll().ToList();
+                //line.Stations.Reverse();
+                int i = 0;
+                foreach (Station s in line.Stations)
+                {
+                    i++;
+                    SerialNumberSL o = new SerialNumberSL();
+                    o.LineId = line.Id;
+                    o.StationId = s.Id;
+                    o.SerialNumber = i;
+                    unitOfWork.SerialNumberSLs.Add(o);
+                    //Station st = new Station();
+                    //st = stats.Find(x => x.Id.Equals(s.Id));
+                    l.Stations.Add(stats.Find(x => x.Id.Equals(s.Id)));
+                }
+
+                try
+                {
+
+                    unitOfWork.Lines.Add(l);
+                    unitOfWork.Complete();
+
+                    return Ok(l.Id);
+                }
+                catch (Exception ex)
+                {
+                    return NotFound();
+                }
+
+                //db.Lines.Add(line);
+                //db.SaveChanges();
+
+                //return CreatedAtRoute("DefaultApi", new { id = line.Id }, line);
             }
-
-
-            Line l = new Line();
-            l.Stations = new List<Station>();
-            l.LineNumber = line.LineNumber;
-            l.ColorLine = line.ColorLine;
-            
-            List<Station> stats = unitOfWork.Stations.GetAll().ToList();
-            //line.Stations.Reverse();
-            int i = 0;
-            foreach(Station s in line.Stations)
-            {
-                i++;
-                SerialNumberSL o = new SerialNumberSL();
-                o.LineId = line.Id;
-                o.StationId = s.Id;
-                o.SerialNumber = i;
-                unitOfWork.SerialNumberSLs.Add(o);
-                //Station st = new Station();
-                //st = stats.Find(x => x.Id.Equals(s.Id));
-                l.Stations.Add(stats.Find(x => x.Id.Equals(s.Id)));
-            }
-
-            try
-            {
-
-                unitOfWork.Lines.Add(l);
-                unitOfWork.Complete();
-                
-                return Ok(l.Id);
-            }
-            catch (Exception ex)
-            {
-                return NotFound();
-            }
-
-            //db.Lines.Add(line);
-            //db.SaveChanges();
-
-            //return CreatedAtRoute("DefaultApi", new { id = line.Id }, line);
         }
 
         //[Route("SerialNumber")]
@@ -224,17 +230,20 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Line))]
         public IHttpActionResult DeleteLine(int id)
         {
-            Line line = unitOfWork.Lines.Get(id);
-            if (line == null)
+            lock (locker)
             {
-                return NotFound();
+                Line line = unitOfWork.Lines.Get(id);
+                if (line == null)
+                {
+                    return NotFound();
+                }
+
+                //unitOfWork.Lines.Remove(line);
+                unitOfWork.Lines.Delete(id);
+                unitOfWork.Complete();
+
+                return Ok(line);
             }
-
-            //unitOfWork.Lines.Remove(line);
-            unitOfWork.Lines.Delete(id);
-            unitOfWork.Complete();
-
-            return Ok(line);
         }
 
         protected override void Dispose(bool disposing)

@@ -19,7 +19,7 @@ namespace WebApp.Controllers
     {
         //private ApplicationDbContext db = new ApplicationDbContext();
         private readonly IUnitOfWork unitOfWork;
-
+        private object locker = new object();
         public StationsController(IUnitOfWork uw)
         {
             unitOfWork = uw;
@@ -87,27 +87,31 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Station))]
         public IHttpActionResult PostStation(Station station)
         {
-            if (!ModelState.IsValid)
+            lock (locker)
             {
-                return BadRequest(ModelState);
-            }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
 
-            try
-            {
-               // station.Lines = new List<Line>();
-                unitOfWork.Stations.Add(station);
-                unitOfWork.Complete();
-                return Ok(station.Id);
-            }
-            catch (Exception ex)
-            {
-                return NotFound();
-            }
-            //db.Stations.Add(station);
-            //db.SaveChanges();
+                try
+                {
+                    // station.Lines = new List<Line>();
+                    unitOfWork.Stations.Add(station);
+                    unitOfWork.Complete();
+                    return Ok(station.Id);
+                }
+                catch (Exception ex)
+                {
+                    return NotFound();
+                }
+                //db.Stations.Add(station);
+                //db.SaveChanges();
 
-           // return CreatedAtRoute("DefaultApi", new { id = station.Id }, station);
+                // return CreatedAtRoute("DefaultApi", new { id = station.Id }, station);
+            }
         }
 
 
@@ -117,26 +121,34 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Station))]
         public IHttpActionResult ChangeStation(Station station)
         {
-            if (!ModelState.IsValid)
+            lock (locker)
             {
-                return BadRequest(ModelState);
-            }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
 
-            try
-            {
-                unitOfWork.Stations.Update(station);
-                unitOfWork.Complete();
-                return Ok(station.Id);
+                try
+                {
+                    unitOfWork.Stations.Update(station);
+                    var ret = unitOfWork.Complete();
+                    //if (ret == -1)
+                    //{
+                    //    return BadRequest("The object has been modified already.");
+                    //}
+                    //  else
+                    //  {
+                    return Ok(station.Id);
+                    //  }
+                }
+                catch (Exception ex)
+                {
+                    return NotFound();
+                }
             }
-            catch (Exception ex)
-            {
-                return NotFound();
-            }
-            //db.Stations.Add(station);
-            //db.SaveChanges();
-
-            // return CreatedAtRoute("DefaultApi", new { id = station.Id }, station);
+            
         }
 
 
@@ -146,16 +158,20 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Station))]
         public IHttpActionResult DeleteStation(int id)
         {
-            Station station = unitOfWork.Stations.Get(id);
-            if (station == null)
+            lock (locker)
             {
-                return NotFound();
+
+                Station station = unitOfWork.Stations.Get(id);
+                if (station == null)
+                {
+                    return NotFound();
+                }
+
+                unitOfWork.Stations.Remove(station);
+                unitOfWork.Complete();
+
+                return Ok(station);
             }
-
-            unitOfWork.Stations.Remove(station);
-            unitOfWork.Complete();
-
-            return Ok(station);
         }
 
         protected override void Dispose(bool disposing)

@@ -118,22 +118,22 @@ namespace WebApp.Controllers
             }
 
         }
+        [Route("Delete")]
+        // DELETE: api/Vehicles/5
+        [ResponseType(typeof(Vehicle))]
+        public IHttpActionResult DeleteVehicle(int id)
+        {
+            Vehicle vehicle = unitOfWork.Vehicles.Get(id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
 
-        //// DELETE: api/Vehicles/5
-        //[ResponseType(typeof(Vehicle))]
-        //public IHttpActionResult DeleteVehicle(int id)
-        //{
-        //    Vehicle vehicle = db.Vehicles.Find(id);
-        //    if (vehicle == null)
-        //    {
-        //        return NotFound();
-        //    }
+            unitOfWork.Vehicles.Remove(vehicle);
+            unitOfWork.Complete();
 
-        //    db.Vehicles.Remove(vehicle);
-        //    db.SaveChanges();
-
-        //    return Ok(vehicle);
-        //}
+            return Ok(vehicle);
+        }
 
         protected override void Dispose(bool disposing)
         {

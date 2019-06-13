@@ -7,7 +7,7 @@
 
 <form #stationForm="ngForm" (ngSubmit)="onSubmit(stationForm.value, stationForm)">
 
-    <div class="form-group">
+    <div *ngIf="isSelected('Add')" class="form-group">
       <label for="Type">Vehicle type:</label>
       <select class="form-control" name="Type" [value]="Bus" ngModel>
           <option  value="Bus" >Bus</option>
@@ -17,6 +17,15 @@
         </select>
       <!-- <input required type="text" class="form-control" name="Type" placeholder="Vehicle type"  ngModel> -->
   
+    </div>
+
+    <div *ngIf="isSelected('Remove')" class="form-group">
+        <label for="Type">Available vehicles:</label>
+        <select name="Id" [value] =  0  ngModel>
+          <option value = 0 >None</option>
+            <option *ngFor="let ln of availableVehicles" value={{ln.Id}}  >{{ln.Id}} | {{ln.Type}}</option>
+        </select>
+        
     </div>
    
   <button type="submit" class="button" *ngIf="isSelected('Add')">Add</button>

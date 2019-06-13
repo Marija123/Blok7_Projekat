@@ -43,7 +43,9 @@ export class EditProfileComponent implements OnInit {
        localStorage.setItem('name', this.user.Email);
      }
     if (this.selectedImage == undefined){
-      this.usersService.edit(userr).subscribe();
+      this.usersService.edit(userr).subscribe(data =>{
+        window.location.href="/profile";
+      } );
       //data =>{
        // if(userr.Role != 'AppUser'){
        //this.notificationServ.sendNotification();
@@ -58,6 +60,7 @@ export class EditProfileComponent implements OnInit {
                 if(localStorage.getItem('role') == 'AppUser'){
                   this.notificationServ.sendNotificationToController();
                 }
+                window.location.href="/profile";
               }
             );
             //(data =>{
@@ -71,7 +74,9 @@ export class EditProfileComponent implements OnInit {
   }
   Button2(pass: ChangePasswordModel, form:NgForm )
   {
-    this.usersService.editPassword(pass).subscribe();
+    this.usersService.editPassword(pass).subscribe(data=>{
+      window.location.href="/profile";
+    });
   }
   onFileSelected(event){
     this.selectedImage = event.target.files;

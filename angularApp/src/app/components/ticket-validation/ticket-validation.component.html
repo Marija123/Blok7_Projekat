@@ -7,7 +7,7 @@
 <div *ngIf="ticketForV">
   <div *ngIf="ticketForV.ApplicationUserId && ticketForV.ApplicationUserId != ''">
     <label>User email:</label>
-    <input type="text" name="userEmail" [(ngModel)]="myInput1">
+    <input type="text" name="userEmail" [(ngModel)] = "myInput1" >
     <button name="butoon2" (click)="ValidateTicket(myInput1)">Validate</button>
   </div>
 </div>

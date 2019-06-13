@@ -48,11 +48,11 @@ namespace WebApp.Controllers
             }
             return stats;
         }
-
+        [HttpGet]
         //GET: api/Lines/5
         [Route("FindVehicle")]
       //  [ResponseType(typeof(int))]
-        public Int32 FindVehicle([FromBody]int id)
+        public Int32 FindVehicle(int id)
         {
             List<Timetable> list = unitOfWork.Timetables.GetAllTimetablesWithVehicles().ToList();
             foreach(Timetable t in list)

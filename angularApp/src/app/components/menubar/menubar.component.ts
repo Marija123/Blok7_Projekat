@@ -30,6 +30,8 @@ export class MenubarComponent implements OnInit {
 
   logout() {
     this.authService.logout();
+      window.location.href = "/home";
+    
     
   }
   get user(): any {

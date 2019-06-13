@@ -5,6 +5,7 @@ import { TimetableModel } from 'src/app/models/timetableModel';
 import { DayTypeModel } from 'src/app/models/dayTypeModel';
 import { VehicleModel } from 'src/app/models/vehicleModel';
 import { VehicleService } from 'src/app/services/vehicleService/vehicle.service';
+import { Time } from '@angular/common';
 
 
 @Component({
@@ -20,6 +21,7 @@ allDayTypes: any = [];
 allTimetables: any = [];
 showList: any = [];
 dt: any;
+
 br: number = 0;
 dayTypeChosen : number;
 lineIdChoosen: number;
@@ -32,6 +34,11 @@ vehicleId: any;
 availableVehicles: any = [];
 chooseVehicle: boolean = false;
 ttZaDodavanje : TimetableModel = new TimetableModel("", 0, 0,0);
+daySelected : string = "0";
+lineSelected: string = "0";
+MyInput: Time;
+
+
   constructor(private lineServ: LineServiceService, private timetableServ: TimetableService,private vehicleServ: VehicleService) { 
     this.lineServ.getAllLines().subscribe(data => {
       this.allLines = data;
@@ -58,7 +65,8 @@ ttZaDodavanje : TimetableModel = new TimetableModel("", 0, 0,0);
   {  
         this.selected = e;  
         this.boolic = false;
-        this.selectedDay = false;
+        
+        this.refresh();
        
   }  
    
@@ -116,10 +124,7 @@ getLineIdsForChange()
     else {
       this.allLines.forEach(element => {
         k = false;
-        // k = ll.find( g =>{
-        //   g.LineId == element.Id;
-        // });
-  
+        
         ll.forEach(d => {
           if(d.LineId == element.Id)
           {
@@ -147,11 +152,6 @@ getLineIds(){
     this.showList = this.allLines;
   }
   else{
-   
-    //ovo vraca undefined
-    // ll = this.allTimetables.find(u =>{
-    //   u.DayTypeId == this.dt;
-    // });
 
     this.allTimetables.forEach(element => {
      
@@ -170,9 +170,6 @@ getLineIds(){
     this.showList = [];
     this.allLines.forEach(element => {
       k = false;
-      // k = ll.find( g =>{
-      //   g.LineId == element.Id;
-      // });
 
       ll.forEach(d => {
         if(d.LineId == element.Id)
@@ -196,15 +193,20 @@ SelectedLine(event: any): void
   this.lineIdChoosen = event.target.value;
   if(event.target.value != 0){
     let k = parseInt(event.target.value,10);
-    this.lineServ.FindVehicleId(k).subscribe(data =>{
+    this.lineServ.FindVehicleId(k).subscribe(data1 =>{
     
-        this.vehicleId = data;
-        if(this.vehicleId){
+        this.vehicleId = data1;
+        if(this.vehicleId != -1){
           this.chooseVehicle = false;
         }
         else{
           this.vehicleServ.GetAllAvailableVehicles().subscribe(data =>{
             this.availableVehicles = data;
+            if(this.availableVehicles == null || this.availableVehicles.length == 0 || this.availableVehicles== undefined)
+            {
+              window.alert("No available vehicles!/n You will be redirected to add vehicle page!");
+              window.location.href = "/add_change_vehicle";
+            }
             this.chooseVehicle = true;
           });
         }
@@ -223,7 +225,7 @@ SelectedLine(event: any): void
 SelectedVehicle(event: any): void
 {
   this.vehicleId = event.target.value;
-  
+
 }
 SplitDepartures(){
 
@@ -260,7 +262,11 @@ ChangeTimetable()
     stringZaDodavanje = stringZaDodavanje + x + ";";
   });
   this.ttZaDodavanje.Departures = stringZaDodavanje;
-  this.timetableServ.changeTimetable(this.ttZaDodavanje.Id,this.ttZaDodavanje).subscribe();
+  this.timetableServ.changeTimetable(this.ttZaDodavanje.Id,this.ttZaDodavanje).subscribe(data=>
+    {
+      window.alert("Timetable successfully changed!");
+      this.refresh();
+    });
 }
 
 AddTimetable(){
@@ -271,8 +277,12 @@ AddTimetable(){
     stringZaDodavanje = stringZaDodavanje + x + ";";
   });
   this.ttZaDodavanje.Departures = stringZaDodavanje;
+  
   this.ttZaDodavanje.Vehicles.push(new VehicleModel(this.vehicleId));
-  this.timetableServ.addTimetable(this.ttZaDodavanje).subscribe();
+  this.timetableServ.addTimetable(this.ttZaDodavanje).subscribe(data => {
+    window.alert("Timetable successfully added!");
+    this.refresh();
+  });
 
 }
 removeFromTimes(st,i){
@@ -282,7 +292,25 @@ removeFromTimes(st,i){
 }
 DeleteTimetable()
 {
-  this.timetableServ.deleteTimetable(this.ttZaDodavanje.Id).subscribe();
+  this.timetableServ.deleteTimetable(this.ttZaDodavanje.Id).subscribe(data =>{
+    window.alert("Timetable successfully deleted!");
+    this.refresh();
+  });
+}
+
+refresh(){
+  this.selectedDay = false;
+        this.daySelected = "0";
+        this.lineSelected = "0";
+        this.boolic = false;
+  this.stringovi = [];
+  this.stringovi1 = [];
+  this.allTimetables= [];
+  this.vehicleId =  0;
+  this.timetableServ.getAllTimetables().subscribe(data => {
+    this.allTimetables = data;
+    console.log(data);
+  });
 }
 
 }

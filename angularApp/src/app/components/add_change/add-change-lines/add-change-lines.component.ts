@@ -8,9 +8,7 @@ import { StationModel } from 'src/app/models/stationModel';
 import { NgForm } from '@angular/forms';
 import { LineModel } from 'src/app/models/lineModel';
 import { LineServiceService } from 'src/app/services/lineService/line-service.service';
-//import {LatLngLiteral} from '../../core/services/google-maps-types';
 
-//@Directive({selector: 'agm-polyline-point'})
 
 @Component({
   selector: 'app-add-change-lines',
@@ -20,7 +18,7 @@ import { LineServiceService } from 'src/app/services/lineService/line-service.se
 })
 export class AddChangeLinesComponent implements OnInit {
   public polyline: Polyline;
-  public selectedLines: LineModel[] = [];
+  //public selectedLines: LineModel[] = [];
   sl: LineModel = new LineModel(0,"",[],"");
   selektovanaLinijaZaIzmenu: LineModel = new LineModel(0,"",[],"");
   selLine: Polyline;
@@ -39,9 +37,11 @@ export class AddChangeLinesComponent implements OnInit {
   public longitude: number;
   markerZaDodavanje: StationModel;
   boolic: boolean = false;
-
-  
+  boolZaAktivanRadio = true;
+  boolZaMarkerZaDodavanje : boolean = false;
+  LineSelected : string = "none";
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
+  
   constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader , private statServ: StationServiceService, private lineServ: LineServiceService) { 
     this.statServ.getAllStations().subscribe(data => {
       this.stati = data;
@@ -71,21 +71,9 @@ export class AddChangeLinesComponent implements OnInit {
       }));
     });
   }
-     
-  
-  // @Output() positionChanged: EventEmitter<LatLngLiteral> = new EventEmitter<LatLngLiteral>();
-  // ngOnChanges(changes: SimpleChanges): any {
-  //   if (changes['latitude'] || changes['longitude']) {
-  //     const position: LatLngLiteral = <LatLngLiteral>{
-  //       lat: changes['latitude'] ? changes['latitude'].currentValue : this.latitude,
-  //       lng: changes['longitude'] ? changes['longitude'].currentValue : this.longitude
-       
-  //     };
-     
-  //     this.positionChanged.emit(position);
-  //   }
-  // }
+
   stationClick( id: number){
+    if(this.selected == 'Add'){
    this.stati.forEach(element => {
     
       if(element.Id == id){
@@ -100,6 +88,7 @@ export class AddChangeLinesComponent implements OnInit {
     this.polyline.addLocation(new GeoLocation(this.pomStat.Latitude, this.pomStat.Longitude))
     this.id = id;
   }
+  }
 
   SelectedLine(event: any): void
   {
@@ -107,23 +96,22 @@ export class AddChangeLinesComponent implements OnInit {
     
     if(this.selectedL == "none" || this.selectedL == "")
     {
-      this.selectedLines = [];
+      //this.selectedLines = [];
       this.sl = new LineModel(0,"",[],"");
       this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
+      this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
 
     }
-    // else if(this.selectedL = "ShowAll")
-    // {
-    //   this.selectedLines = this.allLines;
-    // }
+    
     else 
     {
-      this.selectedLines = [];
+      //this.selectedLines = [];
+      this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
       this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
       this.allLines.forEach(x => {
         if(x.LineNumber == this.selectedL)
         {
-          this.selectedLines.push(x);
+          //this.selectedLines.push(x);
           this.selektovanaLinijaZaIzmenu = x;
           this.sl = x;
           this.idForRemove = x.Id;
@@ -134,43 +122,9 @@ export class AddChangeLinesComponent implements OnInit {
         }
       });
 
-      if(this.selected == "Change")
-      {
-        
-      }
     }
   }
 
-  // SelectedLine(event: any): void
-  // {
-  //   this.selectedL = event.target.value;
-  //   if(this.selectedL == "none" || this.selectedL == "")
-  //   {
-  //     this.selectedLines = [];
-  //   }
-  //   else if(this.selectedL = "ShowAll")
-  //   {
-  //     this.selectedLines = this.allLines;
-  //   }
-  //   else 
-  //   {
-  //     this.selectedLines = [];
-  //     this.allLines.array.forEach(x => {
-  //       if(x.Name == this.selectedL)
-  //       {
-  //         this.selectedLines.push(x);
-  //       }
-  //     });
-  //   }
-    
-  //}
-
- 
-
-  // pathChanged($event: EventEmitter)
-  // {
-  //   console.log($event.addListener())
-  // }
   isSelectedLine(name: string): boolean
   {
     if (!this.selectedL) { // if no radio button is selected, always return false so every nothing is shown  
@@ -180,7 +134,16 @@ export class AddChangeLinesComponent implements OnInit {
   }
   setradio(e: string): void   
   {  
+    this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
+    this.sl = new LineModel(0,"",[],"");
+    this.LineSelected = "none";
+    this.refresh();
         this.selected = e;  
+        if(this.selected != "Add")
+        {
+          this.boolZaAktivanRadio = false;
+        }
+       
   }  
 
   isSelected(name: string): boolean   
@@ -195,42 +158,55 @@ export class AddChangeLinesComponent implements OnInit {
     
     if(this.selected == "Add")
     {
-      //this.authService.register(stationData).subscribe();
-      lineData.Stations = this.selectedStations;
      
+      lineData.Stations = this.selectedStations;
+     if(lineData.ColorLine == "" || lineData.ColorLine == null)
+     {
+       lineData.ColorLine = "#000000";
+     }
       console.log(lineData)
-      this.lineServ.addLine(lineData).subscribe(data => {this.boolic = data;});
-      // if(this.boolic){
-      //   this.lineServ.addSerialNumber(lineData).subscribe();
-      // }
+      this.lineServ.addLine(lineData).subscribe(data => {
+        this.boolic = data;
+        window.alert("Line successfully added!");
+        form.reset();
+        // ponovo kupi sve linije, osvezavanje
+        this.refresh();
+      });
       
-      window.alert("Line successfully added!");
+     
+
     }
     else if(this.selected == "Change"){
-      // stationData.Latitude = this.coordinates.latitude;
-      // stationData.Longitude = this.coordinates.longitude;
-      // stationData.Address = this.address;
-      // stationData.Name = this.name;
-      // stationData.Id = this.id;
-      // console.log(":stationdaya:")
-      // console.log(stationData)
-      // this.statServ.changeStation(stationData).subscribe();
+     
       lineData.Stations = this.selektovanaLinijaZaIzmenu.Stations;
       lineData.Id = this.selektovanaLinijaZaIzmenu.Id;
       lineData.ColorLine = this.selektovanaLinijaZaIzmenu.ColorLine;
       lineData.LineNumber = this.selektovanaLinijaZaIzmenu.LineNumber;
       console.log(lineData);
-      this.lineServ.changeLine(this.selektovanaLinijaZaIzmenu.Id,lineData).subscribe();
-      //this.lineServ.addSerialNumber(lineData).subscribe();
+      this.lineServ.changeLine(this.selektovanaLinijaZaIzmenu.Id,lineData).subscribe(data =>
+        {
+          window.alert("Line successfully changed!");
+          this.LineSelected = "none";
+          form.reset();
+          this.refresh();
+          
+        });
+
+      
     }
     else if(this.selected == "Remove"){
-      this.lineServ.deleteLine(this.idForRemove).subscribe();
-      window.alert("Line successfully removed!");
+      this.lineServ.deleteLine(this.idForRemove).subscribe(data =>
+        {
+          window.alert("Line successfully removed!");
+          // ponovo kupi sve linije, osvezavanje
+          form.reset();
+          this.refresh();
+        });
+     
     }
     else{
       console.log("lalallaa")
     }
-    //window.location.href = "/add_change_lines";
   }
 
   removeFromLine(stationId,i)
@@ -240,7 +216,6 @@ export class AddChangeLinesComponent implements OnInit {
 
   addStationIntoLine(i: any, form: NgForm)
   {
-    //this.selektovanaLinijaZaIzmenu.Stations.
     this.selektovanaLinijaZaIzmenu.Stations.splice(i.rBr-1,0,this.markerZaDodavanje);
     console.log(this.selektovanaLinijaZaIzmenu.Stations);
   }
@@ -250,6 +225,7 @@ export class AddChangeLinesComponent implements OnInit {
      
        if(element.Id == id){
          this.markerZaDodavanje = element;
+         this.boolZaMarkerZaDodavanje = true;
        }
  
     });
@@ -257,6 +233,23 @@ export class AddChangeLinesComponent implements OnInit {
     console.log("marker za dodavanje:");
     console.log(this.markerZaDodavanje);
     
+   }
+
+   refresh()
+   {
+    this.polyline = new Polyline([], 'blue', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
+    this.sl = new LineModel(0,"",[],"");
+    this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
+    this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
+    this.selectedL = "none";
+   this.markerZaDodavanje = new StationModel("","", 0,0,0);
+    this.allLines = [];
+    this.selectedStations = [];
+    this.boolZaMarkerZaDodavanje = false;
+    this.lineServ.getAllLines().subscribe(data => {
+      this.allLines = data;
+      console.log(data);
+    });
    }
   
 }

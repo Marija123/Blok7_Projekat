@@ -3,9 +3,10 @@
 <h4 *ngIf="!priceList">Nema pricelist!!!!</h4>
 <h4 *ngIf="priceList" >Od: {{priceList.StartOfValidity}}</h4> 
 <h4 *ngIf="priceList">Do: {{priceList.EndOfValidity}}</h4><br/>
-<label>Trenutno aktuelne cene:</label>
+
 <form #ticketPricesForm="ngForm" (ngSubmit)="onSubmit1(ticketPricesForm.value,ticketPricesForm)">
-    <div *ngIf="validPrices">
+    <div *ngIf="validPrices && !datumVazenjaBool">
+        <label>Trenutno aktuelne cene:</label><br/>
       <label>Hourly ticket:</label>
       <input type="number" name="Hourly"   [(ngModel)] = "validPrices.Hourly"> <br/>
       <label>Daily ticket:</label>
@@ -16,8 +17,13 @@
       <input type="number" name="Yearly"  [(ngModel)] = "validPrices.Yearly"><br/>
       <button *ngIf="!datumVazenjaBool" type="submit" class="button">Add new prices</button>
     </div>
-  </form>
+</form>
   <div *ngIf="datumVazenjaBool">
+    <label>Prices for new pricelist: </label> <br/>
+      <label>Hourly ticket: </label> <label>{{ticketPricesPom.Hourly}}</label><br/>
+      <label>Daily ticket: </label> <label>{{ticketPricesPom.Daily}}</label><br/>
+      <label>Monthly ticket: </label> <label>{{ticketPricesPom.Monthly}}</label><br/>
+      <label>Yearly ticket: </label><label>{{ticketPricesPom.Yearly}}</label><br/>
       <form #pricelistForm="ngForm" (ngSubmit)="onSubmit(pricelistForm.value,pricelistForm)">
           <div>
             <label>Start of validity:</label>

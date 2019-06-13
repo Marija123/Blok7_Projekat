@@ -23,5 +23,10 @@ export class VehicleService {
   GetAllAvailableVehicles(): Observable<any>{
     return this.httpClient.get(this.base_url+"/api/Vehicles/GetAvailableVehicles");
   }
+
+  deleteVehicle(id){
+    
+    return this.httpClient.delete(this.base_url+"/api/Vehicles/Delete?id=" + id);
+  }
  
 }

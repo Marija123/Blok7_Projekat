@@ -1,7 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { GeoLocation } from 'src/app/models/map/geolocation';
 import { MarkerInfo } from 'src/app/models/map/marker-info.model';
-//import { google } from '@agm/core/services/google-maps-types';
 import { MapsAPILoader, MouseEvent } from '@agm/core';
 import { StationModel } from 'src/app/models/stationModel';
 import { NgForm } from '@angular/forms';
@@ -29,9 +28,7 @@ export class AddChangeStationsComponent implements OnInit {
   constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader, private statServ: StationServiceService) { 
     this.statServ.getAllStations().subscribe(data => {
     this.stati = data;
-    }
-   
-  );
+    });
   }
 
   ngOnInit() {
@@ -50,39 +47,72 @@ export class AddChangeStationsComponent implements OnInit {
     
     if(this.selected == "Add")
     {
-      //this.authService.register(stationData).subscribe();
       stationData.Latitude = this.coordinates.latitude;
       stationData.Longitude = this.coordinates.longitude;
       stationData.Address = this.address;
       console.log(stationData)
-      this.statServ.addStation(stationData).subscribe();
-      window.alert("Station successfully added!");
+      this.statServ.addStation(stationData).subscribe(data => 
+        {
+          window.alert("Station successfully added!");
+          form.reset();
+          this.refresh();
+        });
+     
     }
     else if(this.selected == "Change"){
       stationData.Latitude = this.coordinates.latitude;
       stationData.Longitude = this.coordinates.longitude;
       stationData.Address = this.address;
-      stationData.Name = this.name;
+      if(stationData.Name == "" || stationData.Name == null)
+      {
+        stationData.Name = this.name;
+      }
       stationData.Id = this.id;
-      console.log(":stationdaya:")
+      console.log("stationData")
       console.log(stationData)
-      this.statServ.changeStation(stationData).subscribe();
-      window.alert("Station successfully changed!");
+      this.statServ.changeStation(stationData).subscribe(data =>
+        {
+          window.alert("Station successfully changed!");
+          form.reset();
+          this.refresh();
+        }
+      );
+      
     }
-    else if(this.selected == "Remove"){
-      this.statServ.deleteStation(this.id).subscribe();
-      window.alert("Station successfully removed!");
-    }
+    // else if(this.selected == "Remove"){
+    //   this.statServ.deleteStation(this.id).subscribe(data =>
+    //     {
+    //       window.alert("Station successfully removed!");
+    //       form.reset();
+    //       this.refresh();
+    //     });
+      
+    // }
     else{
       console.log("lalallaa")
     }
-    //window.location.href = "/add_change_stations";
+    
+  }
+
+  RemoveStation()
+  {
+    this.statServ.deleteStation(this.id).subscribe(data =>
+      {
+        window.alert("Station successfully removed!");
+        this.refresh();
+      });
     
   }
 
   setradio(e: string): void   
   {  
-        this.selected = e;      
+        this.selected = e; 
+        this.stati = [];
+        this.name = "";
+        this.address = "";
+        this.statServ.getAllStations().subscribe(data => {
+          this.stati = data;
+          });     
   }  
 
   isSelected(name: string): boolean   
@@ -96,11 +126,7 @@ export class AddChangeStationsComponent implements OnInit {
   placeMarker1($event){
     this.coordinates = new GeoLocation($event.coords.lat, $event.coords.lng);
     this.getAddress(this.coordinates.latitude,this.coordinates.longitude);
-    // this.markerInfo = new MarkerInfo(this.coordinates, 
-    // "assets/busicon.png",
-    // "Jugodrvo" , "" , "http://ftn.uns.ac.rs/691618389/fakultet-tehnickih-nauka");
-
-    //console.log(this.address);
+    
   }
 
   getAddress(latitude: number,longitude:number){
@@ -130,6 +156,14 @@ export class AddChangeStationsComponent implements OnInit {
 
   stationClick(id: number){
     this.id = id;
+  }
+
+  refresh(){
+    this.stati = [];
+    this.address = "";
+    this.statServ.getAllStations().subscribe(data => {
+      this.stati = data;
+      });
   }
 
 }

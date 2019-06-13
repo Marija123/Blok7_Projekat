@@ -39,6 +39,9 @@ import { TicketValidationComponent } from './components/ticket-validation/ticket
 
 import { AgmDirectionModule } from 'agm-direction';
 import { AddChangeVehicleComponent } from './components/add_change/add-change-vehicle/add-change-vehicle.component';
+import { CanActivateNotification } from './guard/notification-guard';
+import { CanActivateUser } from './guard/user-guard';
+import { UserNotSignedInGuard } from './guard/notSignedIn-guard';
 
 const Routes = [
   {
@@ -63,11 +66,14 @@ const Routes = [
   },
   {
     path: "signin",
-    component: SigninComponent
+    component: SigninComponent,
+    canActivate:[UserNotSignedInGuard]
   },
   {
     path: "register",
-    component: RegisterComponent
+    component: RegisterComponent,
+    canActivate:[UserNotSignedInGuard]
+    
   },
   {
     path: "profile",
@@ -102,19 +108,23 @@ const Routes = [
   },
   {
     path: "buy_a_ticket",
-    component: BuyATicketComponent
+    component: BuyATicketComponent,
+    canActivate: [CanActivateUser]
   },
   {
     path: "notifications",
-    component: NotificationsComponent
+    component: NotificationsComponent,
+    canActivate: [CanActivateNotification]
   },
   {
     path: "validateTicket",
-    component: TicketValidationComponent
+    component: TicketValidationComponent,
+    canActivate: [ControlorGuard]
   },
   {
     path: "add_change_vehicle",
-    component: AddChangeVehicleComponent
+    component: AddChangeVehicleComponent,
+    canActivate: [CanActivateViaAuthGuard]
   }
 ]
 
@@ -158,7 +168,10 @@ const Routes = [
   ],
  // {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
   providers: [ CanActivateViaAuthGuard,
+    CanActivateUser,
     UserSignedInGuard,
+    CanActivateNotification,
+    UserNotSignedInGuard,
     ControlorGuard,{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
     
   ],

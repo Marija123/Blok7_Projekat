@@ -16,6 +16,33 @@ ticketPricesPom: TicketPricesPomModel = new TicketPricesPomModel(0,0,0,0,0,new P
 datumVazenjaBool: boolean = false;
 validPrices: TicketPricesPomModel;
   constructor( private pricelistServ: PricelistServiceService) { 
+    this.refresh();
+     
+  }
+
+  ngOnInit() {
+  }
+
+  onSubmit(pm: PriceListModel, form: NgForm){
+  let priceL : any;
+  let bol : boolean = false;
+  this.ticketPricesPom.PriceList = pm;
+  this.pricelistServ.addPricelist(this.ticketPricesPom).subscribe(data =>
+  {
+    window.alert("Timetable successfully added!");
+    this.refresh();
+  })
+
+  }
+  onSubmit1(pm: TicketPricesPomModel, form: NgForm){
+    this.ticketPricesPom = pm;
+    this.datumVazenjaBool = true;
+
+  }
+  refresh(){
+    this.ticketPricesPom  = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(new Date(),new Date(),0, []));
+     this. datumVazenjaBool = false;
+    this.datumVazenjaBool= false;
     this.pricelistServ.getPricelist().subscribe(data => {
       
       this.priceList = data; 
@@ -42,31 +69,6 @@ validPrices: TicketPricesPomModel;
         
       });
      });
-     
-  }
-
-  ngOnInit() {
-  }
-
-  onSubmit(pm: PriceListModel, form: NgForm){
-let priceL : any;
-let bol : boolean = false;
-this.ticketPricesPom.PriceList = pm;
-this.pricelistServ.addPricelist(this.ticketPricesPom).subscribe()
-// bol = this.pricelistServ.addPricelist(pm).subscribe()
-//     if(bol){
-//      priceL =  this.pricelistServ.getPricelistLast().subscribe();
-//      if(priceL){
-//       this.ticketPricesPom.IdPriceList = priceL.Id;
-//       this.pricelistServ.addTicketPrices(this.ticketPricesPom).subscribe();
-//      }
-      
-//     }
-  }
-  onSubmit1(pm: TicketPricesPomModel, form: NgForm){
-    this.ticketPricesPom = pm;
-    this.datumVazenjaBool = true;
-   // this.pricelistServ.addTicketPrices(pm).subscribe();
   }
 
 }

@@ -27,8 +27,9 @@ export class BuyATicketComponent implements OnInit {
   user: any;
   neregKupVremKartu : boolean= false;
   poruka: string = "";
-
-
+  prikaziButtonK : boolean = true;
+   typeM : any;
+  
 
   constructor(private ticketServ: TicketService, private pricelistServ: PricelistServiceService, private usersService: UserProfileService) {
     ticketServ.getAllTicketTypes().subscribe( data => {
@@ -38,6 +39,19 @@ export class BuyATicketComponent implements OnInit {
       this.priceList = data; 
        console.log(data);
     });
+
+    let ro = localStorage.getItem('role');
+    if(ro)
+    {
+      if(ro == "AppUser")
+      {
+        this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
+        
+          this.user = data;    
+          console.log(this.user);    
+        });
+      }
+    }
    }
 
   ngOnInit() {
@@ -45,8 +59,10 @@ export class BuyATicketComponent implements OnInit {
 
   SelectedTicketType(event)
   {
-    
+    if(event.target.value != "")
+    {
      this.selecetTT = parseInt(event.target.value, 10);
+     
      this.priceList.TicketPricess.forEach(element => {
        if(element.TicketTypeId == this.selecetTT)
        {
@@ -60,37 +76,55 @@ export class BuyATicketComponent implements OnInit {
     {
       if(ro == "AppUser")
       {
-        this.CalculateDiscount();
 
+        
+        this.prikaziButtonK = true;
+        this.neregKupVremKartu = false;
+
+        this.CalculateDiscount();
+       
       }
     }else{
+      this.prikaziButtonK = false;
       this.discount = 0;
       this.priceWDiscount = this.price;
       if(this.selecetTT == 1)
       {
         this.neregKupVremKartu = true;
+        this.poruka = "";
       }
       else{
-        this.poruka = "Only signed in users can buy this type of ticked!"
+        this.poruka = "Only signed in users can buy this type of ticket!";
         this.neregKupVremKartu = false;
       }
 
-     
     }
+    }
+  
   }
 
   CalculateDiscount(){
     let uN = localStorage.getItem('name');
-    let typeM : any;
+    
     this.ticketServ.getTypeUser(uN).subscribe(data =>{
-      typeM = data;
-      this.discount =  typeM.Coefficient * 100;
-      this.priceWDiscount = this.price - (this.price * typeM.Coefficient) ;
+      this.typeM = data;
+      this.discount =  this.typeM.Coefficient * 100;
+      this.priceWDiscount = this.price - (this.price * this.typeM.Coefficient) ;
+      if(this.typeM.Name != "Regular")
+      {
+        if(!this.user.Activated)
+        {
+          window.alert("You are not authorized for this action!");
+          this.prikaziButtonK = false;
+        }
+      }
+      
     });
   }
 
   BuyTicket()
   {
+   
     let ticketMod = new TicketModel("",new Date(),0,"",0,0);
     let b = new Date();
     b.setHours(b.getHours()+ 2);
@@ -107,9 +141,12 @@ export class BuyATicketComponent implements OnInit {
     this.usersService.getUserData(localStorage.getItem('name')).subscribe(data =>{
       ai = data;
       ticketMod.ApplicationUserId = ai.Id;
-      this.ticketServ.addTicket(ticketMod).subscribe();
+      this.ticketServ.addTicket(ticketMod).subscribe(data => {
+        window.alert("Ticket successfully bought!")
+        window.location.href = "/home";
+      });
     });
-
+  
     
     
   }
@@ -131,10 +168,12 @@ export class BuyATicketComponent implements OnInit {
     this.ticketServ.addTicket(ticketMod).subscribe( data => {
       this.ticketServ.SendMail(ticketMod).subscribe(resp =>{
         if(resp == 'Ok'){
-          alert("Ticket successfully bought");
+          window.alert("Ticket successfully bought!")
+          window.location.href = "/home";
         }
         else{
           alert("Something went wrong");
+          window.location.href = "/home";
         }
       });
     });

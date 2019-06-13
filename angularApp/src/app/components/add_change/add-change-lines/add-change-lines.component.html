@@ -10,7 +10,7 @@
 <div *ngIf="isSelected('Change')">
     <h4>Select line you want to change:</h4>
     <!-- class="form-control" -->
-    <select  name="lineNumber"  (click)='SelectedLine($event)' ngModel>
+    <select  name="lineNumber"  (click)='SelectedLine($event)' [(ngModel)] = 'LineSelected'>
       <option value="none">None</option>
       <!-- <option value="ShowAll" >Show all</option> -->
       <option *ngFor="let ln of allLines" value="{{ln.LineNumber}}"  >{{ln.LineNumber}}</option>
@@ -18,7 +18,7 @@
 </div>
 
 <div *ngIf="isSelected('Remove')">
-    <h4>Select line you want to change:</h4>
+    <h4>Select line you want to remove:</h4>
     <!-- class="form-control" -->
     <select  name="lineNumber"  (click)='SelectedLine($event)' ngModel>
       <option value="none">None</option>
@@ -103,13 +103,13 @@
 </div>
 
 <div *ngIf="isSelected('Change')">
-  <label for="Stations">You can add stations by clicking on marker! </label>
-  <label *ngIf="markerZaDodavanje">Name:  {{markerZaDodavanje.Name}}</label><br/>
-  <label *ngIf="markerZaDodavanje">Address:  {{markerZaDodavanje.Address}}</label><br/>
-  <form #stationForm1="ngForm" (ngSubmit)="addStationIntoLine(stationForm1.value, stationForm1)">
-    <label for="rBr" *ngIf="markerZaDodavanje">Unesite redni broj stanice: </label>
-    <input *ngIf="markerZaDodavanje" required type="number" name="rBr" placeholder="" ngModel><br/>
-    <button type="submit" *ngIf="markerZaDodavanje" >Add station into line</button> <br/>
+  <label for="Stations">You can add stations by clicking on marker! </label><br/>
+  <label *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje">Name:  {{markerZaDodavanje.Name}}</label><br/>
+  <label *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje">Address:  {{markerZaDodavanje.Address}}</label><br/>
+  <form  #stationForm1="ngForm" (ngSubmit)="addStationIntoLine(stationForm1.value, stationForm1)">
+    <label for="rBr" *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje">Unesite redni broj stanice: </label>
+    <input *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje" required type="number" name="rBr" placeholder="" ngModel><br/>
+    <button type="submit" *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje" >Add station into line</button> <br/>
   
   </form>
 </div>

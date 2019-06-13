@@ -6,26 +6,20 @@
 
 <div  *ngIf="isSelected('Add') || isSelected('Change')">
   <h4>Select daytpe:</h4>
-  <!-- class="form-control" -->
-  <select  name="lineNumber" (click)='SelectedDaytype($event)' ngModel> 
+  <select  name="dayTipe" (click)='SelectedDaytype($event)' [(ngModel)] = 'daySelected'> 
       <option value="0">None</option>
-      <!-- <option value="ShowAll" >Show all</option> -->
       <option *ngFor="let ln of allDayTypes" value={{ln.Id}} >{{ln.Name}}</option>
   </select>
 </div>
   <div  *ngIf="selectedDay">
-    
-        <select name="lineNumber"  (click)='SelectedLine($event)' ngModel>
+        <select name="lineNumbers"  (click)='SelectedLine($event)' [(ngModel)] = 'lineSelected'>
             <option value=0>None</option>
-            <!-- <option value="ShowAll" >Show all</option> -->
             <option *ngFor="let ln of showList" value={{ln.Id}}  >{{ln.LineNumber}}</option>
         </select>
-   
   </div>
+
   <div  *ngIf="chooseVehicle && isSelected('Add') ">
-    
       <select name="vehicleChoice"  (click)='SelectedVehicle($event)' ngModel>
-          <!-- <option value="ShowAll" >Show all</option> -->
           <option *ngFor="let ln of availableVehicles" value={{ln.Id}}  >{{ln.Id}} - {{ln.Type}}</option>
       </select>
  

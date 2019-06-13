@@ -30,7 +30,7 @@
   </agm-map>
   </div>
 
-
+<div *ngIf="!isSelected('Remove')">
 <form #stationForm="ngForm" (ngSubmit)="onSubmit(stationForm.value, stationForm)">
 
   <div class="form-group">
@@ -53,5 +53,7 @@
 
 <button type="submit" class="button" *ngIf="isSelected('Add')">Add</button>
 <button type="submit" class="button" *ngIf="isSelected('Change')">Change</button>
-<button type="submit" class="button" *ngIf="isSelected('Remove')">Remove</button>
+<!-- <button type="submit" class="button" *ngIf="isSelected('Remove')">Remove</button> -->
 </form>
+</div>
+<button type="button" class="button" *ngIf="isSelected('Remove')" (click)=RemoveStation() >Remove</button>

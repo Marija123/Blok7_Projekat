@@ -32,26 +32,24 @@ export class RegisterComponent implements OnInit {
         if(regData.Role != 'AppUser'){
         this.notificationServ.sendNotification();
         }
+        window.location.href="/signin";
        });
         }else{
           this.fileUploadService.uploadFile(this.selectedImage)
-          .subscribe(data => {      
-            //alert("Image uploaded.");  
+          .subscribe(data => {  
             this.authService.register(regData).subscribe(data =>{
               if(regData.Role != 'AppUser'){
                 this.notificationServ.sendNotification();
-                }
+              }
                 if(regData.Role == 'AppUser')
                 {
                   this.notificationServ.sendNotificationToController();
                 }
+                window.location.href="/signin";
             });
           });
         }
        
-        
-       
-    //this.authService.register(regData).subscribe();
   }
 
     setradio(e: string): void   

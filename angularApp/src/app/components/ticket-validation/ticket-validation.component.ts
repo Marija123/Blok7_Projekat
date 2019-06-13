@@ -12,10 +12,10 @@ export class TicketValidationComponent implements OnInit {
   ticketExists: string = "";
   ticketMessage: string = "";
   allTT: any ;
+  myInput1: string = "";
   constructor(private ticketServ: TicketService) {
     this.ticketServ.getAllTicketTypes().subscribe(data => {
       this.allTT = data;
-
     })
    }
 
@@ -24,6 +24,8 @@ export class TicketValidationComponent implements OnInit {
 
   FindTicket(n:any){
  
+    this.ticketMessage = "";
+    this.myInput1 = "";
     console.log(n);
     this.ticketServ.getTicket(n).subscribe(data => {
       this.ticketForV = data;
@@ -31,10 +33,12 @@ export class TicketValidationComponent implements OnInit {
       if(this.ticketForV)
       {
           this.ticketExists = "";
+          this.myInput1 = "";
           if(this.ticketForV.ApplicationUserId == "" || this.ticketForV.ApplicationUserId == undefined || this.ticketForV.ApplicationUserId == null)
           {
             this.ValidateTicketNoUser();
           }
+
       }
       else{
         this.ticketExists = "Ticket doesn't exist in database!"
@@ -46,14 +50,9 @@ export class TicketValidationComponent implements OnInit {
   ValidateTicketNoUser()
   {
     
-  
     let d : Date = new Date(this.ticketForV.PurchaseTime);
 
     d.setHours(d.getHours() + 1);
-        // console.log(this.ticketForV.PurchaseTime);
-        // console.log(d);
-        //console.log(this.ticketForV.PurchaseTime.getHours() + 1 );
-        //if(this.ticketForV.PurchaseTime.getHours() + 1 )
         if(d < new Date())
         {
           this.ticketMessage = "Ticket is not valid. Time is up!"
@@ -61,7 +60,7 @@ export class TicketValidationComponent implements OnInit {
         {
           this.ticketMessage = "Ticket is valid."
         }
-    }
+  }
   
 
   
@@ -84,10 +83,6 @@ export class TicketValidationComponent implements OnInit {
       if(TT == "Hourly")
       {
         d.setHours(d.getHours() + 1);
-        // console.log(this.ticketForV.PurchaseTime);
-        // console.log(d);
-        //console.log(this.ticketForV.PurchaseTime.getHours() + 1 );
-        //if(this.ticketForV.PurchaseTime.getHours() + 1 )
         if(d < new Date())
         {
           this.ticketMessage = "Ticket is not valid. Time is up!"
@@ -155,6 +150,8 @@ export class TicketValidationComponent implements OnInit {
     {
       this.ticketMessage = "User with email: " + n + " did not buy ticket with Id: " + this.ticketForV.Id;
     }
+    // this.MyInput1 = "";
+    // n = "";
   }
 
 }

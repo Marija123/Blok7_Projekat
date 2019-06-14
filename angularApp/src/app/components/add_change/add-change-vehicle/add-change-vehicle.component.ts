@@ -27,18 +27,23 @@ export class AddChangeVehicleComponent implements OnInit {
   ngOnInit() {
   }
   onSubmit(vehicleData: VehicleModel, form: NgForm){
-    
+   
     if(this.selected == "Add")
     {
+      if(vehicleData.Type == "" || vehicleData.Type == null){
+        window.alert("You have to select type!");
+      }else
+      {
       console.log(vehicleData)
       this.vehicleServ.addVehicle(vehicleData).subscribe(data=>{
         window.alert("Station successfully added!");
         form.reset();
         this.refresh();
       });
-     
+    }
     }
     else if(this.selected == "Remove"){
+      
       if(vehicleData.Id != 0)
       {
         this.vehicleServ.deleteVehicle(vehicleData.Id).subscribe(data => {
@@ -53,7 +58,7 @@ export class AddChangeVehicleComponent implements OnInit {
     else{
       console.log("lalallaa")
     }
-
+  
   }
 
   setradio(e: string): void   

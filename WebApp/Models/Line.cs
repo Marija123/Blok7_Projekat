@@ -13,5 +13,8 @@ namespace WebApp.Models
         public string LineNumber { get; set; }
         public string ColorLine { get; set; }
         public List<Station> Stations { get; set; }
+
+        //[Timestamp]
+        //public byte[] RowVersion { get; set; }
     }
 }

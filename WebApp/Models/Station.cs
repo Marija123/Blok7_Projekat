@@ -14,5 +14,8 @@ namespace WebApp.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public List<Line> Lines { get; set; }
+
+        //[Timestamp]
+        //public byte[] RowVersion { get; set; }
     }
 }

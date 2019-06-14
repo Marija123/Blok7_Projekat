@@ -12,9 +12,10 @@ import { TicketPricessModel } from 'src/app/models/ticketPriceModel';
 })
 export class AddChangePricelistComponent implements OnInit {
 priceList: any;
-ticketPricesPom: TicketPricesPomModel = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(new Date(),new Date(),0, []));
+ticketPricesPom: TicketPricesPomModel = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(null,null,0, []));
 datumVazenjaBool: boolean = false;
 validPrices: TicketPricesPomModel;
+
   constructor( private pricelistServ: PricelistServiceService) { 
     this.refresh();
      
@@ -27,28 +28,57 @@ validPrices: TicketPricesPomModel;
   let priceL : any;
   let bol : boolean = false;
   this.ticketPricesPom.PriceList = pm;
-  this.pricelistServ.addPricelist(this.ticketPricesPom).subscribe(data =>
+ let a : Date = new Date(Date.now());
+  if(pm.StartOfValidity.toString() == ""  || pm.EndOfValidity.toString() == '' || pm.StartOfValidity == undefined || pm.StartOfValidity == null || pm.EndOfValidity == undefined || pm.EndOfValidity == null)
   {
-    window.alert("Timetable successfully added!");
-    this.refresh();
-  })
+    window.alert("Start or End of validiti can't be empty!");
+    form.reset();
+    //this.refresh();
+
+  }
+  else if(pm.StartOfValidity> pm.EndOfValidity)
+  {
+    window.alert("Start of validiti id bigger than End of validity!");
+    form.reset();
+    //this.refresh();
+  }
+  
+  else{
+    this.pricelistServ.addPricelist(this.ticketPricesPom).subscribe(data =>
+      {
+        window.alert("Timetable successfully added!");
+        this.refresh();
+      })
+  }
+  
 
   }
   onSubmit1(pm: TicketPricesPomModel, form: NgForm){
     this.ticketPricesPom = pm;
-    this.datumVazenjaBool = true;
+    if(this.ticketPricesPom.Hourly<=0 || this.ticketPricesPom.Daily <= 0 || this.ticketPricesPom.Monthly <0 || this.ticketPricesPom.Yearly<=0)
+    {
+      window.alert("Prices can't be les then 1");
+      this.datumVazenjaBool = false;
+      //form.reset();
+      this.refresh();
+    }
+    else{
+      this.datumVazenjaBool = true;
+    }
+    
 
   }
   refresh(){
-    this.ticketPricesPom  = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(new Date(),new Date(),0, []));
+    this.ticketPricesPom  = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(null,null,0, []));
      this. datumVazenjaBool = false;
-    this.datumVazenjaBool= false;
+   
     this.pricelistServ.getPricelist().subscribe(data => {
       
       this.priceList = data; 
        console.log(data);
       
-       this.validPrices = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(new Date(),new Date(),0, []))
+       this.validPrices = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(null,null,0, []))
+       if(this.priceList){
        this.priceList.TicketPricess.forEach(element => {
         if(element.TicketTypeId == 2)
         {
@@ -68,6 +98,7 @@ validPrices: TicketPricesPomModel;
         }
         
       });
+    }
      });
   }
 

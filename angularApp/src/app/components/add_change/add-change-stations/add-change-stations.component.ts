@@ -6,6 +6,7 @@ import { StationModel } from 'src/app/models/stationModel';
 import { NgForm } from '@angular/forms';
 import { StationServiceService } from 'src/app/services/stationService/station-service.service';
 import { Observable } from 'rxjs/internal/Observable';
+import { AddStationValidation } from 'src/app/models/Validation/validationModels';
 
 @Component({
   selector: 'app-add-change-stations',
@@ -24,7 +25,7 @@ export class AddChangeStationsComponent implements OnInit {
   id: number;
   public allStations: any = [];
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
-
+  validations : AddStationValidation = new AddStationValidation();
   constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader, private statServ: StationServiceService) { 
     this.statServ.getAllStations().subscribe(data => {
     this.stati = data;
@@ -51,6 +52,10 @@ export class AddChangeStationsComponent implements OnInit {
       stationData.Longitude = this.coordinates.longitude;
       stationData.Address = this.address;
       console.log(stationData)
+      if(this.validations.validate(stationData)) {
+        this.refresh();
+        return;
+      }
       this.statServ.addStation(stationData).subscribe(data => 
         {
           window.alert("Station successfully added!");
@@ -68,6 +73,11 @@ export class AddChangeStationsComponent implements OnInit {
         stationData.Name = this.name;
       }
       stationData.Id = this.id;
+      if(this.validations.validate(stationData))
+      {
+        this.refresh();
+        return;
+      } 
       console.log("stationData")
       console.log(stationData)
       this.statServ.changeStation(stationData).subscribe(data =>
@@ -79,15 +89,7 @@ export class AddChangeStationsComponent implements OnInit {
       );
       
     }
-    // else if(this.selected == "Remove"){
-    //   this.statServ.deleteStation(this.id).subscribe(data =>
-    //     {
-    //       window.alert("Station successfully removed!");
-    //       form.reset();
-    //       this.refresh();
-    //     });
-      
-    // }
+  
     else{
       console.log("lalallaa")
     }
@@ -161,6 +163,7 @@ export class AddChangeStationsComponent implements OnInit {
   refresh(){
     this.stati = [];
     this.address = "";
+    this.coordinates = new GeoLocation(0,0); 
     this.statServ.getAllStations().subscribe(data => {
       this.stati = data;
       });

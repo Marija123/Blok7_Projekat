@@ -78,6 +78,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IdentityModel.Services" />
@@ -249,18 +250,6 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\DayTypesController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\LinesController.cs" />
-    <Compile Include="Controllers\PassengerTypesController.cs" />
-    <Compile Include="Controllers\PricelistsController.cs" />
-    <Compile Include="Controllers\StationsController.cs" />
-    <Compile Include="Controllers\TicketPricesController.cs" />
-    <Compile Include="Controllers\TicketsController.cs" />
-    <Compile Include="Controllers\TimetablesController.cs" />
-    <Compile Include="Controllers\ValuesController.cs" />
-    <Compile Include="Controllers\VehiclesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -269,13 +258,9 @@
     <Compile Include="Migrations\201905222056072_InitialMigration.Designer.cs">
       <DependentUpon>201905222056072_InitialMigration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201906121235511_KreiranjeModela.cs" />
-    <Compile Include="Migrations\201906121235511_KreiranjeModela.Designer.cs">
-      <DependentUpon>201906121235511_KreiranjeModela.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201906132241007_bezTS.cs" />
-    <Compile Include="Migrations\201906132241007_bezTS.Designer.cs">
-      <DependentUpon>201906132241007_bezTS.cs</DependentUpon>
+    <Compile Include="Migrations\201906140513469_kreiranjeModela.cs" />
+    <Compile Include="Migrations\201906140513469_kreiranjeModela.Designer.cs">
+      <DependentUpon>201906140513469_kreiranjeModela.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -422,11 +407,8 @@
     <EmbeddedResource Include="Migrations\201905222056072_InitialMigration.resx">
       <DependentUpon>201905222056072_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906121235511_KreiranjeModela.resx">
-      <DependentUpon>201906121235511_KreiranjeModela.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201906132241007_bezTS.resx">
-      <DependentUpon>201906132241007_bezTS.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201906140513469_kreiranjeModela.resx">
+      <DependentUpon>201906140513469_kreiranjeModela.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

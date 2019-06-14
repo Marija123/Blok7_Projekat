@@ -28,7 +28,7 @@
     <div *ngFor="let oneLine of showLines, let i = index">
       <div  *ngFor="let dire of oneLine.Stations, let j = index">
           <agm-direction 
-          [renderOptions] = "{polylineOptions: {strokeColor: oneLine.ColorLine}, suppressMarkers: true}"
+          [renderOptions] = "{polylineOptions: {strokeColor: oneLine.ColorLine}, suppressMarkers: true, preserveViewport: true}"
            *ngIf="oneLine.Stations[j+1]"  
           [origin]="{ lat: oneLine.Stations[j].Latitude, lng: oneLine.Stations[j].Longitude }" 
           [destination]="{ lat: oneLine.Stations[j+1].Latitude, lng: oneLine.Stations[j+1].Longitude }">

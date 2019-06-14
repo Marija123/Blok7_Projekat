@@ -38,17 +38,6 @@ export class RegistrationValidations {
         wrong = true;
       }
       else this.dateOk = true;
-    //   if (registrationData.Role == null || registrationData.Role == "") {
-    //     this.RoleOk = false;
-    //     wrong = true;
-    //   }
-    //   else this.RoleOk = true;
-      
-    //   if (registrationData.PassangerType == null || registrationData.PassangerType == "") {
-    //     this.PassangerTypeOK = false;
-    //     wrong = true;
-    //   }
-    //   else this.PassangerTypeOK = true;
 
       if (registrationData.Password == null || registrationData.Password == "") {
         this.passwordOk = false;
@@ -87,3 +76,65 @@ export class SignInValidations{
       return wrong;
     }
 }
+export class AddStationValidation {
+ 
+    nameOk: boolean = true;
+    
+    addressOk:boolean = true;
+    longitudeOk: boolean = true;
+    latitudeOk: boolean = true;
+
+    validate(statData) {
+      let wrong = false;
+      if (statData.Name == null || statData.Name == "") {
+        this.nameOk = false;
+        wrong = true;
+      }
+      else this.nameOk = true;
+  
+      if (statData.Address == null || statData.Address == "") {
+        this.addressOk = false;
+        wrong = true;
+      }
+      else this.addressOk = true;
+
+      if (statData.Longitude == null || statData.Longitude == "") {
+        this.longitudeOk = false;
+        wrong = true;
+      }
+      else this.longitudeOk = true;
+
+      if (statData.Latitude == null || statData.Latitude == "") {
+        this.latitudeOk = false;
+        wrong = true;
+      }
+      else this.latitudeOk = true;
+
+      return wrong;
+    }
+  }
+
+    export class AddLinesValidation{
+      
+      lineNumberOk:boolean = true;
+      stationsOk: boolean = true;
+  
+      validate(lineData) {
+        let wrong = false;
+        if (lineData.LineNumber == null || lineData.LineNumber == "") {
+          this.lineNumberOk = false;
+          wrong = true;
+        }
+        else this.lineNumberOk = true;
+    
+        if (lineData.Stations.length == 0 || lineData.Stations == null || lineData.Stations == [] || lineData.Stations == undefined) {
+          this.stationsOk = false;
+          wrong = true;
+        }
+        else this.stationsOk = true;
+        return wrong;
+      }
+    }
+
+    
+

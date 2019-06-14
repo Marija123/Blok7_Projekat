@@ -20,6 +20,7 @@ export class PricelistComponent implements OnInit {
          console.log(data);
         
          this.validPrices = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(new Date(),new Date(),0, []))
+         if(this.priceList){
          this.priceList.TicketPricess.forEach(element => {
           if(element.TicketTypeId == 2)
           {
@@ -39,6 +40,7 @@ export class PricelistComponent implements OnInit {
           }
           
         });
+      }
       });
        
     }

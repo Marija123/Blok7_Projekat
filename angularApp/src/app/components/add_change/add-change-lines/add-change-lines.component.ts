@@ -8,6 +8,7 @@ import { StationModel } from 'src/app/models/stationModel';
 import { NgForm } from '@angular/forms';
 import { LineModel } from 'src/app/models/lineModel';
 import { LineServiceService } from 'src/app/services/lineService/line-service.service';
+import { AddLinesValidation } from 'src/app/models/Validation/validationModels';
 
 
 @Component({
@@ -41,6 +42,9 @@ export class AddChangeLinesComponent implements OnInit {
   boolZaMarkerZaDodavanje : boolean = false;
   LineSelected : string = "none";
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
+  validations: AddLinesValidation = new AddLinesValidation();
+
+  errorForListStat:string = "";
   
   constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader , private statServ: StationServiceService, private lineServ: LineServiceService) { 
     this.statServ.getAllStations().subscribe(data => {
@@ -156,57 +160,81 @@ export class AddChangeLinesComponent implements OnInit {
 
   onSubmit(lineData: LineModel, form: NgForm){
     
-    if(this.selected == "Add")
-    {
-     
-      lineData.Stations = this.selectedStations;
-     if(lineData.ColorLine == "" || lineData.ColorLine == null)
-     {
-       lineData.ColorLine = "#000000";
-     }
-      console.log(lineData)
-      this.lineServ.addLine(lineData).subscribe(data => {
-        this.boolic = data;
-        window.alert("Line successfully added!");
-        form.reset();
-        // ponovo kupi sve linije, osvezavanje
-        this.refresh();
-      });
-      
-     
-
-    }
-    else if(this.selected == "Change"){
-     
-      lineData.Stations = this.selektovanaLinijaZaIzmenu.Stations;
-      lineData.Id = this.selektovanaLinijaZaIzmenu.Id;
-      lineData.ColorLine = this.selektovanaLinijaZaIzmenu.ColorLine;
-      lineData.LineNumber = this.selektovanaLinijaZaIzmenu.LineNumber;
-      console.log(lineData);
-      this.lineServ.changeLine(this.selektovanaLinijaZaIzmenu.Id,lineData).subscribe(data =>
-        {
-          window.alert("Line successfully changed!");
-          this.LineSelected = "none";
-          form.reset();
+    
+      if(this.selected == "Add")
+      {
+       
+        lineData.Stations = this.selectedStations;
+       if(lineData.ColorLine == "" || lineData.ColorLine == null)
+       {
+         lineData.ColorLine = "#000000";
+       }
+        console.log(lineData)
+        if(this.validations.validate(lineData)) {
           this.refresh();
+          //form.reset();
+          return;
+        }
+
+        this.allLines.forEach(element => {
+          if(element.LineNumber == lineData.LineNumber)
+          {
+            window.alert("Line number already exits!");
+              form.reset();
+              this.refresh();
+          }
           
         });
 
-      
-    }
-    else if(this.selected == "Remove"){
-      this.lineServ.deleteLine(this.idForRemove).subscribe(data =>
-        {
-          window.alert("Line successfully removed!");
-          // ponovo kupi sve linije, osvezavanje
+        this.lineServ.addLine(lineData).subscribe(data => {
+          this.boolic = data;
+          window.alert("Line successfully added!");
           form.reset();
+          // ponovo kupi sve linije, osvezavanje
           this.refresh();
         });
-     
-    }
-    else{
-      console.log("lalallaa")
-    }
+        
+      }
+      else if(this.selected == "Change"){
+        if(this.selectedL != "none")
+    {
+       
+        lineData.Stations = this.selektovanaLinijaZaIzmenu.Stations;
+        lineData.Id = this.selektovanaLinijaZaIzmenu.Id;
+        lineData.ColorLine = this.selektovanaLinijaZaIzmenu.ColorLine;
+        lineData.LineNumber = this.selektovanaLinijaZaIzmenu.LineNumber;
+        console.log(lineData);
+        if(this.validations.validate(lineData)) {
+          this.refresh();
+          //form.reset();
+          return;
+        }
+        this.lineServ.changeLine(this.selektovanaLinijaZaIzmenu.Id,lineData).subscribe(data =>
+          {
+            window.alert("Line successfully changed!");
+            this.LineSelected = "none";
+            form.reset();
+            this.refresh();
+            
+          });
+  
+        }
+      }
+      else if(this.selected == "Remove"){
+        this.lineServ.deleteLine(this.idForRemove).subscribe(data =>
+          {
+            window.alert("Line successfully removed!");
+            // ponovo kupi sve linije, osvezavanje
+            form.reset();
+            this.refresh();
+          });
+       
+      }
+      else{
+        console.log("lalallaa")
+      }
+    
+   
   }
 
   removeFromLine(stationId,i)
@@ -216,8 +244,20 @@ export class AddChangeLinesComponent implements OnInit {
 
   addStationIntoLine(i: any, form: NgForm)
   {
-    this.selektovanaLinijaZaIzmenu.Stations.splice(i.rBr-1,0,this.markerZaDodavanje);
-    console.log(this.selektovanaLinijaZaIzmenu.Stations);
+    
+    if(i<=0 || i > this.selektovanaLinijaZaIzmenu.Stations.length)
+    {
+      this.errorForListStat = "Index out of range!";
+      form.reset();
+    }
+    else
+    {
+      this.errorForListStat = "";
+      this.selektovanaLinijaZaIzmenu.Stations.splice(i.rBr-1,0,this.markerZaDodavanje);
+      console.log(this.selektovanaLinijaZaIzmenu.Stations);
+      this.boolZaMarkerZaDodavanje = false;
+    }
+    
   }
 
   stationClick1( id: number){

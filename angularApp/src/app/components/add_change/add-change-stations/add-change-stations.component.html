@@ -1,8 +1,4 @@
- <!-- <div *ngFor="let item of stati">
-    {{item.Name}}, {{item.Id}}
-  
-  </div>  -->
-  <!-- class="form-check-input"  class="form-control"  class="form-control" class="form-control" -->
+
 <div>
   <label for="action">Choose action:</label>
   <input  required type="radio" value="Add"  (click)="setradio('Add')"  name="Action"  ngModel>Add
@@ -18,7 +14,7 @@
       (markerClick) = "stationClick(stat.Id)">
       <agm-info-window [latitude]="stat.Latitude" [longitude]="stat.Longitude" >
 
-        <!-- U info-window stavljamo html -->
+     
         <span style="font-size: 16px;font-family:'Times New Roman'">{{stat.Name}}</span>
         <br/>
         
@@ -36,19 +32,26 @@
   <div class="form-group">
     <label for="Name">Station name:</label>
     <input required type="text" class="form-control" name="Name" placeholder="Station name" value={{name}} ngModel>
+    <div *ngIf="!validations.nameOk" style="color:red">Name can't be empty.</div>
 
   </div>
   <div class="form-group">
-    <label for="Address">Station address</label>
-    <input required type="text" class="form-control" name="Address" placeholder="Station address" value={{address}} ngModel>
+    <label for="Address">Station address : </label>
+    <label>{{address}}</label>
+    <!-- <input required type="text" class="form-control" name="Address" placeholder="Station address" value={{address}} ngModel> -->
+    <div *ngIf="!validations.addressOk" style="color:red">Address can't be empty.</div>
   </div>
   <div class="form-group">
     <label for="Longitude">Longitude</label>
-    <input required type="number" class="form-control" name="Longitude" placeholder="Longitude"  value={{coordinates.longitude}} ngModel>
+    <label>{{coordinates.longitude}}</label>
+    <!-- <input required type="number" class="form-control" name="Longitude" placeholder="Longitude"  value={{coordinates.longitude}} ngModel> -->
+    <div *ngIf="!validations.longitudeOk" style="color:red">Longitude can't be empty</div>
   </div>
   <div class="form-group">
     <label for="Latitude">Latitude</label>
-    <input required type="number" class="form-control" name="Latitude" placeholder="Latitude"  value={{coordinates.latitude}} ngModel >
+    <label>{{coordinates.latitude}}</label>
+    <!-- <input required type="number" class="form-control" name="Latitude" placeholder="Latitude"  value={{coordinates.latitude}} ngModel > -->
+    <div *ngIf="!validations.latitudeOk" style="color:red">Latitude can't be empty</div>
   </div>
 
 <button type="submit" class="button" *ngIf="isSelected('Add')">Add</button>

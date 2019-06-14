@@ -41,20 +41,50 @@
  
     </agm-marker>
   </div>
+
   <div *ngIf="isSelected('Add')">
+  <div  *ngFor="let dire of polyline.path, let j = index">
+    <agm-direction 
+    [renderOptions] = "{polylineOptions: {strokeColor: polyline.color}, suppressMarkers: true,  preserveViewport: true}"
+     *ngIf="polyline.path[j+1]"  
+    [origin]="{ lat: polyline.path[j].latitude, lng: polyline.path[j].longitude }" 
+    [destination]="{ lat: polyline.path[j+1].latitude, lng: polyline.path[j+1].longitude }">
+        <!-- <agm-polyline-point  *ngFor="let point of oneLine.Stations" [latitude]="point.Latitude" [longitude]="point.Longitude">
+        [strokeColor]="oneLine.ColorLine"
+        </agm-polyline-point> -->
+      </agm-direction>
+</div>
+</div>
+
+
+<div *ngIf="!isSelected('Add')">
+  <div  *ngFor="let point of sl.Stations, let j = index">
+    <agm-direction 
+    [renderOptions] = "{polylineOptions: {strokeColor: sl.ColorLine}, suppressMarkers: true, preserveViewport: true}"
+     *ngIf="sl.Stations[j+1]"  
+    [origin]="{ lat: sl.Stations[j].Latitude, lng: sl.Stations[j].Longitude }" 
+    [destination]="{ lat: sl.Stations[j+1].Latitude, lng:sl.Stations[j+1].Longitude }">
+        <!-- <agm-polyline-point  *ngFor="let point of oneLine.Stations" [latitude]="point.Latitude" [longitude]="point.Longitude">
+        [strokeColor]="oneLine.ColorLine"
+        </agm-polyline-point> -->
+      </agm-direction>
+</div>
+</div>
+
+  <!-- <div *ngIf="isSelected('Add')">
     <agm-polyline [strokeColor]="lineColor">
       <agm-polyline-point *ngFor="let point of polyline.path" [latitude]="point.latitude" [longitude]="point.longitude">
       </agm-polyline-point>
     </agm-polyline>
-  </div>
+  </div> -->
     <!-- *ngFor="let line of selectedLines" -->
     <!-- [editable]="isSelected('Change')" -->
-<div *ngIf="!isSelected('Add')">
+<!-- <div *ngIf="!isSelected('Add')">
     <agm-polyline   [strokeColor]="sl.ColorLine" >
       <agm-polyline-point  *ngFor="let point of sl.Stations" [latitude]="point.Latitude" [longitude]="point.Longitude">
       </agm-polyline-point>
     </agm-polyline>
-  </div>
+  </div> -->
     <!-- <agm-marker *ngFor="let point of selLine.path" [latitude]="point.latitude" [longitude]="point.longitude" [iconUrl]="selLine.icon">
      </agm-marker> -->
 
@@ -68,6 +98,7 @@
   <div *ngIf = "isSelected('Add')" class="form-group">
     <label for="LineNumber">Line number:</label>
     <input required type="text" class="form-control" name="LineNumber" placeholder="Line Number" value={{selectedL}} ngModel>
+    <div *ngIf="!validations.lineNumberOk" style="color:red">Line number can't be empty.</div>
   </div>
   <div *ngIf = "!isSelected('Add')" class="form-group">
     <label for="LineNumber">Line number: {{selectedL}} </label>
@@ -90,6 +121,7 @@
       <label>{{st.Address}}</label><br/>
       <label>************************************</label><br/>
   </div>
+  <div *ngIf="!validations.stationsOk" style="color:red">Stations can't be empty.</div>
 </div>
 
 <div *ngIf="isSelected('Change')">
@@ -100,16 +132,19 @@
       <button (click)="removeFromLine(st.Id,i)">X</button> <br/>
       <label>************************************</label><br/>
   </div>
+  <div *ngIf="!validations.stationsOk" style="color:red">Stations can't be empty.</div>
 </div>
 
 <div *ngIf="isSelected('Change')">
   <label for="Stations">You can add stations by clicking on marker! </label><br/>
   <label *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje">Name:  {{markerZaDodavanje.Name}}</label><br/>
   <label *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje">Address:  {{markerZaDodavanje.Address}}</label><br/>
+
   <form  #stationForm1="ngForm" (ngSubmit)="addStationIntoLine(stationForm1.value, stationForm1)">
     <label for="rBr" *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje">Unesite redni broj stanice: </label>
     <input *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje" required type="number" name="rBr" placeholder="" ngModel><br/>
     <button type="submit" *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje" >Add station into line</button> <br/>
-  
+    
+    <div  style="color:red">{{errorForListStat}}</div>
   </form>
 </div>

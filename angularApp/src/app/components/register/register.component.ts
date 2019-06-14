@@ -76,17 +76,5 @@ export class RegisterComponent implements OnInit {
      
     }
   
-    // onUpload(){    
-    //   if (this.selectedImage == undefined){
-    //     alert("No image selected!");
-    //     return; 
-    //   }
-    //   this.fileUploadService.uploadFile(this.selectedImage)
-    //   .subscribe(data => {      
-    //     alert("Image uploaded.");  
-    //   }, 
-    //   error => {
-    //     alert("Image not added, too large!");  
-    //   })
-    // }
+
 }

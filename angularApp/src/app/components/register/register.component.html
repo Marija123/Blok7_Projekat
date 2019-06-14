@@ -1,12 +1,18 @@
-<div class="container">
+<div class="container" style="width: 500px; text-align: center; ">
   <h1>Registration</h1>
   <form #registrationForm="ngForm" (ngSubmit)="Button1(registrationForm.value, registrationForm)">
     <div class="form-group">
-      <label for="role">Role</label>
-      <input class="form-check-input" required type="radio" value="AppUser"  (click)="setradio('AppUser')" class="form-control" name="Role"  ngModel>User
-      <input required type="radio" value="Controller" class="form-control" (click)="setradio('Controller')" name="Role"  ngModel> Controller
-      <input required type="radio" value="Admin" class="form-control" (click)="setradio('Admin')" name="Role"  ngModel> Admin
-    </div>  
+      <label for="role">Role</label><br/>
+      <label style="margin-right: 150px" >
+        <input class="form-check-input" required type="radio" value="AppUser"  (click)="setradio('AppUser')"  name="Role"  ngModel>User
+      </label>
+      <label style="align-content: center" > 
+        <input required type="radio" value="Controller" class="form-check-input" (click)="setradio('Controller')" name="Role"  ngModel> Controller
+      </label>
+      <label style="margin-left: 120px" >
+        <input required type="radio" value="Admin" class="form-check-input" (click)="setradio('Admin')" name="Role"  ngModel> Admin
+      </label>
+     </div>  
     <div *ngIf="isSelected('AppUser')">
       <h4>Type</h4>
       
@@ -64,6 +70,6 @@
           <input *ngIf="isSelected('AppUser')" type="file" (change)="onFileSelected($event)" >  
           <!-- <button type="button" class="button" (click)="onUpload()">Upload</button> -->
           </div>
-      <button type="submit" class="button" >Register</button>
+      <button  type="submit" class="btn btn-success" >Register</button>
     </form>
 </div>

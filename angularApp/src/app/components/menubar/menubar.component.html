@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -21,12 +21,12 @@
         <li><a class="nav-link" [routerLink]="['/validateTicket']">Validation</a></li>
     </ul>
 
-      <div *ngIf="user=='Admin'" class="container">
+      <div *ngIf="user=='Admin'" class="dropdown">
          
        <ul class="nav nav-pills">
          
           <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" data-toggle="dropdown"  role="button" aria-haspopup="true" aria-expanded="true">Add/Change</a>
+              <a class="btn btn-secondary" data-toggle="dropdown"  role="button" aria-haspopup="true" aria-expanded="true">Add/Change</a>
               <div class="dropdown-menu">
                   <a class="dropdown-item" [routerLink]="['/add_change_stations']">Stations</a>
                   <a class="dropdown-item" [routerLink]="['/add_change_lines']">Lines</a>

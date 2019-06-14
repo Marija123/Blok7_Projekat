@@ -250,6 +250,18 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DayTypesController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LinesController.cs" />
+    <Compile Include="Controllers\PassengerTypesController.cs" />
+    <Compile Include="Controllers\PricelistsController.cs" />
+    <Compile Include="Controllers\StationsController.cs" />
+    <Compile Include="Controllers\TicketPricesController.cs" />
+    <Compile Include="Controllers\TicketsController.cs" />
+    <Compile Include="Controllers\TimetablesController.cs" />
+    <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Controllers\VehiclesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

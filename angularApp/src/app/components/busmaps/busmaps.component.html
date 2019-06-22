@@ -7,8 +7,9 @@
   <option *ngFor="let ln of allLines" value="{{ln.LineNumber}}"  >{{ln.LineNumber}}</option>
 </select> -->
 <div class="container">
+    <button class="btn btn-success" (click)="getLocation()">See bus location</button> <br/>
   <div class="row">
-
+   
   <div class="col-xs-6">
       <button class="btn btn-success" (click)="showCheckBoxes()">Click to choose lines</button> <br/>
       <div *ngIf="show">

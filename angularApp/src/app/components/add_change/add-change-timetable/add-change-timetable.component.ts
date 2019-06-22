@@ -280,13 +280,19 @@ ChangeTimetable()
   this.ttZaDodavanje.Departures = stringZaDodavanje;
   if(this.ttZaDodavanje.Departures == "")
   {
-    window.alert("You have to select vehicle and to add at least one time!");
+    window.alert("You have to select vehicle and add at least one time!");
     this.refresh();
   }else{
     this.timetableServ.changeTimetable(this.ttZaDodavanje.Id,this.ttZaDodavanje).subscribe(data=>
       {
         window.alert("Timetable successfully changed!");
         this.refresh();
+      },
+      err => {
+        window.alert(err.error);
+        this.refresh();
+       
+
       });
   }
   
@@ -305,13 +311,19 @@ AddTimetable(){
 
   if(this.ttZaDodavanje.Vehicles.length == 0 || this.ttZaDodavanje.Departures == "")
   {
-    window.alert("You have to select vehicle and to add at least one time!");
+    window.alert("You have to select vehicle and  add at least one time!");
     this.refresh();
   }
   else {
     this.timetableServ.addTimetable(this.ttZaDodavanje).subscribe(data => {
       window.alert("Timetable successfully added!");
       this.refresh();
+    },
+    err => {
+      window.alert(err.error);
+      this.refresh();
+     
+
     });
   }
   
@@ -328,6 +340,12 @@ DeleteTimetable()
   this.timetableServ.deleteTimetable(this.ttZaDodavanje.Id).subscribe(data =>{
     window.alert("Timetable successfully deleted!");
     this.refresh();
+  },
+  err => {
+    window.alert(err.error);
+    this.refresh();
+   
+
   });
 }
 

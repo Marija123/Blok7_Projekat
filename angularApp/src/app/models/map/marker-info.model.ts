@@ -14,4 +14,9 @@ export class MarkerInfo {
         this.location = location;
         this.link = link;
     }
+
+    updatePosition(loc: GeoLocation)
+    {
+        this.location = loc;
+    }
 } 

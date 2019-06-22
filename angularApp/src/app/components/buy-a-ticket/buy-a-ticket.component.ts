@@ -8,14 +8,15 @@ import { TypeModel } from 'src/app/models/typeModel';
 import { TicketModel } from 'src/app/models/ticketModel';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { NgForm } from '@angular/forms';
-
+//import { PayPalConfig } from 'ngx-paypal'
+import { IPayPalConfig,ICreateOrderRequest } from 'ngx-paypal';
 @Component({
   selector: 'app-buy-a-ticket',
   templateUrl: './buy-a-ticket.component.html',
   styleUrls: ['./buy-a-ticket.component.css']
 })
 export class BuyATicketComponent implements OnInit {
-
+  public payPalConfig?: IPayPalConfig;
   allTicketTypes : any = [];
   ticketTypeDetail: string = "";
   selecetTT : number;
@@ -48,13 +49,17 @@ export class BuyATicketComponent implements OnInit {
         this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
         
           this.user = data;    
-          console.log(this.user);    
+          console.log(this.user); 
+          
+           
         });
       }
     }
    }
 
   ngOnInit() {
+    console.log("pozvan initConfig()");
+    this.initConfig(); 
   }
 
   SelectedTicketType(event)
@@ -178,6 +183,40 @@ export class BuyATicketComponent implements OnInit {
       });
     });
    
+  }
+
+  private initConfig(): void {
+    
+   
+    var diffDays =this.priceWDiscount;
+
+
+
+
+    // this.payPalConfig = new PayPalConfig(PayPalIntegrationType.ClientSideREST, PayPalEnvironment.Sandbox, {
+    //   commit: true,
+    //   client: {
+    //    // sandbox: PayPalKey,
+    //   },
+    //   button: {
+    //     label: 'paypal',
+    //   },
+    //   onPaymentComplete: (data, actions) => {
+    //     console.log('OnPaymentComplete');
+    //   },
+    //   onCancel: (data, actions) => {
+    //     console.log('OnCancel');
+    //   },
+    //   onError: (err) => {
+    //     console.log('OnError');
+    //   },
+    //   transactions: [{
+    //     amount: {
+    //       currency: 'USD',
+    //       total: 1 // this.vehicle.pricePerHour * diffDays * 24
+    //     }
+    //   }]
+    // });
   }
 
  

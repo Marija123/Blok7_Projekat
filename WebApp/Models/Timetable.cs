@@ -13,6 +13,8 @@ namespace WebApp.Models
         public string Departures { get; set; }
         public List<Vehicle> Vehicles { get; set; }
 
+        public int Version { get; set; }
+
         [ForeignKey("Line")]
         public int LineId { get; set; }
         public Line Line { get; set; }

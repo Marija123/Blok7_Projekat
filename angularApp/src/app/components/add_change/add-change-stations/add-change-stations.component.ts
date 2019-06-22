@@ -23,6 +23,7 @@ export class AddChangeStationsComponent implements OnInit {
   address: string;
   stati: any = [];
   id: number;
+  version: number;
   public allStations: any = [];
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
   validations : AddStationValidation = new AddStationValidation();
@@ -61,7 +62,14 @@ export class AddChangeStationsComponent implements OnInit {
           window.alert("Station successfully added!");
           form.reset();
           this.refresh();
-        });
+        },
+        err => {
+          window.alert(err.error);
+          this.refresh();
+         
+  
+        }
+        );
      
     }
     else if(this.selected == "Change"){
@@ -73,6 +81,7 @@ export class AddChangeStationsComponent implements OnInit {
         stationData.Name = this.name;
       }
       stationData.Id = this.id;
+      stationData.Version = this.version;
       if(this.validations.validate(stationData))
       {
         this.refresh();
@@ -85,6 +94,12 @@ export class AddChangeStationsComponent implements OnInit {
           window.alert("Station successfully changed!");
           form.reset();
           this.refresh();
+        },
+        err => {
+          window.alert(err.error);
+          this.refresh();
+         
+  
         }
       );
       
@@ -102,6 +117,12 @@ export class AddChangeStationsComponent implements OnInit {
       {
         window.alert("Station successfully removed!");
         this.refresh();
+      },
+      err => {
+        window.alert(err.error);
+        this.refresh();
+       
+
       });
     
   }
@@ -146,13 +167,14 @@ export class AddChangeStationsComponent implements OnInit {
     
   }
 
-  markerDragEnd($event: MouseEvent, name:string, id: number) {
+  markerDragEnd($event: MouseEvent, name:string, id: number, version: number) {
     console.log($event);
      this.coordinates.latitude = $event.coords.lat;
      this.coordinates.longitude = $event.coords.lng;
      this.getAddress(this.coordinates.latitude, this.coordinates.longitude);
      this.name = name;
      this.id = id;
+     this.version = version;
      console.log(id);
   }
 
@@ -163,6 +185,8 @@ export class AddChangeStationsComponent implements OnInit {
   refresh(){
     this.stati = [];
     this.address = "";
+    this.name = "";
+    
     this.coordinates = new GeoLocation(0,0); 
     this.statServ.getAllStations().subscribe(data => {
       this.stati = data;

@@ -14,6 +14,7 @@
   <label>{{priceWDiscount}}</label><br/>
 </div>
 <form  #ticketBuyForm="ngForm" (ngSubmit)="Button1(ticketBuyForm.value, ticketBuyForm)">
+
 <div *ngIf="neregKupVremKartu">
   <label>Ticket is valid for the next hour from the moment of purchase!</label>
     <label for="email">Email address:</label>
@@ -23,10 +24,14 @@
 <div *ngIf="!neregKupVremKartu && !prikaziButtonK">
     <label>{{poruka}}</label>
       
-  </div>
-
+</div>
+<ngx-paypal [config]="payPalConfig"></ngx-paypal>
 </form>
 
 <div *ngIf="prikaziButtonK ">
     <button type="submit" class="button" (click)="BuyTicket()" >Buy a ticket</button>
-</div>
+    <br/>
+    <br/>
+    <br/>
+    
+  </div>

@@ -86,4 +86,20 @@ export class AddChangeVehicleComponent implements OnInit {
       
     });
   }
+
+  // errorHandler(err: any) {
+  //   console.log(err);
+  //   if (err.status != undefined && (err.status == 409 || err.status == 404 || err.status == 400) &&
+  //     err.error.includes("WARNING")) {
+  //     alert(err.error);
+  //     if (!err.error.includes("REFRESH")) {
+  //      //radi nesto refresh
+  //     }
+  //   }
+  // }
+
+  // err => {
+  //   this.errorHandler(err);
+  // }
+
 }

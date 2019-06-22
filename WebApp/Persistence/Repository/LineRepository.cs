@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using WebApp.Models;
 
@@ -20,7 +21,7 @@ namespace WebApp.Persistence.Repository
             return stats;
         }
 
-        public void ReplaceStations(int lineId, IEnumerable<Station> stations)
+        public string ReplaceStations(int lineId, IEnumerable<Station> stations)
         {
             //var line = Context.Lines.Find(lineId);
             //line.Stations = new List<Station>();
@@ -30,13 +31,27 @@ namespace WebApp.Persistence.Repository
            
             foreach(Station s in stations)
             {
-                line.Stations.Add(Context.Stations.Find(s.Id));
-            }
-           // stations.Reverse();
 
-           // line.Stations.AddRange(stations);
-            
-            
+                Station stationDb = Context.Stations.Find(s.Id);
+                if (stationDb != null)
+                {
+                    if (stationDb.Version > s.Version)
+                    {
+                        return "notOk";
+                    }
+                }
+                else
+                {
+                    return "nullStation";
+                }
+
+                line.Stations.Add(stationDb);
+            }
+            // stations.Reverse();
+
+            // line.Stations.AddRange(stations);
+
+            return "Ok";
         }
 
         public void Delete(int id)

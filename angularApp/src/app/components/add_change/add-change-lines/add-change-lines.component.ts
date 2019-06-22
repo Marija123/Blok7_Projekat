@@ -192,6 +192,12 @@ export class AddChangeLinesComponent implements OnInit {
           form.reset();
           // ponovo kupi sve linije, osvezavanje
           this.refresh();
+        },
+        err => {
+          window.alert(err.error);
+          this.refresh();
+         
+  
         });
         
       }
@@ -203,6 +209,7 @@ export class AddChangeLinesComponent implements OnInit {
         lineData.Id = this.selektovanaLinijaZaIzmenu.Id;
         lineData.ColorLine = this.selektovanaLinijaZaIzmenu.ColorLine;
         lineData.LineNumber = this.selektovanaLinijaZaIzmenu.LineNumber;
+        lineData.Version = this.selektovanaLinijaZaIzmenu.Version;
         console.log(lineData);
         if(this.validations.validate(lineData)) {
           this.refresh();
@@ -216,7 +223,13 @@ export class AddChangeLinesComponent implements OnInit {
             form.reset();
             this.refresh();
             
-          });
+          },
+        err => {
+          window.alert(err.error);
+          this.refresh();
+         
+  
+        });
   
         }
       }
@@ -227,7 +240,14 @@ export class AddChangeLinesComponent implements OnInit {
             // ponovo kupi sve linije, osvezavanje
             form.reset();
             this.refresh();
-          });
+          },
+          err => {
+            window.alert(err.error);
+            this.refresh();
+           
+    
+          }
+          );
        
       }
       else{
@@ -290,6 +310,11 @@ export class AddChangeLinesComponent implements OnInit {
       this.allLines = data;
       console.log(data);
     });
+    this.statServ.getAllStations().subscribe(data => {
+      this.stati = data;
+      this.drugiMarkeriStati = data;
+      }
+    );
    }
   
 }

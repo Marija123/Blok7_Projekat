@@ -1,14 +1,15 @@
 <div class="container" style="width: 500px; text-align: center; ">
   
-  <label>Do you want to register as admin or controller?</label><a [routerLink]="['/regAdminController']">Click here</a>
+  
 
   <form [formGroup]="registerForm" (ngSubmit)="Button1()">
-    <h2>Register</h2>
+    <h2>Register as admin or controller</h2>
   
-      <h4>Passenger type</h4>
+      <h4>Choose role: </h4>
       
-      <select class="form-control" name="PassengerType" [value]="Regular" formControlName="PassengerType">
-          <option *ngFor="let type of types" value="{{type.Name}}" >{{type.Name}}</option>
+      <select class="form-control" name="Role" [value]="Admin" formControlName="Role">
+          <option  value="Admin" >Admin</option>
+          <option  value="Controller" >Controller</option>
         </select>
         <!-- <div *ngIf="!validations.RoleOk" style="color:red">Role can't be empty.</div> -->
         
@@ -94,10 +95,6 @@
           </div>
         </div>
 
-        <div *ngIf="registerForm.get('PassengerType').value != 'Regular'" class="form-group" >
-         
-          <input  type="file" (change)="onFileSelected($event)" >  
-        </div>
       <button  type="submit" [disabled]="registerForm.invalid" class="btn btn-success" >Register</button>
     </form>
 </div> 
@@ -108,4 +105,3 @@
     {{error}}
   </li>
 </ul>
-

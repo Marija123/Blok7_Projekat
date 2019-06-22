@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { RegModel } from 'src/app/models/regModel';
-import { NgForm } from '@angular/forms';
-import { TypeModel } from 'src/app/models/typeModel';
+import { Validators, FormBuilder } from '@angular/forms';
+
+
 import { FileUploadService } from 'src/app/services/fileUploadService/file-upload.service';
 import { NotificationService } from 'src/app/services/notificationService/notification.service';
-import { RegistrationValidations } from 'src/app/models/Validation/validationModels';
+import { Router } from '@angular/router';
+import { ConfirmPasswordValidator } from 'src/app/models/Validation/password-validator';
 
 @Component({
   selector: 'app-register',
@@ -13,68 +15,94 @@ import { RegistrationValidations } from 'src/app/models/Validation/validationMod
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  validations: RegistrationValidations = new RegistrationValidations();
-  private selected: string=""; 
-  types:any = [];
-  selectedImage: any;
- 
-  userBytesImage: any;
-  constructor(private authService: AuthenticationService, private fileUploadService: FileUploadService, private notificationServ: NotificationService) {
-    authService.getTypes().subscribe(types => {
-      this.types = types;
-    });
-   }
+
+    serverErrors: string[];
+  registerForm = this.fb.group({
+   
+    Password: ['',
+      [Validators.required,
+      Validators.minLength(6),
+      Validators.pattern(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W])/)]],
+    ConfirmPassword: ['',
+      Validators.required],
+    Email: ['',
+      [Validators.email]],
+    Name: ['',
+      Validators.required],
+    Surname: ['',
+      Validators.required],
+      Address: ['',
+      Validators.required],
+    Birthday: ['', Validators.required],
+     PassengerType: ['Regular', Validators.required]
+  },
+  { validators: ConfirmPasswordValidator }
+   );
+   selectedImage: any = null;
+   types:any = [];
+
+
+  onFileSelected(event){
+    this.selectedImage = event.target.files;
+     
+  }
+
+  get f() 
+  {
+     return this.registerForm.controls; 
+  }
+  constructor(private fb: FormBuilder, private fileUploadService: FileUploadService, private accountService: AuthenticationService,private notificationServ: NotificationService, private router: Router) { 
+    accountService.getTypes().subscribe(types => {
+          this.types = types;
+        });
+  }
+
+
 
   ngOnInit() {
   }
 
-  Button1(regData: RegModel, form: NgForm){
-    if (this.selectedImage == undefined){
-      if(this.validations.validate(regData)) return;
-    console.log(regData);
-      this.authService.register(regData).subscribe(data =>{
-        if(regData.Role != 'AppUser'){
-        this.notificationServ.sendNotification();
-        }
-        window.location.href="/signin";
-       });
-        }else{
-          this.fileUploadService.uploadFile(this.selectedImage)
-          .subscribe(data => {  
-            if(this.validations.validate(regData)) return;
-            console.log(regData);
-            this.authService.register(regData).subscribe(data =>{
-              if(regData.Role != 'AppUser'){
-                this.notificationServ.sendNotification();
-              }
-                if(regData.Role == 'AppUser')
-                {
-                  this.notificationServ.sendNotificationToController();
-                }
-                window.location.href="/signin";
-            });
-          });
-        }
-       
+  Button1() {
+    let regModel: RegModel = this.registerForm.value;
+    let formData: FormData = new FormData();
+
+    regModel.Activated  = false;
+    regModel.Role = "AppUser";
+
+    if (this.selectedImage == undefined || this.selectedImage == null){
+    this.accountService.register(regModel).subscribe(
+      ret => {
+        this.serverErrors = [];
+        //this.notificationServ.sendNotificationToController();
+        this.router.navigateByUrl('/signin');
+
+      },
+      err => {
+        console.log(err);
+        this.serverErrors = err.error.ModelState[""]
+
+      }
+    );
+    }
+    else{
+      this.fileUploadService.uploadFile(this.selectedImage)
+         .subscribe(data => { 
+          this.accountService.register(regModel).subscribe(
+            ret => {
+              this.serverErrors = [];
+              this.notificationServ.sendNotificationToController();
+              this.router.navigateByUrl('/signin');
+      
+            },
+            err => {
+              console.log(err);
+              this.serverErrors = err.error.ModelState[""]
+            }
+          );
+         });
+
+    }
   }
 
-    setradio(e: string): void   
-  {    
-    this.selected = e;  
-  }  
-
-  isSelected(name: string): boolean   
-  { 
-    if (!this.selected) { // if no radio button is selected, always return false so every nothing is shown  
-      return false;  
-    }  
-    return (this.selected === name); // if current radio button is selected, return true, else return false  
-  }   
-
-    onFileSelected(event){
-      this.selectedImage = event.target.files;
-     
-    }
-  
 
 }

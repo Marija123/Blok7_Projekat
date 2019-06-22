@@ -7,6 +7,7 @@ import { StationServiceService } from 'src/app/services/stationService/station-s
 import { LineModel } from 'src/app/models/lineModel';
 import { FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
 import { LineServiceService } from 'src/app/services/lineService/line-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-busmaps',
@@ -28,7 +29,7 @@ export class BusmapsComponent implements OnInit {
   show: boolean = false;
   markerInfo: MarkerInfo;
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
-  constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private mapsApiLoader : MapsAPILoader , private statServ: StationServiceService, private lineServ: LineServiceService) { 
+  constructor(private ngZone: NgZone, private formBuilder: FormBuilder, private mapsApiLoader : MapsAPILoader , private statServ: StationServiceService, private lineServ: LineServiceService, private router: Router) { 
     
     this.statServ.getAllStations().subscribe(data => {
       this.stati = data;
@@ -52,6 +53,10 @@ export class BusmapsComponent implements OnInit {
       //   this.addCheckBoxes();
       // }
       
+  }
+
+  getLocation(){
+    this.router.navigateByUrl('/getLocation');
   }
 
   FieldsChange(event){

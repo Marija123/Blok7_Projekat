@@ -12,6 +12,8 @@ using WebApp.Models;
 using WebApp.Persistence;
 using WebApp.Persistence.UnitOfWork;
 using System.Data.Linq;
+using WebApp.Hubs;
+
 namespace WebApp.Controllers
 {
     [RoutePrefix("api/Stations")]
@@ -20,10 +22,26 @@ namespace WebApp.Controllers
         //private ApplicationDbContext db = new ApplicationDbContext();
         private readonly IUnitOfWork unitOfWork;
         private object locker = new object();
-        public StationsController(IUnitOfWork uw)
+        private BusLocationHub hub;
+        public StationsController(IUnitOfWork uw, BusLocationHub hubb)
         {
             unitOfWork = uw;
+            hub = hubb;
         }
+
+
+        
+
+        
+
+        [HttpPost]
+        [Route("SendStationsToHub")]
+        public IHttpActionResult SendStationsToHub(List<Station> list)
+        {
+            hub.AddStations(list);
+            return Ok();
+        }
+
 
         [Route("GetStations")]
         // GET: api/Stations
@@ -87,39 +105,56 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Station))]
         public IHttpActionResult PostStation(Station station)
         {
-            lock (locker)
-            {
+            
 
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
 
+                if (StationExists(station.Id))
+                {
+                    return Content(HttpStatusCode.Conflict,"CONFLICT Station already exists!");
+                }
 
-                try
+                if (station.Version != 0)
+                {
+                    station.Version = 0;
+                    
+                }
+
+            unitOfWork.Stations.Add(station);
+            try
                 {
                     // station.Lines = new List<Line>();
-                    unitOfWork.Stations.Add(station);
+                    
                     unitOfWork.Complete();
-                    return Ok(station.Id);
-                }
-                catch (Exception ex)
-                {
-                    return NotFound();
-                }
-                //catch (DbUpdateConcurrencyException)
-                //{
-                //    return BadRequest("You have old version of files. Please reload page.");
-                //}
-                //catch (Exception)
-                //{
-                //    return NotFound();
-                //}
-                //db.Stations.Add(station);
-                //db.SaveChanges();
-                //return Ok(station.Id);
-                // return CreatedAtRoute("DefaultApi", new { id = station.Id }, station);
+                return Ok(station.Id);
+
             }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return Content(HttpStatusCode.Conflict, ex);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
+            //return CreatedAtRoute("DefaultApi", new { id = station.Id }, station);
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    return BadRequest("You have old version of files. Please reload page.");
+            //}
+            //catch (Exception)
+            //{
+            //    return NotFound();
+            //}
+            //db.Stations.Add(station);
+            //db.SaveChanges();
+            //return Ok(station.Id);
+            // return CreatedAtRoute("DefaultApi", new { id = station.Id }, station);
+
         }
 
 
@@ -137,28 +172,52 @@ namespace WebApp.Controllers
                     return BadRequest(ModelState);
                 }
 
-
-                try
+            Station stationDb = unitOfWork.Stations.Get(station.Id);
+            if (stationDb != null)
+            {
+                if (stationDb.Version > station.Version)
                 {
-                    unitOfWork.Stations.Update(station);
-                    unitOfWork.Complete();
-                return Ok(station.Id);
-            }
-                //catch (DbUpdateConcurrencyException)
-               // {
-                   // return BadRequest("The object has been modified already.");
-               // }
-                    //    return BadRequest("The object has been modified already.");
-                    //}
-                    //  else
-                    //  {
-                    //return Ok(station.Id);
-                    //  }
-                
-                catch (Exception ex)
-                {
-                    return NotFound();
+                    return Content(HttpStatusCode.Conflict, $" You are trying to edit a station  that has been changed recently. Try again.");
                 }
+            }
+            else
+            {
+                return Content(HttpStatusCode.NotFound, "Station that you are trying to edit either do not exist or was previously deleted by another user.");
+            }
+            stationDb.Version++;
+            stationDb.Latitude = station.Latitude;
+            stationDb.Longitude = station.Longitude;
+            stationDb.Name = station.Name;
+            stationDb.Address = station.Address;
+           
+
+            try
+                {
+                unitOfWork.Stations.Update(stationDb);
+                unitOfWork.Complete();
+                return Ok(stationDb.Id);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return Content(HttpStatusCode.Conflict, ex);
+            }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
+            //catch (DbUpdateConcurrencyException)
+            // {
+            // return BadRequest("The object has been modified already.");
+            // }
+            //    return BadRequest("The object has been modified already.");
+            //}
+            //  else
+            //  {
+            //return Ok(station.Id);
+            //  }
+
+           
             //}
            
 
@@ -177,8 +236,9 @@ namespace WebApp.Controllers
                 Station station = unitOfWork.Stations.Get(id);
                 if (station == null)
                 {
-                    return NotFound();
+                    return Content(HttpStatusCode.NotFound, "Station that you are trying to delete either do not exist or was previously deleted by another user.");
                 }
+            
 
             try
             {
@@ -187,14 +247,20 @@ namespace WebApp.Controllers
                 return Ok(station);
             }
             //catch (DbUpdateConcurrencyException)
-           // {
-               // return BadRequest("The object has been modified already.");
+            // {
+            // return BadRequest("The object has been modified already.");
             //}
-            catch (Exception){
-                return NotFound();
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return Content(HttpStatusCode.Conflict, ex);
             }
-                
-           // }
+            catch (Exception e)
+            {
+                return InternalServerError(e);
+            }
+
+
+            // }
         }
 
         protected override void Dispose(bool disposing)
@@ -206,9 +272,9 @@ namespace WebApp.Controllers
             base.Dispose(disposing);
         }
 
-        //private bool StationExists(int id)
-        //{
-        //    return db.Stations.Count(e => e.Id == id) > 0;
-        //}
+        private bool StationExists(int id)
+        {
+            return unitOfWork.Stations.Get(id) != null;
+        }
     }
 }

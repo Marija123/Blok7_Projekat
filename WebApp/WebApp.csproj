@@ -265,6 +265,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\BusLocationHub.cs" />
     <Compile Include="Hubs\NotificationHub.cs" />
     <Compile Include="Migrations\201905222056072_InitialMigration.cs" />
     <Compile Include="Migrations\201905222056072_InitialMigration.Designer.cs">
@@ -273,6 +274,10 @@
     <Compile Include="Migrations\201906140704591_kreiranjeModela.cs" />
     <Compile Include="Migrations\201906140704591_kreiranjeModela.Designer.cs">
       <DependentUpon>201906140704591_kreiranjeModela.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906211144459_PokusajResavanjaKonflikta.cs" />
+    <Compile Include="Migrations\201906211144459_PokusajResavanjaKonflikta.Designer.cs">
+      <DependentUpon>201906211144459_PokusajResavanjaKonflikta.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -421,6 +426,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906140704591_kreiranjeModela.resx">
       <DependentUpon>201906140704591_kreiranjeModela.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906211144459_PokusajResavanjaKonflikta.resx">
+      <DependentUpon>201906211144459_PokusajResavanjaKonflikta.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

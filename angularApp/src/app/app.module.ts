@@ -42,6 +42,9 @@ import { AddChangeVehicleComponent } from './components/add_change/add-change-ve
 import { CanActivateNotification } from './guard/notification-guard';
 import { CanActivateUser } from './guard/user-guard';
 import { UserNotSignedInGuard } from './guard/notSignedIn-guard';
+import { RegAdminContComponent } from './components/register/reg-admin-cont/reg-admin-cont.component';
+import { BusLocationComponent } from './components/busmaps/bus-location/bus-location.component';
+import { NgxPayPalModule } from 'ngx-paypal';
 
 const Routes = [
   {
@@ -61,6 +64,10 @@ const Routes = [
     component: BusmapsComponent
   },
   {
+    path: "getLocation",
+    component: BusLocationComponent
+  },
+  {
     path: "pricelist",
     component: PricelistComponent
   },
@@ -75,6 +82,13 @@ const Routes = [
     canActivate:[UserNotSignedInGuard]
     
   },
+  {
+    path: "regAdminController",
+    component: RegAdminContComponent,
+    canActivate:[UserNotSignedInGuard]
+    
+  },
+  
   {
     path: "profile",
     component: ProfileComponent,
@@ -148,7 +162,9 @@ const Routes = [
     EditProfileComponent,
     NotificationsComponent,
     TicketValidationComponent,
-    AddChangeVehicleComponent
+    AddChangeVehicleComponent,
+    RegAdminContComponent,
+    BusLocationComponent
   ],
   imports: [
     BrowserModule,
@@ -164,7 +180,7 @@ const Routes = [
     ToastrModule.forRoot({
       toastComponent: ToastNoAnimation,
     }),
-    
+    NgxPayPalModule,
   ],
  // {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
   providers: [ CanActivateViaAuthGuard,

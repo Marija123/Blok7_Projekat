@@ -5,13 +5,15 @@ export class LineModel{
     LineNumber: string;
     ColorLine: string;
     Stations: StationModel[] = [];
+    Version: number;
     
     
-    constructor( id: number,  linenumber:string,stations: StationModel[], col:string ){
+    constructor( id: number,  linenumber:string,stations: StationModel[], col:string, ver? : number ){
         this.Id = id;
         this.LineNumber = linenumber;
         this.Stations = stations;
         this.ColorLine = col;
+        this.Version = ver;
       
     }
 }

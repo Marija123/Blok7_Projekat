@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/auth/authentication.service';
 import { Subscription } from 'rxjs';
 import { NotificationService } from 'src/app/services/notificationService/notification.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menubar',
@@ -13,7 +14,7 @@ export class MenubarComponent implements OnInit {
   // message: any = {};
   // subscription: Subscription;
   
-  constructor(private notServ:NotificationService, public authService: AuthenticationService) {  
+  constructor(private notServ:NotificationService, public authService: AuthenticationService, private router: Router) {  
      //this.subscription = this.notServ.getMessage().subscribe(message => { this.message = message; });
     }
 
@@ -30,7 +31,8 @@ export class MenubarComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-      window.location.href = "/home";
+     // window.location.href = "/home";
+      this.router.navigate(["signin"]);
     
     
   }

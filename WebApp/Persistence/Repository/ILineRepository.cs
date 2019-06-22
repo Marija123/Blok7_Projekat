@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebApp.Models;
 
 namespace WebApp.Persistence.Repository
@@ -10,7 +6,7 @@ namespace WebApp.Persistence.Repository
     public interface ILineRepository : IRepository<Line,int>
     {
         IEnumerable<Line> GetAllLinesWithStations();
-        void ReplaceStations(int lineId, IEnumerable<Station> stations);
+        string ReplaceStations(int lineId, IEnumerable<Station> stations);
         void Delete(int id);
     }
 }

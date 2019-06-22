@@ -10,6 +10,7 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
 import { NgForm } from '@angular/forms';
 //import { PayPalConfig } from 'ngx-paypal'
 import { IPayPalConfig,ICreateOrderRequest } from 'ngx-paypal';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-buy-a-ticket',
   templateUrl: './buy-a-ticket.component.html',
@@ -32,7 +33,7 @@ export class BuyATicketComponent implements OnInit {
    typeM : any;
   
 
-  constructor(private ticketServ: TicketService, private pricelistServ: PricelistServiceService, private usersService: UserProfileService) {
+  constructor(private router: Router,private ticketServ: TicketService, private pricelistServ: PricelistServiceService, private usersService: UserProfileService) {
     ticketServ.getAllTicketTypes().subscribe( data => {
       this.allTicketTypes = data;
     });
@@ -58,8 +59,7 @@ export class BuyATicketComponent implements OnInit {
    }
 
   ngOnInit() {
-    console.log("pozvan initConfig()");
-    this.initConfig(); 
+    
   }
 
   SelectedTicketType(event)
@@ -97,6 +97,8 @@ export class BuyATicketComponent implements OnInit {
       {
         this.neregKupVremKartu = true;
         this.poruka = "";
+        console.log("pozvan initConfig()");
+      this.initConfig(); 
       }
       else{
         this.poruka = "Only signed in users can buy this type of ticket!";
@@ -115,6 +117,10 @@ export class BuyATicketComponent implements OnInit {
       this.typeM = data;
       this.discount =  this.typeM.Coefficient * 100;
       this.priceWDiscount = this.price - (this.price * this.typeM.Coefficient) ;
+
+      console.log("pozvan initConfig()");
+      this.initConfig(); 
+
       if(this.typeM.Name != "Regular")
       {
         if(!this.user.Activated)
@@ -174,11 +180,11 @@ export class BuyATicketComponent implements OnInit {
       this.ticketServ.SendMail(ticketMod).subscribe(resp =>{
         if(resp == 'Ok'){
           window.alert("Ticket successfully bought!")
-          window.location.href = "/home";
+          this.router.navigateByUrl('/home');
         }
         else{
           alert("Something went wrong");
-          window.location.href = "/home";
+          this.router.navigateByUrl('/home');
         }
       });
     });
@@ -189,35 +195,80 @@ export class BuyATicketComponent implements OnInit {
     
    
     var diffDays =this.priceWDiscount;
+    console.log("cena u dinarima: ", diffDays);
+    diffDays = diffDays/118;
+    var str = diffDays.toFixed(2);
+    console.log("cena u evrima: ", str);
+
+    this.payPalConfig = {
+      currency: 'EUR',
+      clientId: 'sb',
+      
+      createOrderOnClient: (data) => <ICreateOrderRequest> {
+          intent: 'CAPTURE',
+          purchase_units: [{
+              amount: {
+                  currency_code: 'EUR',
+                  value: str,
+                  breakdown: {
+                      item_total: {
+                          currency_code: 'EUR',
+                          value: str
+                      }
+                  }
+              },
+              items: [{
+                  name: 'Enterprise Subscription',
+                  quantity: '1',
+                  category: 'DIGITAL_GOODS',
+                  unit_amount: {
+                      currency_code: 'EUR',
+                      value: str,
+                  },
+              }]
+          }]
+      },
+      advanced: {
+          commit: 'true'
+      },
+      style: {
+          label: 'paypal',
+          layout: 'horizontal',
+          size:  'medium',
+    shape: 'pill',
+    color:  'blue' 
+          
+      },
+      
+      onApprove: (data, actions) => {
+          console.log('onApprove - transaction was approved, but not authorized', data, actions);
+          //actions.order.get().then(details => {
+            //  console.log('onApprove - you can get full order details inside onApprove: ', details);
+         // });
+
+      },
+      onClientAuthorization: (data) => {
+          console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
+         // this.showSuccess = true;
+      },
+      onCancel: (data, actions) => {
+          console.log('OnCancel', data, actions);
+         // this.showCancel = true;
+
+      },
+      onError: err => {
+          console.log('OnError', err);
+          //this.showError = true;
+      },
+      onClick: (data, actions) => {
+          console.log('onClick', data, actions);
+          //this.resetStatus();
+      },
+  };
+}
 
 
-
-
-    // this.payPalConfig = new PayPalConfig(PayPalIntegrationType.ClientSideREST, PayPalEnvironment.Sandbox, {
-    //   commit: true,
-    //   client: {
-    //    // sandbox: PayPalKey,
-    //   },
-    //   button: {
-    //     label: 'paypal',
-    //   },
-    //   onPaymentComplete: (data, actions) => {
-    //     console.log('OnPaymentComplete');
-    //   },
-    //   onCancel: (data, actions) => {
-    //     console.log('OnCancel');
-    //   },
-    //   onError: (err) => {
-    //     console.log('OnError');
-    //   },
-    //   transactions: [{
-    //     amount: {
-    //       currency: 'USD',
-    //       total: 1 // this.vehicle.pricePerHour * diffDays * 24
-    //     }
-    //   }]
-    // });
-  }
+   
 
  
 }

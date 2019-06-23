@@ -16,7 +16,7 @@ import { ConfirmPasswordValidator } from 'src/app/models/Validation/password-val
 })
 export class RegisterComponent implements OnInit {
 
-    serverErrors: string[];
+  serverErrors: string[];
   registerForm = this.fb.group({
    
     Password: ['',
@@ -73,12 +73,12 @@ export class RegisterComponent implements OnInit {
     this.accountService.register(regModel).subscribe(
       ret => {
         this.serverErrors = [];
-        //this.notificationServ.sendNotificationToController();
         this.router.navigateByUrl('/signin');
 
       },
       err => {
         console.log(err);
+        window.alert(err.error.ModelState[""]);
         this.serverErrors = err.error.ModelState[""]
 
       }
@@ -90,12 +90,22 @@ export class RegisterComponent implements OnInit {
           this.accountService.register(regModel).subscribe(
             ret => {
               this.serverErrors = [];
-              this.notificationServ.sendNotificationToController();
-              this.router.navigateByUrl('/signin');
-      
+              console.log("ret", ret);
+              if(ret == "sve je ok")
+              {
+                this.notificationServ.sendNotificationToController();
+                this.router.navigateByUrl('/signin');
+              }
+              else
+              {
+                console.log("nesto nece d posalje notifikaciju");
+                this.router.navigateByUrl('/signin');
+              }
+                
             },
             err => {
               console.log(err);
+              window.alert(err.error.ModelState[""]);
               this.serverErrors = err.error.ModelState[""]
             }
           );

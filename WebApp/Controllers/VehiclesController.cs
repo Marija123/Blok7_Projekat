@@ -103,6 +103,10 @@ namespace WebApp.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if(vehicle.Type == "" || vehicle.Type == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "You have to select type of vehicle!");
+            }
 
             try
             {
@@ -123,6 +127,11 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Vehicle))]
         public IHttpActionResult DeleteVehicle(int id)
         {
+            if(id == 0)
+            {
+                return Content(HttpStatusCode.BadRequest, "You have to select vehicle you want to remove!");
+            }
+
             Vehicle vehicle = unitOfWork.Vehicles.Get(id);
             if (vehicle == null)
             {

@@ -6,7 +6,7 @@ import { StationModel } from 'src/app/models/stationModel';
 import { NgForm } from '@angular/forms';
 import { StationServiceService } from 'src/app/services/stationService/station-service.service';
 import { Observable } from 'rxjs/internal/Observable';
-import { AddStationValidation } from 'src/app/models/Validation/validationModels';
+//import { AddStationValidation } from 'src/app/models/Validation/validationModels';
 
 @Component({
   selector: 'app-add-change-stations',
@@ -26,7 +26,8 @@ export class AddChangeStationsComponent implements OnInit {
   version: number;
   public allStations: any = [];
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
-  validations : AddStationValidation = new AddStationValidation();
+ // validations : AddStationValidation = new AddStationValidation();
+
   constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader, private statServ: StationServiceService) { 
     this.statServ.getAllStations().subscribe(data => {
     this.stati = data;
@@ -40,7 +41,6 @@ export class AddChangeStationsComponent implements OnInit {
     "Jugodrvo" , "" , "http://ftn.uns.ac.rs/691618389/fakultet-tehnickih-nauka");
     
     this.mapsApiLoader.load().then(() =>{
-     
       this.geocoder = new google.maps.Geocoder();
     });
   }
@@ -53,10 +53,7 @@ export class AddChangeStationsComponent implements OnInit {
       stationData.Longitude = this.coordinates.longitude;
       stationData.Address = this.address;
       console.log(stationData)
-      if(this.validations.validate(stationData)) {
-        this.refresh();
-        return;
-      }
+     
       this.statServ.addStation(stationData).subscribe(data => 
         {
           window.alert("Station successfully added!");
@@ -66,13 +63,11 @@ export class AddChangeStationsComponent implements OnInit {
         err => {
           window.alert(err.error);
           this.refresh();
-         
-  
-        }
-        );
+        });
      
     }
     else if(this.selected == "Change"){
+
       stationData.Latitude = this.coordinates.latitude;
       stationData.Longitude = this.coordinates.longitude;
       stationData.Address = this.address;
@@ -82,11 +77,7 @@ export class AddChangeStationsComponent implements OnInit {
       }
       stationData.Id = this.id;
       stationData.Version = this.version;
-      if(this.validations.validate(stationData))
-      {
-        this.refresh();
-        return;
-      } 
+     
       console.log("stationData")
       console.log(stationData)
       this.statServ.changeStation(stationData).subscribe(data =>
@@ -98,21 +89,17 @@ export class AddChangeStationsComponent implements OnInit {
         err => {
           window.alert(err.error);
           this.refresh();
-         
-  
-        }
-      );
-      
+        });
     }
   
-    else{
-      console.log("lalallaa")
-    }
-    
   }
 
   RemoveStation()
   {
+    if(this.id == undefined)
+    {
+      this.id = 0;
+    }
     this.statServ.deleteStation(this.id).subscribe(data =>
       {
         window.alert("Station successfully removed!");
@@ -121,61 +108,57 @@ export class AddChangeStationsComponent implements OnInit {
       err => {
         window.alert(err.error);
         this.refresh();
-       
-
       });
     
   }
 
   setradio(e: string): void   
   {  
-        this.selected = e; 
-        this.stati = [];
-        this.name = "";
-        this.address = "";
-        this.statServ.getAllStations().subscribe(data => {
-          this.stati = data;
-          });     
+    this.selected = e; 
+    this.stati = [];
+    this.name = "";
+    this.address = "";
+    this.statServ.getAllStations().subscribe(data => {
+      this.stati = data;
+    });     
   }  
 
   isSelected(name: string): boolean   
   { 
-        if (!this.selected) { // if no radio button is selected, always return false so every nothing is shown  
-            return false;  
-        }  
-        return (this.selected === name); // if current radio button is selected, return true, else return false  
+    if (!this.selected) { // if no radio button is selected, always return false so every nothing is shown  
+      return false;  
+    }  
+    return (this.selected === name); // if current radio button is selected, return true, else return false  
   } 
 
   placeMarker1($event){
     this.coordinates = new GeoLocation($event.coords.lat, $event.coords.lng);
-    this.getAddress(this.coordinates.latitude,this.coordinates.longitude);
-    
+    this.getAddress(this.coordinates.latitude,this.coordinates.longitude);  
   }
 
   getAddress(latitude: number,longitude:number){
     this.geocoder.geocode({'location': {lat: latitude, lng: longitude}}, (results,status) =>{
       console.log(results);
       if(status === 'OK'){
-          if(results[0]){
-            this.address = results[0].formatted_address;
-          }
-          else{
-            window.alert('no results found');
-          }
+        if(results[0]){
+          this.address = results[0].formatted_address;
+        }
+        else{
+          window.alert('no results found');
+        }
       }
     });
     
   }
 
   markerDragEnd($event: MouseEvent, name:string, id: number, version: number) {
-    console.log($event);
-     this.coordinates.latitude = $event.coords.lat;
-     this.coordinates.longitude = $event.coords.lng;
-     this.getAddress(this.coordinates.latitude, this.coordinates.longitude);
-     this.name = name;
-     this.id = id;
-     this.version = version;
-     console.log(id);
+    this.coordinates.latitude = $event.coords.lat;
+    this.coordinates.longitude = $event.coords.lng;
+    this.getAddress(this.coordinates.latitude, this.coordinates.longitude);
+    this.name = name;
+    this.id = id;
+    this.version = version;
+    console.log(id);
   }
 
   stationClick(id: number){
@@ -190,7 +173,7 @@ export class AddChangeStationsComponent implements OnInit {
     this.coordinates = new GeoLocation(0,0); 
     this.statServ.getAllStations().subscribe(data => {
       this.stati = data;
-      });
+    });
   }
 
 }

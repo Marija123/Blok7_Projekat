@@ -16,26 +16,26 @@
                 <div class="form-group">
                   <label for="Name"><b>Station name:</b></label>
                   <input required type="text" class="form-control" name="Name" placeholder="Station name" value={{name}} ngModel>
-                  <div *ngIf="!validations.nameOk" style="color:red">Name can't be empty.</div>
+                  
               
                 </div>
                 <div class="form-group">
                   <label for="Address"><b>Station address :</b> </label><br/>
                   <label style="max-width: 200px; word-wrap: break-word">{{address}}</label>
                   <!-- <input required type="text" class="form-control" name="Address" placeholder="Station address" value={{address}} ngModel> -->
-                  <div *ngIf="!validations.addressOk" style="color:red">Address can't be empty.</div>
+                 
                 </div>
                 <div class="form-group">
                   <label for="Longitude"><b>Longitude:</b> </label><br/>
                   <label>{{coordinates.longitude}}</label>
                   <!-- <input required type="number" class="form-control" name="Longitude" placeholder="Longitude"  value={{coordinates.longitude}} ngModel> -->
-                  <div *ngIf="!validations.longitudeOk" style="color:red">Longitude can't be empty</div>
+                 
                 </div>
                 <div class="form-group">
                   <label for="Latitude"><b>Latitude: </b></label><br/>
                   <label>{{coordinates.latitude}}</label>
                   <!-- <input required type="number" class="form-control" name="Latitude" placeholder="Latitude"  value={{coordinates.latitude}} ngModel > -->
-                  <div *ngIf="!validations.latitudeOk" style="color:red">Latitude can't be empty</div>
+                
                 </div>
               
               <button type="submit" class="btn btn-success" *ngIf="isSelected('Add')">Add</button>

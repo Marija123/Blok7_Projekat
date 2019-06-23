@@ -8,7 +8,8 @@ import { StationModel } from 'src/app/models/stationModel';
 import { NgForm } from '@angular/forms';
 import { LineModel } from 'src/app/models/lineModel';
 import { LineServiceService } from 'src/app/services/lineService/line-service.service';
-import { AddLinesValidation } from 'src/app/models/Validation/validationModels';
+//import { AddLinesValidation } from 'src/app/models/Validation/validationModels';
+import { element } from 'protractor';
 
 
 @Component({
@@ -19,7 +20,6 @@ import { AddLinesValidation } from 'src/app/models/Validation/validationModels';
 })
 export class AddChangeLinesComponent implements OnInit {
   public polyline: Polyline;
-  //public selectedLines: LineModel[] = [];
   sl: LineModel = new LineModel(0,"",[],"");
   selektovanaLinijaZaIzmenu: LineModel = new LineModel(0,"",[],"");
   selLine: Polyline;
@@ -42,7 +42,7 @@ export class AddChangeLinesComponent implements OnInit {
   boolZaMarkerZaDodavanje : boolean = false;
   LineSelected : string = "none";
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
-  validations: AddLinesValidation = new AddLinesValidation();
+  //validations: AddLinesValidation = new AddLinesValidation();
 
   errorForListStat:string = "";
   
@@ -50,8 +50,7 @@ export class AddChangeLinesComponent implements OnInit {
     this.statServ.getAllStations().subscribe(data => {
       this.stati = data;
       this.drugiMarkeriStati = data;
-      }
-    );
+      });
 
       this.lineServ.getAllLines().subscribe(data => {
         this.allLines = data;
@@ -76,53 +75,56 @@ export class AddChangeLinesComponent implements OnInit {
     });
   }
 
-  stationClick( id: number){
+  stationClick( id: number){  //pravjenje linije
+    let postojiStanica : boolean = false;
     if(this.selected == 'Add'){
-   this.stati.forEach(element => {
-    
-      if(element.Id == id){
-        this.pomStat = element;
+      this.stati.forEach(element => {
+       if(element.Id == id){
+          this.pomStat = element;
+       }
+    });
+    this.selectedStations.forEach(element => {
+      if(element.Id == this.pomStat.Id)
+      {
+        postojiStanica = true;
       }
-
-   });
- 
-   console.log("pomStat:");
-   console.log(this.pomStat);
-   this.selectedStations.push(this.pomStat);
-    this.polyline.addLocation(new GeoLocation(this.pomStat.Latitude, this.pomStat.Longitude))
-    this.id = id;
-  }
+    })
+    if(postojiStanica)
+    {
+      window.alert("Station already exists in line! Choose another station.");
+    }else {
+      this.selectedStations.push(this.pomStat);
+      this.polyline.addLocation(new GeoLocation(this.pomStat.Latitude, this.pomStat.Longitude))
+      this.id = id;
+    }
+    
+    }
   }
 
   SelectedLine(event: any): void
   {
     this.selectedL = event.target.value;
-    
+
     if(this.selectedL == "none" || this.selectedL == "")
     {
-      //this.selectedLines = [];
       this.sl = new LineModel(0,"",[],"");
       this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
       this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
-
+      this.idForRemove = 0;
     }
-    
     else 
     {
-      //this.selectedLines = [];
       this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
       this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
       this.allLines.forEach(x => {
         if(x.LineNumber == this.selectedL)
         {
-          //this.selectedLines.push(x);
           this.selektovanaLinijaZaIzmenu = x;
           this.sl = x;
           this.idForRemove = x.Id;
           x.Stations.forEach(stat => {
             this.selLine.addLocation(new GeoLocation(stat.Longitude, stat.Latitude));
           });
-          console.log(this.selLine);
         }
       });
 
@@ -131,11 +133,12 @@ export class AddChangeLinesComponent implements OnInit {
 
   isSelectedLine(name: string): boolean
   {
-    if (!this.selectedL) { // if no radio button is selected, always return false so every nothing is shown  
+    if (!this.selectedL) { 
       return false;  
     }  
-     return (this.selectedL === name); 
+    return (this.selectedL === name); 
   }
+
   setradio(e: string): void   
   {  
     this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
@@ -152,52 +155,32 @@ export class AddChangeLinesComponent implements OnInit {
 
   isSelected(name: string): boolean   
   {  
-        if (!this.selected) { // if no radio button is selected, always return false so every nothing is shown  
-            return false;  
-        }  
-        return (this.selected === name); // if current radio button is selected, return true, else return false  
+    if (!this.selected) {  
+       return false;  
+    }  
+    return (this.selected === name);  
   } 
 
   onSubmit(lineData: LineModel, form: NgForm){
     
-    
       if(this.selected == "Add")
       {
-       
         lineData.Stations = this.selectedStations;
-       if(lineData.ColorLine == "" || lineData.ColorLine == null)
-       {
-         lineData.ColorLine = "#000000";
-       }
-        console.log(lineData)
-        if(this.validations.validate(lineData)) {
-          this.refresh();
-          //form.reset();
-          return;
+        if(lineData.ColorLine == "" || lineData.ColorLine == null)
+        {
+          lineData.ColorLine = "#000000";
         }
-
-        this.allLines.forEach(element => {
-          if(element.LineNumber == lineData.LineNumber)
-          {
-            window.alert("Line number already exits!");
-              form.reset();
-              this.refresh();
-          }
-          
-        });
 
         this.lineServ.addLine(lineData).subscribe(data => {
           this.boolic = data;
           window.alert("Line successfully added!");
           form.reset();
-          // ponovo kupi sve linije, osvezavanje
           this.refresh();
         },
         err => {
           window.alert(err.error);
+          form.reset();
           this.refresh();
-         
-  
         });
         
       }
@@ -211,11 +194,11 @@ export class AddChangeLinesComponent implements OnInit {
         lineData.LineNumber = this.selektovanaLinijaZaIzmenu.LineNumber;
         lineData.Version = this.selektovanaLinijaZaIzmenu.Version;
         console.log(lineData);
-        if(this.validations.validate(lineData)) {
-          this.refresh();
-          //form.reset();
-          return;
-        }
+        // if(this.validations.validate(lineData)) {
+        //   this.refresh();
+        //   //form.reset();
+        //   return;
+        // }
         this.lineServ.changeLine(this.selektovanaLinijaZaIzmenu.Id,lineData).subscribe(data =>
           {
             window.alert("Line successfully changed!");
@@ -234,6 +217,10 @@ export class AddChangeLinesComponent implements OnInit {
         }
       }
       else if(this.selected == "Remove"){
+        if(this.idForRemove == undefined)
+        {
+          this.idForRemove = 0;
+        }
         this.lineServ.deleteLine(this.idForRemove).subscribe(data =>
           {
             window.alert("Line successfully removed!");
@@ -244,10 +231,7 @@ export class AddChangeLinesComponent implements OnInit {
           err => {
             window.alert(err.error);
             this.refresh();
-           
-    
-          }
-          );
+          });
        
       }
       else{
@@ -264,48 +248,61 @@ export class AddChangeLinesComponent implements OnInit {
 
   addStationIntoLine(i: any, form: NgForm)
   {
-    
-    if(i<=0 || i > this.selektovanaLinijaZaIzmenu.Stations.length)
+    let postojiStanica : boolean = false;
+
+    this.selektovanaLinijaZaIzmenu.Stations.forEach(element => {
+      if(element.Id == this.markerZaDodavanje.Id)
+      {
+        postojiStanica = true;
+      }
+    })
+    if(postojiStanica)
     {
-      this.errorForListStat = "Index out of range!";
-      form.reset();
+      window.alert("Station already exists in line! Choose another station.");
+    }else {
+       
+      if(i.rBr <= 0 || i.rBr > this.selektovanaLinijaZaIzmenu.Stations.length)
+      {
+        window.alert("Index out of range!");
+        form.reset();
+      }
+      else
+      {
+        this.errorForListStat = "";
+        this.selektovanaLinijaZaIzmenu.Stations.splice(i.rBr-1,0,this.markerZaDodavanje);
+        this.boolZaMarkerZaDodavanje = false;
+      }
     }
-    else
-    {
-      this.errorForListStat = "";
-      this.selektovanaLinijaZaIzmenu.Stations.splice(i.rBr-1,0,this.markerZaDodavanje);
-      console.log(this.selektovanaLinijaZaIzmenu.Stations);
-      this.boolZaMarkerZaDodavanje = false;
-    }
+   
     
   }
 
-  stationClick1( id: number){
+  stationClick1( id: number){  //dodavanje u liniju
+
     this.stati.forEach(element => {
-     
        if(element.Id == id){
          this.markerZaDodavanje = element;
          this.boolZaMarkerZaDodavanje = true;
        }
  
     });
-  
-    console.log("marker za dodavanje:");
-    console.log(this.markerZaDodavanje);
     
-   }
+  }
 
-   refresh()
-   {
+  refresh()
+  {
     this.polyline = new Polyline([], 'blue', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
     this.sl = new LineModel(0,"",[],"");
     this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
     this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
     this.selectedL = "none";
-   this.markerZaDodavanje = new StationModel("","", 0,0,0);
+    this.markerZaDodavanje = new StationModel("","", 0,0,0);
     this.allLines = [];
     this.selectedStations = [];
     this.boolZaMarkerZaDodavanje = false;
+    this.idForRemove = 0;
+    this.LineSelected = "none";
+
     this.lineServ.getAllLines().subscribe(data => {
       this.allLines = data;
       console.log(data);
@@ -313,8 +310,7 @@ export class AddChangeLinesComponent implements OnInit {
     this.statServ.getAllStations().subscribe(data => {
       this.stati = data;
       this.drugiMarkeriStati = data;
-      }
-    );
-   }
+    });
+  }
   
 }

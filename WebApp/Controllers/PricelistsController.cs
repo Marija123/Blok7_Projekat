@@ -49,51 +49,35 @@ namespace WebApp.Controllers
             return pricelist;
         }
 
-        //// PUT: api/Pricelists/5
-        //[ResponseType(typeof(void))]
-        //public IHttpActionResult PutPricelist(int id, Pricelist pricelist)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-        //    if (id != pricelist.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    db.Entry(pricelist).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        db.SaveChanges();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!PricelistExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return StatusCode(HttpStatusCode.NoContent);
-        //}
-
+ 
         // POST: api/Pricelists
         [Route("Add")]
         [ResponseType(typeof(Pricelist))]
-        public bool PostPricelist(TicketPricesHelpModel t)
+        public IHttpActionResult PostPricelist(TicketPricesHelpModel t)
         {
             if (!ModelState.IsValid)
             {
-                return false;
+                return BadRequest(ModelState);
             }
 
+            //validacije
+            if(t.Hourly<= 0 || t.Daily<=0 || t.Monthly<=0 || t.Yearly<=0)
+            {
+                return Content(HttpStatusCode.BadRequest, "Prices can't be less then 1!");
+            }
+            if(t.PriceList.StartOfValidity.ToString() == "" || t.PriceList.EndOfValidity.ToString() == "" || t.PriceList.StartOfValidity == null || t.PriceList.EndOfValidity == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "Start or end of validity can't be empty!");
+            }
+            if(t.PriceList.StartOfValidity.Value.Date < DateTime.Now.Date)
+            {
+                return Content(HttpStatusCode.BadRequest, "You can't make pricelist for past!");
+            }
+
+            if(t.PriceList.StartOfValidity > t.PriceList.EndOfValidity)
+            {
+                return Content(HttpStatusCode.BadRequest, "Start of validity is bigger then end of validity!");
+            }
 
             try
             {
@@ -125,12 +109,12 @@ namespace WebApp.Controllers
                 unitOfWork.PriceLists.Add(prl);
                 unitOfWork.Complete();
 
-                return true;
+                return Ok();
             }
             catch (Exception ex)
             {
 
-                return false;
+                return NotFound();
             }
         }
 

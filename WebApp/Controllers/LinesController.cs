@@ -74,27 +74,25 @@ namespace WebApp.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutLine(int id, Line line)
         {
-            
+            if (!ModelState.IsValid)
+            {
+               return BadRequest(ModelState);
+            }
 
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
+            if (id != line.Id)
+            {
+                return BadRequest();
+            }
 
+            if (line.Stations == null || line.Stations.Count < 2)
+            {
+                return Content(HttpStatusCode.BadRequest, "You must add at least two stations per line");
+            }
+            //List<Line> stats = unitOfWork.Lines.GetAllLinesWithStations().ToList();
+            Line lineDb = unitOfWork.Lines.Get(id);
 
-
-                if (id != line.Id)
-                {
-                    return BadRequest();
-                }
-
-                //List<Line> stats = unitOfWork.Lines.GetAllLinesWithStations().ToList();
-
-                Line lineDb = unitOfWork.Lines.Get(id);
-
-
-                if (lineDb != null)
-                {
+            if (lineDb != null)
+            {
                     if (lineDb.Version > line.Version)
                     {
                         return Content(HttpStatusCode.Conflict, "CONFLICT You are trying to edit a Line that has been changed recently. Try again. ");
@@ -156,61 +154,71 @@ namespace WebApp.Controllers
         public IHttpActionResult PostLine(Line line)
         {
            
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-                 if (LineExists(line.Id))
-                 {
-                    return Content(HttpStatusCode.Conflict, "CONFLICT Line already exists!");
-                 }
+            if (LineExists(line.Id))
+            {
+                return Content(HttpStatusCode.Conflict, "CONFLICT Line already exists!");
+            }
 
-                if (line.Version != 0)
-                {
-                    line.Version = 0;
+            if (line.Version != 0)
+            {
+                line.Version = 0;
+            }
 
-                }
+            if(line.LineNumber == "" || line.LineNumber == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "You have to fill line number!");
+            }
+
+            List<Line> listOfLines = unitOfWork.Lines.GetAll().ToList();
+            if(listOfLines.Exists(x => x.LineNumber == line.LineNumber))
+            {
+                return Content(HttpStatusCode.BadRequest, "Line with that number already exists!");
+            }
+            if(line.Stations == null || line.Stations.Count < 2)
+            {
+                return Content(HttpStatusCode.BadRequest, "You must add at least two stations per line");
+            }
 
             Line l = new Line();
-                l.Stations = new List<Station>();
-                l.LineNumber = line.LineNumber;
-                l.ColorLine = line.ColorLine;
+            l.Stations = new List<Station>();
+            l.LineNumber = line.LineNumber;
+            l.ColorLine = line.ColorLine;
 
-                List<Station> stats = unitOfWork.Stations.GetAll().ToList();
-                //line.Stations.Reverse();
-                int i = 0;
-                foreach (Station s in line.Stations)
+            List<Station> stats = unitOfWork.Stations.GetAll().ToList();
+            int i = 0;
+            foreach (Station s in line.Stations)
+            {
+                Station stationAdd = stats.Find(x => x.Id.Equals(s.Id));
+                if(stationAdd == null)
                 {
-
-                    Station stationAdd = stats.Find(x => x.Id.Equals(s.Id));
-                    if(stationAdd == null)
+                    return Content(HttpStatusCode.Conflict, "CONFLICT Station you want to add in line has been removed!");
+                }
+                else{
+                    if(stationAdd.Version > s.Version)
                     {
-                        return Content(HttpStatusCode.Conflict, "CONFLICT Station you want to add in line has been removed!");
+                        return Content(HttpStatusCode.Conflict, "CONFLICT Station you want to add in line has been changed!");
                     }
-                    else{
-                        if(stationAdd.Version > s.Version)
-                        {
-                            return Content(HttpStatusCode.Conflict, "CONFLICT Station you want to add in line has been changed!");
-                        }
-                    }
-                    i++;
-                    SerialNumberSL o = new SerialNumberSL();
-                    o.LineId = line.Id;
-                    o.StationId = s.Id;
-                    o.SerialNumber = i;
-                    unitOfWork.SerialNumberSLs.Add(o);
-                    l.Stations.Add(stats.Find(x => x.Id.Equals(s.Id)));
                 }
+                i++;
+                SerialNumberSL o = new SerialNumberSL();
+                o.LineId = line.Id;
+                o.StationId = s.Id;
+                o.SerialNumber = i;
+                unitOfWork.SerialNumberSLs.Add(o);
+                l.Stations.Add(stats.Find(x => x.Id.Equals(s.Id)));
+            }
 
-                try
-                {
-
-                    unitOfWork.Lines.Add(l);
-                    unitOfWork.Complete();
-
-                    return Ok(l.Id);
-                }
+            try
+            {
+                unitOfWork.Lines.Add(l);
+                unitOfWork.Complete();
+                return Ok(l.Id);
+            }
             catch (DbUpdateConcurrencyException ex)
             {
                 return Content(HttpStatusCode.Conflict, ex);
@@ -219,69 +227,25 @@ namespace WebApp.Controllers
             {
                 return InternalServerError(e);
             }
-
-            //db.Lines.Add(line);
-            //db.SaveChanges();
-
-            //return CreatedAtRoute("DefaultApi", new { id = line.Id }, line);
+            
 
         }
 
-        //[Route("SerialNumber")]
-
-        //// POST: api/Lines
-        //[ResponseType(typeof(Line))]
-        //public IHttpActionResult PostSerialNumber(Line line)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-
-
-        //    List<StationLines> sl = unitOfWork.StationLines.GetAll().ToList();
-
-        //    List<Station> stats = unitOfWork.Stations.GetAll().ToList();
-        //    //line.Stations.Reverse();
-        //    int i = 0;
-        //    foreach (Station s in line.Stations)
-        //    {
-        //        i++;
-        //       var k = sl.Find(x => x.LineId == line.Id && x.StationId == s.Id);
-        //        k.SerialNumber = i;
-        //        unitOfWork.StationLines.Update(k);
-
-        //    }
-
-        //    try
-        //    {
-
-               
-        //        unitOfWork.Complete();
-
-        //        return Ok(line.Id);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    //db.Lines.Add(line);
-        //    //db.SaveChanges();
-
-        //    //return CreatedAtRoute("DefaultApi", new { id = line.Id }, line);
-        //}
-
-
+       
         [Route("Delete")]
         // DELETE: api/Lines/5
         [ResponseType(typeof(Line))]
         public IHttpActionResult DeleteLine(int id)
         {
            
-                Line line = unitOfWork.Lines.Get(id);
-                if (line == null)
-                {
+            if(id == 0)
+            {
+                return Content(HttpStatusCode.BadRequest, "You have to select line you want to remove!");
+            }
+
+            Line line = unitOfWork.Lines.Get(id);
+            if (line == null)
+            {
                 return Content(HttpStatusCode.NotFound, "Line that you are trying to delete either do not exist or was previously deleted by another user.");
             }
 

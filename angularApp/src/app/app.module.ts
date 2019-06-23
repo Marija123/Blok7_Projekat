@@ -22,7 +22,7 @@ import { AgmCoreModule } from '@agm/core';
 import { AddChangeStationsComponent } from './components/add_change/add-change-stations/add-change-stations.component';
 import { AddChangeTimetableComponent } from './components/add_change/add-change-timetable/add-change-timetable.component';
 import { AddChangePricelistComponent } from './components/add_change/add-change-pricelist/add-change-pricelist.component';
-import { MapComponent } from './components/map/map.component';
+
 import { BuyATicketComponent } from './components/buy-a-ticket/buy-a-ticket.component';
 import { UserSignedInGuard } from './guard/userSignedIn-guar';
 import { CanActivateViaAuthGuard } from './guard/auth-guard';
@@ -157,7 +157,6 @@ const Routes = [
     AddChangeStationsComponent,
     AddChangeTimetableComponent,
     AddChangePricelistComponent,
-    MapComponent,
     BuyATicketComponent,
     EditProfileComponent,
     NotificationsComponent,

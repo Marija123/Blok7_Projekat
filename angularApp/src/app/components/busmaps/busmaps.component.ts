@@ -42,16 +42,7 @@ export class BusmapsComponent implements OnInit {
         console.log(data);
       });
 
-      // if(this.allLines != []){
-      //   //const formControls = this.allLines.map(control => new FormControl(false));
-  
-      //   // Simply add the list of FormControls to the FormGroup as a FormArray
-      //   this.myGroup = this.formBuilder.group({
-      //     allLines: new FormArray([]) //new FormArray(formControls)
-      //   });
-
-      //   this.addCheckBoxes();
-      // }
+    
       
   }
 
@@ -139,10 +130,7 @@ export class BusmapsComponent implements OnInit {
       this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
 
     }
-     else if(this.selectedL = "ShowAll")
-    {
-      // this.selectedLines = this.allLines;
-     }
+    
     else 
     {
       

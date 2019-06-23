@@ -42,7 +42,7 @@
           <div *ngIf = "isSelected('Add')" class="form-group">
             <label for="LineNumber">Line number:</label>
             <input required type="text" class="form-control" name="LineNumber" placeholder="Line Number" value={{selectedL}} ngModel>
-            <div *ngIf="!validations.lineNumberOk" style="color:red">Line number can't be empty.</div>
+            
           </div>
           <div *ngIf = "!isSelected('Add')" class="form-group">
             <label for="LineNumber">Line number: {{selectedL}} </label>

@@ -389,13 +389,15 @@ namespace WebApp.Controllers
 
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-            UserManager.AddToRole(user.Id, user.Role);
+
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
             }
+            UserManager.AddToRole(user.Id, user.Role);
+           
 
-            return Ok();
+            return Ok("sve je okej");
         }
 
         [AllowAnonymous]
@@ -418,7 +420,11 @@ namespace WebApp.Controllers
             user.Address = model.Address;
             user.Name = model.Name;
             user.Surname = model.Surname;
-            user.Image = path;
+            if(user.Image == "")
+            {
+                user.Image = path;
+            }
+           
             path = "";
 
 
@@ -537,10 +543,20 @@ namespace WebApp.Controllers
                             Image img = (Image)bmp;
                             byte[] imagebytes = ImageToByteArray(img);
                             byte[] cryptedBytes = EncryptBytes(imagebytes, "password", "asdasd");
-                            File.WriteAllBytes(filePath, cryptedBytes);
-
+                            string newFN = "";
                             path = "/Content/Images/" + postedFile.FileName;
                             var message = string.Format("/Content/Images/" + postedFile.FileName);
+                            if (File.Exists(filePath))
+                            {
+                                 newFN = postedFile.FileName.Split('.')[0] + "1." + postedFile.FileName.Split('.')[1];
+                                filePath = HttpContext.Current.Server.MapPath("/Content/Images/" + newFN);
+                                path = "/Content/Images/" + newFN;
+                                 message = string.Format("/Content/Images/" + newFN);
+                            }
+                            File.WriteAllBytes(filePath, cryptedBytes);
+
+                           
+                            
                         }
                     }
 

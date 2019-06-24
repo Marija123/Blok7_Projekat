@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebApp.Models;
+using WebApp.Models.HelpModels;
 using WebApp.Persistence;
 using WebApp.Persistence.UnitOfWork;
 
@@ -120,6 +121,21 @@ namespace WebApp.Controllers
                 return BadRequest(ModelState);
             }
 
+            if(ticket.Name != null && ticket.Name != "")
+            {
+                if(ticket.TicketTypeId != 1)
+                {
+                    return Content(HttpStatusCode.BadRequest, "Only signedIn users can buy this type of ticket!");
+                }
+            }else {
+                ApplicationUser appu = UserManager.FindById(ticket.ApplicationUserId);
+                if((appu.Activated == "NOT ACTIVATED" || appu.Activated == "PENDING" ) && ticket.TicketTypeId != 1)
+                {
+                    return Content(HttpStatusCode.BadRequest, "Only authorized users can buy this type of ticket!");
+                }
+            }
+
+
             try
             {
                 Ticket t = new Ticket();
@@ -128,7 +144,7 @@ namespace WebApp.Controllers
 
                 t.TicketTypeId = unitOfWork.TicketTypes.Get(ticket.TicketTypeId.GetValueOrDefault()).Id;
                 t.Name = "Karta";
-                if(ticket.ApplicationUserId  != null)
+                if(ticket.ApplicationUserId  != null && ticket.ApplicationUserId != "")
                 {
                     t.ApplicationUserId = UserManager.FindById(ticket.ApplicationUserId).Id;
                 }
@@ -215,6 +231,48 @@ namespace WebApp.Controllers
             }
             base.Dispose(disposing);
         }
+
+
+        [Route("GetTicketsForOneUser")]
+        [HttpGet]
+        //GET: api/Tickets
+        public IEnumerable<ShowTicketHelpModel> GetTicketsForOneUser(string id)
+        {
+            ApplicationUser ap = UserManager.FindByEmail(id);
+            PassengerType pt = unitOfWork.PassengerTypes.Get((int)ap.PassengerTypeId);
+
+            List<Ticket> lista = unitOfWork.Tickets.getAllTicketsForUser(id).ToList();
+            
+            List<ShowTicketHelpModel> ret = new List<ShowTicketHelpModel>();
+            foreach(Ticket t in lista)
+            {
+                ShowTicketHelpModel st = new ShowTicketHelpModel();
+                st.Id = t.Id;
+                st.PurchaseTime = t.PurchaseTime;
+                double price = unitOfWork.TicketPrices.Get(t.TicketPricesId).Price;
+                st.TicketPrice = price - (price * pt.Coefficient);
+                st.TicketType = unitOfWork.TicketTypes.Get((int)t.TicketTypeId).Name;
+                if(t.TicketTypeId == 1)
+                {
+                    st.ExparationTime = "Ticket expires one hour from purchase time!";
+                }
+                if (t.TicketTypeId == 2)
+                {
+                    st.ExparationTime = "Ticket expires at the end of purchase day!";
+                }
+                if (t.TicketTypeId == 3)
+                {
+                    st.ExparationTime = "Ticket expires at the end of purchase month!";
+                }
+                if (t.TicketTypeId == 4)
+                {
+                    st.ExparationTime = "Ticket expires at the end of purchase year!";
+                }
+                ret.Add(st);
+            }
+            return ret;
+        }
+
 
         //private bool TicketExists(int id)
         //{

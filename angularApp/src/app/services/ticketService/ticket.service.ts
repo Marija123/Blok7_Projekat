@@ -29,4 +29,7 @@ export class TicketService {
   getTicket(id) {
     return this.httpClient.get(this.base_url+"/api/Tickets/GetTicket?id="+id);
   }
+  getAllTicketsForOneUser(id){
+    return this.httpClient.get(this.base_url+"/api/Tickets/GetTicketsForOneUser?id="+id);
+  }
 }

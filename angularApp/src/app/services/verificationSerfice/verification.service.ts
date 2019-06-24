@@ -16,6 +16,13 @@ export class VerificationService {
   authorizeAdmin(adminId): Observable<any> {
     return this.httpClient.post("http://localhost:52295/api/Account/AuthorizeAdmin", adminId);
   }
+  declineAdmin(adminId): Observable<any> {
+    return this.httpClient.post("http://localhost:52295/api/Account/DeclineAdmin", adminId);
+  }
+
+  declineController(controllerId): Observable<any> {
+    return this.httpClient.post("http://localhost:52295/api/Account/DeclineController", controllerId);
+  }
 
   getAwaitingControllers(): Observable<any> {
     return this.httpClient.get("http://localhost:52295/api/Account/GetAwaitingAControllers");
@@ -32,8 +39,15 @@ export class VerificationService {
     return this.httpClient.get("http://localhost:52295/api/Account/GetAwaitingClients");
   }
 
+  GetAwaitingRegularClients(): Observable<any> {
+    return this.httpClient.get("http://localhost:52295/api/Account/GetAwaitingRegularClients");
+  }
+
   authorizeUser(userId): Observable<any> {
     return this.httpClient.post("http://localhost:52295/api/Account/AuthorizeUser",userId);
+  }
+  declineUser(userId): Observable<any> {
+    return this.httpClient.post("http://localhost:52295/api/Account/DeclineUser",userId);
   }
 
 }

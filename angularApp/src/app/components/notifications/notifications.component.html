@@ -1,21 +1,24 @@
 
 <div *ngIf="user" class="container">
-  <div *ngIf="user.Activated && user.Role=='Admin'">
+  <div *ngIf="user.Activated== 'ACTIVATED' && user.Role=='Admin'">
     <div class="col-md-12">
       <h3>Authorize awaiting controllers </h3>
       <ul class="list-group" *ngFor="let awaitingController of awaitingControllers; let i = index">
         <li class="list-group-item">{{awaitingController.Name}} <span class="pull-right" style="float:right">
           <button class="btn btn-success btn-small" (click)="AuthorizeControllers(awaitingController.Id,i)">Authorize Controller</button>
+          <button class="btn btn-success btn-small" (click)="DeclineControllers(awaitingController.Id,i)">Decline Controller</button>
         </span>
       </li>
       </ul>
 
     </div>
-    <div class="col-md-12" *ngIf="user.Activated && user.Role=='Admin'">
+    <div class="col-md-12" *ngIf="user.Activated == 'ACTIVATED' && user.Role=='Admin'">
         <h3>Authorize awaiting admins </h3>
         <ul class="list-group" *ngFor="let awaitingAdmin of awaitingAdmins; let i = index">
-          <li class="list-group-item">{{awaitingAdmin.Name}} <span class="pull-right" style="float:right">
+          <li class="list-group-item">{{awaitingAdmin.Name}} 
+            <span class="pull-right" style="float:right">
             <button class="btn btn-success btn-small" (click)="AuthorizeAdmins(awaitingAdmin.Id,i)">Authorize Admin</button>
+            <button class="btn btn-success btn-small" (click)="DeclineAdmins(awaitingAdmin.Id,i)">Decline Admin</button>
           </span>
         </li>
         </ul>
@@ -23,13 +26,24 @@
   
   </div>
 <div>
-  <div class="col-md-12" *ngIf="user.Activated && user.Role=='Controller'">
+  <div class="col-md-12" *ngIf="user.Activated== 'ACTIVATED' && user.Role=='Controller'">
+      <h3>Authorize awaiting regular clients: </h3>
+      <ul class="list-group" *ngFor="let awaitingregularClient of awaitingRegularClients; let i = index">
+        <li class="list-group-item">{{awaitingregularClient.Name}} 
+          <span class="pull-right" style="float:right">
+          <button class="btn btn-success btn-small" (click)="AuthorizeRegularUser(awaitingregularClient.Id,i)">Authorize client</button>
+          <button class="btn btn-success btn-small" (click)="DeclineRegularUser(awaitingregularClient.Id,i)">Decline client</button>
+        </span>
+      </li>
+      </ul>
+
     <h3>Authorize awaiting clients</h3> 
     <ul class="list-group" *ngFor="let awaitingClient of awaitingClients; let i = index">
       <li class="list-group-item">{{awaitingClient.Name}}  {{awaitingClient.Surname}}<br>
         <img *ngIf="imagesLoaded" src="{{wtfList[i]}}" width="200" height="100" alt="">
         <span class="pull-right" style="float:right">
           <button class="btn btn-success btn-small" (click)="AuthorizeUser(awaitingClient.Id,i)">Authorize Client</button>
+          <button class="btn btn-success btn-small" (click)="DeclineUser(awaitingClient.Id,i)">Decline User</button>
         </span>
       </li>
     </ul>

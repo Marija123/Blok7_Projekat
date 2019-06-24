@@ -279,12 +279,17 @@
     <Compile Include="Migrations\201906211144459_PokusajResavanjaKonflikta.Designer.cs">
       <DependentUpon>201906211144459_PokusajResavanjaKonflikta.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906241651052_IzmenaKorisnika.cs" />
+    <Compile Include="Migrations\201906241651052_IzmenaKorisnika.Designer.cs">
+      <DependentUpon>201906241651052_IzmenaKorisnika.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\DayType.cs" />
     <Compile Include="Models\HelpModels\ModelHelperAuthorization.cs" />
+    <Compile Include="Models\HelpModels\ShowTicketHelpModel.cs" />
     <Compile Include="Models\HelpModels\TicketPricesHelpModel.cs" />
     <Compile Include="Models\Line.cs" />
     <Compile Include="Models\PassengerType.cs" />
@@ -429,6 +434,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906211144459_PokusajResavanjaKonflikta.resx">
       <DependentUpon>201906211144459_PokusajResavanjaKonflikta.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906241651052_IzmenaKorisnika.resx">
+      <DependentUpon>201906241651052_IzmenaKorisnika.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

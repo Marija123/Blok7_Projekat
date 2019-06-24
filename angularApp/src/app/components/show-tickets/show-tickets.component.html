@@ -1,0 +1,19 @@
+<div *ngIf="!prikazKarata || allTickets.length == 0">
+  <h2>No tickets to show!!!</h2>
+</div>
+
+<div *ngIf="prikazKarata && allTickets.length>0">
+  <div>
+    <h2>Your tickets:</h2>
+  </div>
+  <br/>
+  <br/>
+  <div *ngFor="let t of allTickets, let i = index">
+    <label>{{i+1}}. Ticket id: {{t.Id}}</label> <br/>
+    <label>   Time of purchase: {{t.PurchaseTime}}</label><br/>
+    <label>   Valid to: {{t.ExparationTime}}</label><br/>
+    <label>   Ticket type: {{t.TicketType}}</label><br/>
+    <label>   Ticket price: {{t.TicketPrice}}</label><br/>
+    <label>**********************************************</label>
+  </div>
+</div>

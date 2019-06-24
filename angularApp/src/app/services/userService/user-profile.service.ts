@@ -24,6 +24,11 @@ export class UserProfileService {
     console.log(user);
     return this.httpClient.post(this.base_url+"/api/Account/Edit",user);
   }
+
+  resendReqest(user) : Observable<any> {
+    return this.httpClient.post(this.base_url+"/api/Account/ResendRequest",user);
+  }
+
   editPassword(pass): Observable<any>{
     console.log(pass);
     return this.httpClient.post(this.base_url+"/api/Account/ChangePassword",pass);

@@ -357,19 +357,24 @@ namespace WebApp.Controllers
             var user = new ApplicationUser();
             user.UserName = model.Email;
             user.Email = model.Email;
-            user.Activated = false;
+            user.Activated = model.Activated;
             user.Birthday = DateTime.Parse(model.Birthday);
             user.Address = model.Address;
             user.Name = model.Name;
             user.Surname = model.Surname;
             user.Role = model.Role;
+            if(path != "")
+            {
+                user.Activated = "PENDING";
+            }
             user.Image = path;
             path = "";
             if (user.Role == "AppUser")
             {
-                //ApplicationDbContext context = dbContext as ApplicationDbContext;
-                //context.Database.
-                // .Any(u => u.UserName == "admin@yahoo.com");
+                if(model.PassengerType == "Regular")
+                {
+                    user.Activated = "PENDING";
+                }
                 var p = unitOfWork.PassengerTypes.GetAll();
                 foreach (var k in p)
                 {
@@ -401,6 +406,35 @@ namespace WebApp.Controllers
         }
 
         [AllowAnonymous]
+        [Route("ResendRequest")]
+        public string ResendRequest([FromBody]ModelHelperAuthorization Id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState).ToString();
+            }
+
+            //var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+
+
+
+            ApplicationUser user = UserManager.FindByEmail(Id.Id);
+            user.Activated = "PENDING";
+            try
+            {
+                IdentityResult result = UserManager.Update(user);
+
+               
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest().ToString();
+            }
+
+            return "Ok";
+        }
+
+        [AllowAnonymous]
         [Route("Edit")]
         public async Task<IHttpActionResult> Edit(EditBindingModel model)
         {
@@ -422,7 +456,12 @@ namespace WebApp.Controllers
             user.Surname = model.Surname;
             if(user.Image == "")
             {
+                if(path != "")
+                {
+                    user.Activated = "PENDING";
+                }
                 user.Image = path;
+                
             }
            
             path = "";
@@ -655,21 +694,55 @@ namespace WebApp.Controllers
         [Route("GetAwaitingAdmins")]
         public List<ApplicationUser> GetAwaitingAdmins()
         {
-            List<ApplicationUser> u = UserManager.Users.Where(x => (x.Activated == false && x.Role == "Admin")).ToList();
+            List<ApplicationUser> u = UserManager.Users.Where(x => ((x.Activated == "NOT ACTIVATED" || x.Activated == "PENDING") && x.Role == "Admin")).ToList();
             return u;
         }
         [Authorize(Roles = "Admin")]
         [Route("GetAwaitingAControllers")]
         public List<ApplicationUser> GetAwaitingControllers()
         {
-            List<ApplicationUser> u =  UserManager.Users.Where(x => (x.Activated == false && x.Role == "Controller")).ToList();
+            List<ApplicationUser> u =  UserManager.Users.Where(x => (x.Activated == "NOT ACTIVATED" || x.Activated == "PENDING") && x.Role == "Controller").ToList();
             return u;
         }
 
+        [Authorize(Roles = "Admin")]
+        [Route("DeclineController")]
+        public string DeclineController([FromBody]ModelHelperAuthorization Id)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState).ToString();
+            }
+            //Get user data, and update activated to true
+            ApplicationUser current = UserManager.FindById(Id.Id);
+            current.Activated = "DECLINED";
+
+            try
+            {
+                IdentityResult result = UserManager.Update(current);
+
+                try
+                {
+                    string subject = "Controller declined";
+                    string desc = $"Dear {current.Name}, You have been declined as controller. You can resend request on you profile!";
+                    var adminEmail = current.Email;
+                    NotifyViaEmail(adminEmail, subject, desc);
+                }
+                catch { }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest().ToString();
+            }
+
+            return "Ok";
+
+        }
 
         [Authorize(Roles = "Admin")]
-        [Route("AuthorizeAdmin")]
-        public string AuthorizeAdmin([FromBody]ModelHelperAuthorization Id)
+        [Route("DeclineAdmin")]
+        public string DeclineAdmin([FromBody]ModelHelperAuthorization Id)
         {
            
                 if (!ModelState.IsValid)
@@ -678,7 +751,7 @@ namespace WebApp.Controllers
                 }
                 //Get user data, and update activated to true
                 ApplicationUser current = UserManager.FindById(Id.Id);
-                current.Activated = true;
+                current.Activated = "DECLINED";
 
                 try
                 {
@@ -686,8 +759,8 @@ namespace WebApp.Controllers
 
                 try
                     {
-                        string subject = "Admin approved";
-                        string desc = $"Dear {current.Name}, You have been approved as admin.";
+                        string subject = "Admin declined";
+                        string desc = $"Dear {current.Name}, You have been declined as admin. You can resend request on you profile!";
                         var adminEmail = current.Email;
                        NotifyViaEmail(adminEmail, subject, desc);
                     }
@@ -702,7 +775,81 @@ namespace WebApp.Controllers
             
         }
 
-       [Authorize(Roles = "Admin")]
+       
+
+        [Authorize(Roles = "Controller")]
+        [Route("DeclineUser")]
+        public string DeclineUser([FromBody]ModelHelperAuthorization Id)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState).ToString();
+            }
+            //Get user data, and update activated to true
+            ApplicationUser current = UserManager.FindById(Id.Id);
+            current.Activated = "DECLINED";
+            current.Image = "";
+
+            try
+            {
+                IdentityResult result = UserManager.Update(current);
+
+                try
+                {
+                    string subject = "User declined";
+                    string desc = $"Dear {current.Name}, You have been declined as authorized user. You can resend request by uploading picture of document!";
+                    var adminEmail = current.Email;
+                    NotifyViaEmail(adminEmail, subject, desc);
+                }
+                catch { }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest().ToString();
+            }
+
+            return "Ok";
+
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        [Route("AuthorizeAdmin")]
+        public string AuthorizeAdmin([FromBody]ModelHelperAuthorization Id)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState).ToString();
+            }
+            //Get user data, and update activated to true
+            ApplicationUser current = UserManager.FindById(Id.Id);
+            current.Activated = "ACTIVATED";
+
+            try
+            {
+                IdentityResult result = UserManager.Update(current);
+
+                try
+                {
+                    string subject = "Admin approved";
+                    string desc = $"Dear {current.Name}, You have been approved as admin.";
+                    var adminEmail = current.Email;
+                    NotifyViaEmail(adminEmail, subject, desc);
+                }
+                catch { }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest().ToString();
+            }
+
+            return "Ok";
+
+        }
+
+        [Authorize(Roles = "Admin")]
         [Route("AuthorizeControll")]
         public string AuthorizeControll([FromBody]ModelHelperAuthorization Id)
         {
@@ -713,7 +860,7 @@ namespace WebApp.Controllers
             }
             //Get user data, and update activated to true
             ApplicationUser current = UserManager.FindById(Id.Id);
-            current.Activated = true;
+            current.Activated = "ACTIVATED";
 
             try
             {
@@ -754,7 +901,15 @@ namespace WebApp.Controllers
         [Route("GetAwaitingClients")]
         public List<ApplicationUser> GetAwaitingClients()
         {
-            List<ApplicationUser> u = UserManager.Users.Where(x => (x.Activated == false && x.Role == "AppUser" && x.Image!="")).ToList();
+            List<ApplicationUser> u = UserManager.Users.Where(x => (x.Activated == "PENDING" && x.Role == "AppUser" && x.Image!= "")).ToList();
+            return u;
+        }
+
+        [Authorize(Roles = ("Controller"))]
+        [Route("GetAwaitingRegularClients")]
+        public List<ApplicationUser> GetAwaitingRegularClients()
+        {
+            List<ApplicationUser> u = UserManager.Users.Where(x => (x.Activated == "PENDING" && x.Role == "AppUser" && x.Image == "")).ToList();
             return u;
         }
 
@@ -769,7 +924,7 @@ namespace WebApp.Controllers
                 }
             //Get user data, and update activated to true
             ApplicationUser current = UserManager.FindById(Id.Id);
-            current.Activated = true;
+            current.Activated = "ACTIVATED";
 
             try
                 {

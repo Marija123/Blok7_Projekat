@@ -3,6 +3,7 @@ import { AuthenticationService } from 'src/app/services/auth/authentication.serv
 import { Subscription } from 'rxjs';
 import { NotificationService } from 'src/app/services/notificationService/notification.service';
 import { Router } from '@angular/router';
+import { UserProfileService } from 'src/app/services/userService/user-profile.service';
 
 @Component({
   selector: 'app-menubar',
@@ -11,8 +12,9 @@ import { Router } from '@angular/router';
 })
 export class MenubarComponent implements OnInit {
   prom: string;
+  userr: any;
   
-  constructor(private notServ:NotificationService, public authService: AuthenticationService, private router: Router) {  
+  constructor(private notServ:NotificationService, public authService: AuthenticationService, private router: Router,private userService: UserProfileService) {  
     }
 
   ngOnInit() {
@@ -21,7 +23,11 @@ export class MenubarComponent implements OnInit {
 
   loggedIn():string{
     if(localStorage.jwt){
-      this.prom = localStorage.getItem('name');
+      this.userService.getUserData(localStorage.getItem('name')).subscribe(data => {
+        
+        this.userr = data;
+      this.prom = this.userr.Name;
+      });
     }
     return localStorage.jwt;
   }

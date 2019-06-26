@@ -49,11 +49,7 @@ namespace WebApp.Controllers
             return unitOfWork.TicketTypes.GetAll().ToList();
         }
 
-        // GET: api/Tickets
-        //public IQueryable<Ticket> GetTickets()
-        //{
-        //    return db.Tickets;
-        //}
+      
 
         [Route("GetTicket")]
         // GET: api/Tickets/5
@@ -65,7 +61,7 @@ namespace WebApp.Controllers
             
             if (ticket == null)
             {
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "Ticket is not in database") ;
             }
             if(ticket.ApplicationUser != null)
             {
@@ -75,41 +71,120 @@ namespace WebApp.Controllers
 
             return Ok(ticket);
         }
+        [Route("validateTicketNoUser")]
+        public IHttpActionResult ValidateTicketNoUser(Ticket ticket)
+        {
+            if(ticket == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "Ticket doesnt exists");
+            }
+            DateTime pr =(DateTime) ticket.PurchaseTime;
+            DateTime aa = pr.AddHours(1);
+            if (aa < DateTime.Now)
+            {
+                return Content(HttpStatusCode.BadRequest, "Ticket is not valid. Time is up!");
+            }
+            return Ok("Ticket is valid!");
+        }
+        [Route("validateTicket")]
+        public string ValidateTicket(ModelHelpTicketValidation tic)
+        {
+            if(tic.Name == "" || tic.Name == null)
+            {
+                return  "You have to fill email adres of user!";
+            }
+            Ticket t = unitOfWork.Tickets.GetTicketWithInclude(tic.Id);
+            if(t == null)
+            {
+                return  "There is not ticket with that id!";
+            }
 
-        //// PUT: api/Tickets/5
-        //[ResponseType(typeof(void))]
-        //public IHttpActionResult PutTicket(int id, Ticket ticket)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+            
 
-        //    if (id != ticket.Id)
-        //    {
-        //        return BadRequest();
-        //    }
+            if(tic.Name != t.ApplicationUser.Email )
+            {
+                string s = "User with email: " + tic.Name + " did not buy ticket with Id: " + tic.Id;
+                return s;
+            }
+            else
+            {
+                DateTime pr = (DateTime)t.PurchaseTime;
+                DateTime dt = DateTime.Now;
+                if (t.TicketTypeId == 1)
+                {
+                    DateTime aa = pr.AddHours(1);
+                    if (aa < DateTime.Now)
+                    {
+                        return "Ticket is not valid. Time is up!";
+                    }
+                    else
+                    {
+                        return "Ticket is valid!";
+                    }
+                    
+                }
+                if(t.TicketTypeId == 2)
+                {
+                    
+                    if(pr.Year < dt.Year)
+                    {
+                        return  "Ticket is not valid. Time is up!";
+                    }else if(pr.Year == dt.Year)
+                    {
+                        if(pr.Month < dt.Month)
+                        {
+                            return "Ticket is not valid. Time is up!";
+                        }else if(pr.Month == dt.Month)
+                        {
+                            if(pr.Day == dt.Day)
+                            {
+                                return "Ticket is valid";
+                            }
+                            else
+                            {
+                                return  "Ticket is not valid. Time is up!";
+                            }
+                        }
+                    }
+                }
 
-        //    db.Entry(ticket).State = EntityState.Modified;
+                if (t.TicketTypeId == 3)
+                {
+                    
+                    if (pr.Year < dt.Year)
+                    {
+                        return  "Ticket is not valid. Time is up!";
+                    }
+                    else if (pr.Year == dt.Year)
+                    {
+                        if (pr.Month == dt.Month)
+                        {
+                            return "Ticket is valid";
+                        }
+                        else
+                        {
+                            return "Ticket is not valid. Time is up!";
+                        }
+                    }
+                }
 
-        //    try
-        //    {
-        //        db.SaveChanges();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!TicketExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
+                if(t.TicketTypeId == 4)
+                {
+                    if (pr.Year == dt.Year)
+                    {
+                        return "Ticket is valid";
+                    }
+                    else
+                    {
+                        return "Ticket is not valid. Time is up!";
+                    }
+                }
 
-        //    return StatusCode(HttpStatusCode.NoContent);
-        //}
+                return "Ticket is valid";
+            }
+        }
+
+
 
         // POST: api/Tickets
         [Route("Add")]
@@ -163,44 +238,18 @@ namespace WebApp.Controllers
            
         }
 
-        //// DELETE: api/Tickets/5
-        //[ResponseType(typeof(Ticket))]
-        //public IHttpActionResult DeleteTicket(int id)
-        //{
-        //    Ticket ticket = db.Tickets.Find(id);
-        //    if (ticket == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    db.Tickets.Remove(ticket);
-        //    db.SaveChanges();
-
-        //    return Ok(ticket);
-        //}
+    
 
 
         [Route("SendMail")]
         public string SendMail(Ticket ticket)
         {
            
-                //if (!ModelState.IsValid)
-                //{
-                //    return BadRequest(ModelState).ToString();
-                //}
-            //Get user data, and update activated to true
+               
 
             try
             {
-               // Ticket t = new Ticket();
-               // t.PurchaseTime = ticket.PurchaseTime;
-               // t.TicketPricesId = unitOfWork.TicketPrices.Get(ticket.TicketPricesId).Id;
-               // t.TicketTypeId = unitOfWork.TicketTypes.Get((int)ticket.TicketTypeId).Id;
-               // t.Name = "Karta";
-               ////  t.ApplicationUserId = "unknown";
-
-               // unitOfWork.Tickets.Add(ticket);
-               // unitOfWork.Complete();
+               
                 try
                 {
                     string subject = "Ticket purchase";

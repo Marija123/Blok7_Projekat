@@ -12,6 +12,7 @@ import { NgForm } from '@angular/forms';
 import { IPayPalConfig,ICreateOrderRequest } from 'ngx-paypal';
 import { Router } from '@angular/router';
 import { TicketTypeModel } from 'src/app/models/ticketTypeModel';
+import { ShowTicketsComponent } from '../show-tickets/show-tickets.component';
 @Component({
   selector: 'app-buy-a-ticket',
   templateUrl: './buy-a-ticket.component.html',
@@ -165,7 +166,9 @@ export class BuyATicketComponent implements OnInit {
     this.ticketServ.addTicket(ticketMod).subscribe(data => {
      
       window.alert("Ticket successfully bought!")
-      this.router.navigateByUrl('/show_tickets');
+      //ShowTicketsComponent.returned.next(false);
+      //this.router.navigateByUrl('/show_tickets');
+      this.router.navigate(['home']);
     },
     err =>{
       window.alert(err.error)
@@ -207,7 +210,7 @@ export class BuyATicketComponent implements OnInit {
         
           this.ticketServ.SendMail(ticketMod).subscribe(resp =>{
             if(resp == 'Ok'){
-              window.alert("Ticket successfully bought!")
+             window.alert("Ticket successfully bought!")
               this.router.navigateByUrl('/home');
             }
             else{

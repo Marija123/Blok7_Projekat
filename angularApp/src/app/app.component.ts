@@ -1,4 +1,4 @@
-import { Component, NgZone, Input } from '@angular/core';
+import { Component, NgZone, Input, AfterViewInit, ElementRef } from '@angular/core';
 import { NotificationService } from './services/notificationService/notification.service';
 import { NotificationMessage } from './models/notificationMessage';
 import { ToastrService } from 'ngx-toastr';
@@ -10,18 +10,22 @@ import { decode } from 'punycode';
   providers: [NotificationService],
   
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit  {
   title = 'angularApp';
   public currentMessage: NotificationMessage;  
   public allMessages: any = "";  
   public canSendMessage: Boolean; 
   
 
-  constructor(private notificationServ: NotificationService, private _ngZone: NgZone, private toastr: ToastrService) {    
+  constructor(private elementRef: ElementRef, private notificationServ: NotificationService, private _ngZone: NgZone, private toastr: ToastrService) {    
     this.subscribeToEvents();  
     this.canSendMessage = notificationServ.connectionExists; 
     //this.sendMessage();
-}
+  }
+
+  ngAfterViewInit(){
+    this.elementRef.nativeElement.ownerDocument.body.style.backgroundColor = '#2e2e28';
+ }
 
 showMessage(message: string) {
   this.toastr.success(message, 'New notification!');

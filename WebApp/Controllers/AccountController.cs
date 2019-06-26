@@ -373,7 +373,7 @@ namespace WebApp.Controllers
             {
                 if(model.PassengerType == "Regular")
                 {
-                    user.Activated = "PENDING";
+                    user.Activated = "ACTIVATED";
                 }
                 var p = unitOfWork.PassengerTypes.GetAll();
                 foreach (var k in p)
@@ -905,13 +905,13 @@ namespace WebApp.Controllers
             return u;
         }
 
-        [Authorize(Roles = ("Controller"))]
-        [Route("GetAwaitingRegularClients")]
-        public List<ApplicationUser> GetAwaitingRegularClients()
-        {
-            List<ApplicationUser> u = UserManager.Users.Where(x => (x.Activated == "PENDING" && x.Role == "AppUser" && x.Image == "")).ToList();
-            return u;
-        }
+        //[Authorize(Roles = ("Controller"))]
+        //[Route("GetAwaitingRegularClients")]
+        //public List<ApplicationUser> GetAwaitingRegularClients()
+        //{
+        //    List<ApplicationUser> u = UserManager.Users.Where(x => (x.Activated == "PENDING" && x.Role == "AppUser" && x.Image == "")).ToList();
+        //    return u;
+        //}
 
         [Authorize(Roles = "Controller")]
         [Route("AuthorizeUser")]

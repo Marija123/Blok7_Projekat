@@ -47,7 +47,8 @@ import { BusLocationComponent } from './components/busmaps/bus-location/bus-loca
 import { NgxPayPalModule } from 'ngx-paypal';
 import { ShowTicketsComponent } from './components/show-tickets/show-tickets.component';
 
-const Routes = [
+
+const routes = [
   {
     path: "",
     component: HomeComponent
@@ -94,13 +95,14 @@ const Routes = [
     path: "profile",
     component: ProfileComponent,
     canActivate: [UserSignedInGuard],
+    //runGuardsAndResolvers: 'always',
     children: [
       {
         path:'edit',
         component: EditProfileComponent,
         canActivate: [UserSignedInGuard]
       }],
-      runGuardsAndResolvers: 'always',
+      
   },
   {
     path: "add_change_lines",
@@ -176,7 +178,7 @@ const Routes = [
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot(Routes, {onSameUrlNavigation: 'reload'}),
+    RouterModule.forRoot(routes,  {onSameUrlNavigation: 'reload'}),
     HttpModule,
     HttpClientModule,
     NgxPopper,
@@ -195,7 +197,8 @@ const Routes = [
     UserSignedInGuard,
     CanActivateNotification,
     UserNotSignedInGuard,
-    ControlorGuard,{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true}
+    ControlorGuard,{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
+   // {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: false}}
     
   ],
   bootstrap: [AppComponent]

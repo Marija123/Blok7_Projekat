@@ -71,7 +71,10 @@ export class BusLocationComponent implements OnInit {
           this.polyline.addLocation(new GeoLocation(this.stations[i].Latitude, this.stations[i].Longitude));
         }
         console.log(this.stations);
-        this.clickService.click(this.stations).subscribe();
+        this.clickService.click(this.stations).subscribe(data =>
+          {
+            console.log("data bus location ", data);
+          });
       }
     });
     

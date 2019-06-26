@@ -32,4 +32,7 @@ export class TicketService {
   getAllTicketsForOneUser(id){
     return this.httpClient.get(this.base_url+"/api/Tickets/GetTicketsForOneUser?id="+id);
   }
+  checkValidity(bla) : Observable<any> {
+    return this.httpClient.post(this.base_url + "/api/Tickets/CheckValidity", bla);
+  }
 }

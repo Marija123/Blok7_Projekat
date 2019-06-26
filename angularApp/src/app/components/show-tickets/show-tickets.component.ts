@@ -20,6 +20,7 @@ export class ShowTicketsComponent implements OnInit {
     ticketServ.getAllTicketsForOneUser(this.uniqueName).subscribe(data => {
       this.allTickets = data;
       this.prikazKarata = true;
+      console.log(this.allTickets);
     },
     err =>{
       window.alert(err.error);

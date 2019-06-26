@@ -9,4 +9,10 @@ namespace WebApp.Models.HelpModels
     {
         public string Id { get; set; }
     }
+
+    public class ModelHelpTicketValidation
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }

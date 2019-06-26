@@ -111,6 +111,9 @@ export class RegisterComponent implements OnInit {
               this.serverErrors = err.error.ModelState[""]
             }
           );
+         },
+         err => {
+          window.alert(err.error);
          });
 
     }

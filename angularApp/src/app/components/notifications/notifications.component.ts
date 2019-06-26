@@ -39,8 +39,7 @@ export class NotificationsComponent implements OnInit {
       })
     }
     if(this.user.Role == 'Controller'){
-      verifyService.GetAwaitingRegularClients().subscribe(data => {
-        this.awaitingRegularClients = data;
+     
       
       verifyService.getAwaitingClients().subscribe(data => {
         this.awaitingClients = data;
@@ -54,7 +53,7 @@ export class NotificationsComponent implements OnInit {
           console.log(this.userBytesImages)
         })
       })
-    });
+    
     }
     });
    
@@ -147,31 +146,9 @@ export class NotificationsComponent implements OnInit {
   }
 
 
-  AuthorizeRegularUser(id, i) {
-    this.modelHelp.Id = id;
-    this.verifyService.authorizeUser(this.modelHelp).subscribe(resp => {
-      if(resp == "Ok")  {
-        alert("Client has been authorized!"); 
-        this.awaitingRegularClients.splice(i,1);
-       
-      }
+ 
 
-      else alert("Something went wrong");
-    })
-  }
-
-  DeclineRegularUser(id, i) {
-    this.modelHelp.Id = id;
-    this.verifyService.declineUser(this.modelHelp).subscribe(resp => {
-      if(resp == "Ok")  {
-        alert("Client has been declined!"); 
-        this.awaitingRegularClients.splice(i,1);
-        
-      }
-
-      else alert("Something went wrong");
-    })
-  }
+ 
 
  
 

@@ -273,6 +273,42 @@ namespace WebApp.Controllers
             return ret;
         }
 
+        [Route("CheckValidity")]
+        //[HttpGet]
+        public bool CheckValidity(ModelHelpTicketValidation tic)
+        {
+            
+            if(tic.Name == null || tic.Name == "")
+            {
+                if(tic.Id == 1)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                ApplicationUser a = UserManager.FindByEmail(tic.Name);
+                if(a != null)
+                {
+                    if(a.Activated != "ACTIVATED")
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
 
         //private bool TicketExists(int id)
         //{

@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   otvorenEdit: boolean = false;
   accBool : boolean = false;
   nijeUser : boolean = false;
+  birt: string = "";
   navigationSubscription;
   public static returned: Subject<any> = new Subject();
   constructor(private usersService: UserProfileService, private router: Router, private route: ActivatedRoute) {
@@ -75,6 +76,8 @@ provera() {
       this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
         
           this.user = data;
+          let str = this.user.Birthday;
+          this.birt = str.split('T')[0];
           if(localStorage.getItem('role') == 'AppUser')
           {
             

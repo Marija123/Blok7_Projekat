@@ -54,7 +54,7 @@ export class RegAdminContComponent implements OnInit {
     let regModel: RegModel = this.registerForm.value;
     let formData: FormData = new FormData();
 
-    regModel.Activated  = "NOT ACTIVATED";
+    regModel.Activated  = "PENDING";
    
 
    

@@ -23,17 +23,30 @@ export class MenubarComponent implements OnInit {
 
   loggedIn():string{
     if(localStorage.jwt){
+      if(this.prom == "" || this.prom == null){
       this.userService.getUserData(localStorage.getItem('name')).subscribe(data => {
         
         this.userr = data;
-      this.prom = this.userr.Name;
+        if(this.userr.Name == ""|| this.userr.Name == null)
+        {
+          this.prom = this.userr.Email;
+        }
+        else
+        {
+          this.prom = this.userr.Name;
+        }
+      
       });
     }
+      //this.prom = localStorage.getItem('name');
+    
+  }
     return localStorage.jwt;
   }
 
   logout() {
     this.authService.logout();
+    this.prom = "";
     this.router.navigate(["signin"]);
     
     
@@ -41,5 +54,6 @@ export class MenubarComponent implements OnInit {
   get user(): any {
     return localStorage.getItem('role');
   }
+  
 
 }

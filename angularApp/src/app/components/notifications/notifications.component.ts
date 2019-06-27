@@ -26,9 +26,7 @@ export class NotificationsComponent implements OnInit {
   constructor(private verifyService: VerificationService,private usersService: UserProfileService, private notificationServ: NotificationService) { 
     this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
          
-      this.user = data;    
-      console.log("USER:");
-      console.log(this.user);    
+      this.user = data;       
      if(this.user.Role == 'Admin')
      {
       verifyService.getAwaitingAdmins().subscribe(data => {
@@ -40,7 +38,7 @@ export class NotificationsComponent implements OnInit {
     }
     if(this.user.Role == 'Controller'){
      
-      
+      if(this.user.Activated == 'ACTIVATED'){
       verifyService.getAwaitingClients().subscribe(data => {
         this.awaitingClients = data;
         usersService.getUserImages(this.awaitingClients).subscribe(imageBytes => {
@@ -53,7 +51,7 @@ export class NotificationsComponent implements OnInit {
           console.log(this.userBytesImages)
         })
       })
-    
+      }
     }
     });
    

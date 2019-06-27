@@ -25,7 +25,7 @@
       </div>
   
   </div>
-<div>
+
   <!-- <div class="col-md-12" *ngIf="user.Activated== 'ACTIVATED' && user.Role=='Controller'">
       <h3>Authorize awaiting regular clients: </h3>
       <ul class="list-group" *ngFor="let awaitingregularClient of awaitingRegularClients; let i = index">
@@ -36,7 +36,7 @@
         </span>
       </li>
       </ul> -->
-
+      <div class="col-md-12" *ngIf="user.Activated== 'ACTIVATED' && user.Role=='Controller'">
     <h3>Authorize awaiting clients</h3> 
     <ul class="list-group" *ngFor="let awaitingClient of awaitingClients; let i = index">
       <li class="list-group-item">{{awaitingClient.Name}}  {{awaitingClient.Surname}}<br>

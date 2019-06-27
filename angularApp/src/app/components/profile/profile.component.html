@@ -1,14 +1,47 @@
-<div class="container" *ngIf="!otvorenEdit" >
- <h4>Name: {{user?.Name}}</h4> 
- <h4>Surname: {{user?.Surname}}</h4>
-  <h4>Email: {{user?.Email}}</h4>
-  <h4>Birthday: {{user?.Birthday}}</h4> 
-  <h4>Address: {{user?.Address}}</h4>
-  <h4>Activated: {{user?.Activated}}</h4>
-  <div  *ngIf="accBool && nijeUser" >
-    <button type="submit" (click)="Resend()" >Resend request</button>  <br/>
-  </div>
-  <button type="submit" (click)="Edit()" >Edit profile</button> <br/>
-</div>
 
+<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"> -->
+
+<div class="container-fluid" >
+  <div *ngIf="user != null">
+<br/>
+<br/>
+<br/>
+
+<div class="container rounded" style="border:1px solid black ;"  *ngIf="!otvorenEdit" >
+  <div class="row rounded align-items-center" style="border:1px solid black; background-color: rgb(141, 156, 150)"><br/>
+      <div class=" col-sm-6 col-md-4 align-items-center rounded">
+          <img src="/assets/profile.png" alt="" class="img-rounded img-responsive " />
+      </div>
+      <div  class="col-sm-6 col-md-8 align-items-left rounded">
+        <br/>
+          <h4 style="font-size: 35px; font-family: 'Gill Sans'">
+              {{user?.Name}} {{user?.Surname}}</h4>
+          <small><cite title={{user?.Address}}>{{user?.Address}} <img src="/assets/markerIcon1.png" alt=""   style="height: 1cm; width: 1cm"/></cite></small>
+          <p style="font-size: 30px; font-family: 'Gill Sans'">
+            
+              <img src="/assets/letterIcon.png" alt=""   style="height: 1cm; width: 1cm"/>{{user?.Email}}
+              <br />
+             
+              <img src="/assets/birthdayImage.png" alt=""   style="height: 1cm; width: 1cm"/>{{birt}}
+              <br/>
+             
+             
+          </p>
+          <label style="font-size: 35px; font-family: 'Gill Sans'">{{user?.Activated}}   </label> 
+         
+            <label  *ngIf="accBool && nijeUser" style="font-size: 35px; font-family: 'Gill Sans'">|  </label>
+              <button *ngIf="accBool && nijeUser"  class="btn btn-primary btn-lg" style="background-color: #5bd6cc" type="submit" (click)="Resend()" >Resend request</button>  <br/>
+         
+ <br/>
+ <br/>
+  
+  <button class="btn btn-primary btn-lg" style="background-color: #5bd6cc" type="submit" (click)="Edit()" >Edit profile</button> <br/>
+<br/>
+  <br/>
+</div>
+</div>
+</div>
+</div>
+</div>
 <router-outlet></router-outlet>
+

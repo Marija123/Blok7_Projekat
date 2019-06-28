@@ -23,21 +23,21 @@ export class MenubarComponent implements OnInit {
 
   loggedIn():string{
     if(localStorage.jwt){
-      if(this.prom == "" || this.prom == null){
-      this.userService.getUserData(localStorage.getItem('name')).subscribe(data => {
+      // if(this.prom == "" || this.prom == null){
+      // this.userService.getUserData(localStorage.getItem('name')).subscribe(data => {
         
-        this.userr = data;
-        if(this.userr.Name == ""|| this.userr.Name == null)
-        {
-          this.prom = this.userr.Email;
-        }
-        else
-        {
-          this.prom = this.userr.Name;
-        }
+      //   this.userr = data;
+      //   if(this.userr.Name == ""|| this.userr.Name == null)
+      //   {
+      //     this.prom = this.userr.Email;
+      //   }
+      //   else
+      //   {
+      //     this.prom = this.userr.Name;
+      //   }
       
-      });
-    }
+      // });
+    //}
       //this.prom = localStorage.getItem('name');
     
   }

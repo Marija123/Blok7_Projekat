@@ -3,6 +3,7 @@ import { TicketService } from 'src/app/services/ticketService/ticket.service';
 import { Router, NavigationEnd } from '@angular/router';
 import { Subject } from 'rxjs';
 import { TicketHelpModel } from 'src/app/models/ticketHelpModel';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
   selector: 'app-show-tickets',
@@ -15,13 +16,13 @@ export class ShowTicketsComponent implements OnInit {
   prikazKarata : boolean = false;
   allTickets: any  = [];
   blaa: any = [];
+
   navigationSubscription;
  
   constructor(private ticketServ: TicketService,  private router: Router) {
 
 
     this.navigationSubscription = this.router.events.subscribe((e: any) => {
-      // If it is a NavigationEnd event re-initalise the component
       if (e instanceof NavigationEnd) {
        this.prikazi();
       }
@@ -35,7 +36,6 @@ export class ShowTicketsComponent implements OnInit {
 
   prikazi(){
     this.prikazKarata = false;
-    //this.allTickets= [];
     this.uniqueName = localStorage.getItem('name');
     if(this.uniqueName == "" || this.uniqueName == null)
     {
@@ -43,15 +43,22 @@ export class ShowTicketsComponent implements OnInit {
     }
     this.ticketServ.getAllTicketsForOneUser(this.uniqueName).subscribe(data => {
       this.allTickets = [];
-      //this.blaa = [];
       this.prikazKarata = true;
       this.allTickets = data;
-      // this.blaa.forEach(element => {
-      //   this.allTickets.push(element);
-      // });
-      // //this.prikazKarata = true;
-      // console.log("blaa", this.blaa);
-      // console.log("allTickets",this.allTickets);
+      this.allTickets.forEach(element => {
+        let d : Date = new Date(element.PurchaseTime);
+        let mesec : number = d.getMonth() + 1;
+        let m : string = "";
+        m = m+ d.getDate().toString() + ".";
+        m = m+ mesec.toString() + ".";
+        m = m + d.getFullYear().toString() + "." + "  ";
+        m = m + d.getHours().toString() + ":";
+        m = m + d.getMinutes().toString();
+
+        this.blaa.push(m);
+      });
+      this.allTickets.reverse();
+      this.blaa.reverse();
     },
     err =>{
       window.alert(err.error);
@@ -60,9 +67,6 @@ export class ShowTicketsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    // avoid memory leaks here by cleaning up after ourselves. If we  
-    // don't then we will continue to run our initialiseInvites()   
-    // method on every navigationEnd event.
     if (this.navigationSubscription) {  
        this.navigationSubscription.unsubscribe();
     }

@@ -1,0 +1,18 @@
+/* sredj{
+    padding: 10px;
+    border:2px solid #5bd6cc;
+    background-color: transparent;
+    font-family: 'Gill Sans';
+    font-size: 20px;
+    color: #5bd6cc;
+
+} */
+
+
+
+.button2:hover {
+    cursor: pointer;
+  -webkit-transition-duration: 0.3s; /* Safari */
+  transition-duration: 0.3s;
+    box-shadow: 0 12px 16px 0 rgba(131, 130, 130, 0.24),0 17px 50px 0 rgba(252, 249, 249, 0.19);
+  }

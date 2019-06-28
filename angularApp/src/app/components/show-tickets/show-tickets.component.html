@@ -1,24 +1,30 @@
-<label>bla bla</label>
+<!-- <label>bla bla</label>
 
 <div *ngIf="!prikazKarata ">
   <h2>No tickets to show!!!</h2>
-</div>
+</div> -->
 
-<div *ngIf="prikazKarata && allTickets.length>0">
+<div *ngIf="prikazKarata && allTickets.length>0" style="width:700px; align-items: center" class="container">
   <div>
-    <h2>Your tickets:</h2>
+    <br/>
+    <h2  style="text-align: center; color: #d7dfde;">~ Your tickets ~</h2>
   </div>
-  <br/>
   <br/>
  
-  <div *ngFor="let t of allTickets, let i = index">
-    <label>{{i+1}}. Ticket id: {{t.Id}}</label> <br/> 
-    <label>   Time of purchase: {{t.PurchaseTime}}</label><br/>
-    <label>   Valid to: {{t.ExparationTime}}</label><br/>
-    <label>   Ticket type: {{t.TicketType}}</label><br/>
-    <label>   Ticket price: {{t.TicketPrice}}</label><br/>
-    <label>**********************************************</label>
-  </div>
-
+  <ul class="list-group" *ngFor="let t of allTickets, let i = index">
+      <button class="list-group-item-action button2" style="margin: 0 0 7px 0; border:2px solid #5bd6cc; background-color: transparent;
+      font-family: 'Gill Sans'; border-radius: 20px; 
+      font-size: 20px;
+      color: #d6e4e3;"><span class="pull-center " style="float:center; ">
+    <label style="padding-left: 10px" > <b>Ticket ID: </b> {{t.Id}}</label> <br/> 
+    <label style="padding-left: 10px" >   <b>Time of purchase: </b> {{blaa[i]}}</label><br/>
+    <label style="padding-left: 10px" >  <b> {{t.ExparationTime}}</b></label><br/>
+    <label style="padding-left: 10px" >  <b> Type: </b> {{t.TicketType}}</label><br/>
+    <label style="padding-left: 10px">   <b>Price: </b> {{t.TicketPrice}} RSD</label><br/>
+  </span>
+</button>
+  </ul>
+  <!-- {{t.PurchaseTime}} -->
 </div>
+
 

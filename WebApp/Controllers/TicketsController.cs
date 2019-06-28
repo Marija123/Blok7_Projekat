@@ -303,19 +303,19 @@ namespace WebApp.Controllers
                 st.TicketType = unitOfWork.TicketTypes.Get((int)t.TicketTypeId).Name;
                 if(t.TicketTypeId == 1)
                 {
-                    st.ExparationTime = "Ticket expires one hour from purchase time!";
+                    st.ExparationTime = "Ticket expires an hour after the purchase time";
                 }
                 if (t.TicketTypeId == 2)
                 {
-                    st.ExparationTime = "Ticket expires at the end of purchase day!";
+                    st.ExparationTime = "Ticket expires by the end of the purchase day ";
                 }
                 if (t.TicketTypeId == 3)
                 {
-                    st.ExparationTime = "Ticket expires at the end of purchase month!";
+                    st.ExparationTime = "Ticket expires by the end of the purchase month";
                 }
                 if (t.TicketTypeId == 4)
                 {
-                    st.ExparationTime = "Ticket expires at the end of purchase year!";
+                    st.ExparationTime = "Ticket expires by the end of the purchase year";
                 }
                 ret.Add(st);
             }

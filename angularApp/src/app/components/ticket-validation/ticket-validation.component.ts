@@ -79,6 +79,7 @@ export class TicketValidationComponent implements OnInit {
     
     let d : Date = new Date(this.ticketForV.PurchaseTime);
 
+    
     d.setHours(d.getHours() + 1);
         if(d < new Date())
         {

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg  navbar-light" style="background-color: #5bd6cc; font-family:'Gill Sans'; font-size: 20px">
+<nav class="navbar navbar-expand-lg  navbar-light navbar-custom" style="background-color: #5bd6cc; font-family:'Gill Sans'; font-size: 20px">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -7,27 +7,36 @@
     </a>
     
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav mr-auto navbar-links-custom">
         <!-- <li><a class="nav-link" [routerLink]="['/home']">Home</a></li> -->
         <li><a class="nav-link" [routerLink]="['/timetable']">Timetable</a></li>
         <li><a class="nav-link" [routerLink]="['/busmaps']">BusMaps</a></li>
         <li><a class="nav-link" [routerLink]="['/pricelist']">Pricelist</a></li>
         <li *ngIf="user =='AppUser' || !loggedIn()" ><a class="nav-link" [routerLink]="['/buy_a_ticket']">Buy a ticket</a></li>        
+        <li *ngIf="user!='AppUser' && loggedIn() "><a class="nav-link" [routerLink]="['/notifications']">Notifications</a></li>
+        <li *ngIf="user =='Controller'&& loggedIn() "><a class="nav-link" [routerLink]="['/validateTicket']">Validation</a></li>
+        <li *ngIf="user =='AppUser' && loggedIn() "><a class="nav-link" [routerLink]="['/show_tickets']">Tickets</a></li>
+      
       </ul>
       
-      <ul *ngIf="user!='AppUser' && loggedIn() " class="navbar-nav mr-auto">
+      <!-- <ul *ngIf="user!='AppUser' && loggedIn() " class="navbar-nav mr-auto">
           <li><a class="nav-link" [routerLink]="['/notifications']">Notifications</a></li>
-      </ul>
-      <ul *ngIf="user =='Controller'&& loggedIn() " class="navbar-nav mr-auto">
+      </ul> -->
+      <!-- <ul *ngIf="user =='Controller'&& loggedIn() " class="navbar-nav mr-auto">
         <li><a class="nav-link" [routerLink]="['/validateTicket']">Validation</a></li>
-    </ul>
+    </ul> -->
+
+    <!-- <ul *ngIf="user =='AppUser' && loggedIn() " class="navbar-nav mr-auto">
+        <li><a class="nav-link" [routerLink]="['/show_tickets']">Tickets</a></li>
+      </ul> -->
+
 
       <div *ngIf="user=='Admin'" class="dropdown">
          
-       <ul class="nav nav-pills">
+       <ul class="nav nav-pills mr-auto">
          
           <li class="nav-item dropdown">
-              <a class="btn btn-secondary" data-toggle="dropdown"  role="button" aria-haspopup="true" aria-expanded="true">Add/Change</a>
+              <a class="btn" data-toggle="dropdown"  role="button" aria-haspopup="true" aria-expanded="true" style="border:1px solid black; background-color: transparent; font-family: 'Gill Sans'; font-size: 18px ; color: rgb(100, 98, 98)"  >Add/Change</a>
               <div class="dropdown-menu">
                   <a class="dropdown-item" [routerLink]="['/add_change_stations']">Stations</a>
                   <a class="dropdown-item" [routerLink]="['/add_change_lines']">Lines</a>
@@ -40,16 +49,20 @@
       </ul>
     </div>
     
-      <ul class="navbar-nav mr-auto"  *ngIf="!loggedIn()" > 
+      <ul class="navbar-nav ml-auto navbar-links-custom"  *ngIf="!loggedIn()" > 
           <li><a class="nav-link" [routerLink]="['/signin']" >SignIn</a></li>
           <li><a class="nav-link" [routerLink]="['/register']">Register</a></li>
           
       </ul>
-      <ul *ngIf="user =='AppUser' && loggedIn() " class="navbar-nav mr-auto">
-        <li><a class="nav-link" [routerLink]="['/show_tickets']">Tickets</a></li>
-      </ul>
-      <ul class =" navbar-nav ml-auto "  *ngIf="loggedIn()" > 
-        <li><a class="nav-link" [routerLink]="['/profile']" >{{prom}}</a></li>
+     
+      <ul class =" navbar-nav ml-auto navbar-links-custom"  *ngIf="loggedIn()" > 
+        <li >
+          <a class="nav-link" [routerLink]="['/profile']">
+              <img src="/assets/profileIcon1.png" width="30" height="30" class=" align-center" alt="">
+             
+            </a>
+        </li>
+        <!-- <li><a class="nav-link" [routerLink]="['/profile']" >{{prom}}</a></li> -->
         <li><a class="nav-link" [routerLink]="['/home']" (click)="logout()">LogOut</a></li>
       </ul>
       

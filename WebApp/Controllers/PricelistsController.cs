@@ -37,7 +37,7 @@ namespace WebApp.Controllers
         [ResponseType(typeof(Pricelist))]
         public Pricelist GetPricelist()
         {
-            Pricelist pricelist = unitOfWork.PriceLists.GetAllPricelists().ToList().FindLast(x=> x.EndOfValidity >= DateTime.Now && x.StartOfValidity<= DateTime.Now);
+            Pricelist pricelist = unitOfWork.PriceLists.GetAllPricelists().ToList().FindLast(x=> x.EndOfValidity.Value.Date >= DateTime.Now.Date && x.StartOfValidity.Value.Date<= DateTime.Now.Date);
            
             return pricelist;
         }

@@ -13,4 +13,17 @@ namespace WebApp.Models.HelpModels
         public string TicketType { get; set; }
         public double TicketPrice { get; set; }
     }
+
+    public class ValidateTicketHelpModel
+    {
+        public bool Valid { get; set; }
+        public string Message { get; set; }
+
+        public ValidateTicketHelpModel() { }
+        public ValidateTicketHelpModel(bool t, string m)
+        {
+            Valid = t;
+            Message = m;
+        }
+    }
 }

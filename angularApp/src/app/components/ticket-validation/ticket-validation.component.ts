@@ -12,6 +12,8 @@ export class TicketValidationComponent implements OnInit {
   ticketForV : any;
   ticketExists: string = "";
   ticketMessage: string = "";
+  ticketMessageError: string = "";
+  ticketRet: any;
   allTT: any ;
   myInput1: string = "";
   myInput : number ;
@@ -27,6 +29,7 @@ export class TicketValidationComponent implements OnInit {
   FindTicket(n:any){
  
     this.ticketMessage = "";
+    this.ticketMessageError= "";
     this.myInput1 = "";
     console.log(n);
     if(n != null)
@@ -51,7 +54,7 @@ export class TicketValidationComponent implements OnInit {
                 this.myInput1 = "";
                 this.myInput = null;
                 this.ticketForV = null;
-                this.ticketMessage = err.error;
+                this.ticketMessageError = err.error;
               })
               //this.ValidateTicketNoUser();
             }
@@ -74,129 +77,38 @@ export class TicketValidationComponent implements OnInit {
     
   }
 
-  ValidateTicketNoUser()
-  {
-    
-    let d : Date = new Date(this.ticketForV.PurchaseTime);
-
-    
-    d.setHours(d.getHours() + 1);
-        if(d < new Date())
-        {
-          this.ticketMessage = "Ticket is not valid. Time is up!"
-        }else
-        {
-          this.ticketMessage = "Ticket is valid."
-        }
-  }
   
 ValidateTicket(n:any)
 {
+  this.ticketMessage = "";
+  this.ticketMessageError= "";
+  
   let sl = new TicketTypeModel(n,this.ticketForV.Id);
   this.ticketServ.validateTicket(sl).subscribe(data =>
     {
+      
       this.myInput1 = "";
       this.myInput = null;
       this.ticketForV = null;
-      this.ticketMessage = data;
+      this.ticketRet = data;
+      if(this.ticketRet.Valid)
+      {
+        this.ticketMessage = this.ticketRet.Message;
+      }else
+      {
+        this.ticketMessageError = this.ticketRet.Message;
+      }
+      
     },
     err =>
     {
       this.myInput1 = "";
       this.myInput = null;
       this.ticketForV = null;
-      this.ticketMessage = err.error;
+      this.ticketMessageError = err.error;
     })
 }
   
-  ValidateTicket1(n: any)
-  {
-    let TT : string = "";
-    this.allTT.forEach(element => {
-      if(this.ticketForV.TicketTypeId == element.Id)
-      {
-          TT = element.Name;
-      }
-      
-    });
-  
-    let d : Date = new Date(this.ticketForV.PurchaseTime);
-
-    if(n == this.ticketForV.ApplicationUserId)
-    {
-
-      if(TT == "Hourly")
-      {
-        d.setHours(d.getHours() + 1);
-        if(d < new Date())
-        {
-          this.ticketMessage = "Ticket is not valid. Time is up!"
-        }else
-        {
-          this.ticketMessage = "Ticket is valid."
-        }
-      }
-
-      if(TT == "Daily")
-      {
-        if(d.getFullYear() < new Date().getFullYear())
-        {
-          this.ticketMessage = "Ticket is not valid. Time is up!"
-        }else if(d.getFullYear() == new Date().getFullYear())
-        {
-          if(d.getMonth() < new Date().getMonth())
-          {
-            this.ticketMessage = "Ticket is not valid. Time is up!"
-          }else if(d.getMonth() == new Date().getMonth())
-          {
-            if(d.getDate() == new Date().getDate())
-            {
-              this.ticketMessage = "Ticket is valid."
-            }
-            else{
-              this.ticketMessage = "Ticket is not valid. Time is up!"
-            }
-          
-          }
-        }
-      }
-
-      if(TT == "Monthly")
-      {
-        if(d.getFullYear() < new Date().getFullYear())
-        {
-          this.ticketMessage = "Ticket is not valid. Time is up!"
-        }else if(d.getFullYear() == new Date().getFullYear())
-        {
-          if(d.getMonth() == new Date().getMonth())
-          {
-            this.ticketMessage = "Ticket is valid."
-          }
-          else{
-            this.ticketMessage = "Ticket is not valid. Time is up!"
-          }
-         
-        }
-      }
-
-      if(TT == "Yearly")
-      {
-        if(d.getFullYear() == new Date().getFullYear())
-        {
-          this.ticketMessage = "Ticket is valid."
-        }
-        else
-        {
-          this.ticketMessage = "Ticket is not valid. Time is up!"
-        }
-      }
-
-    }else
-    {
-      this.ticketMessage = "User with email: " + n + " did not buy ticket with Id: " + this.ticketForV.Id;
-    }
-    // this.MyInput1 = "";
-    // n = "";
-  }
+ 
 
 }

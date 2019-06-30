@@ -13,6 +13,8 @@ export class PricelistComponent implements OnInit {
   ticketPricesPom: TicketPricesPomModel = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(new Date(),new Date(),0, []));
   datumVazenjaBool: boolean = false;
   validPrices: TicketPricesPomModel;
+  pocDatum: string = "";
+  endDatum: string = "";
     constructor( private pricelistServ: PricelistServiceService) { 
       this.pricelistServ.getPricelist().subscribe(data => {
         
@@ -21,6 +23,10 @@ export class PricelistComponent implements OnInit {
         
          this.validPrices = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(new Date(),new Date(),0, []))
          if(this.priceList){
+           let d : Date = new Date(this.priceList.StartOfValidity);
+           this.pocDatum = d.getDate().toString()+ "." + (d.getMonth() + 1).toString() + "." + d.getFullYear().toString() + ".";
+           let e: Date = new Date(this.priceList.EndOfValidity);
+           this.endDatum = e.getDate().toString() + "." + (e.getMonth() + 1).toString() + "." + e.getFullYear().toString() + ".";
          this.priceList.TicketPricess.forEach(element => {
           if(element.TicketTypeId == 2)
           {

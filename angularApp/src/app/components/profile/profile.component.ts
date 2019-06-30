@@ -76,8 +76,14 @@ provera() {
       this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
         
           this.user = data;
-          let str = this.user.Birthday;
-          this.birt = str.split('T')[0];
+          let d : Date = new Date(this.user.Birthday);
+          let mesec : number = d.getMonth() + 1;
+          
+          this.birt = this.birt+ d.getDate().toString() + ".";
+          this.birt = this.birt+ mesec.toString() + ".";
+          this.birt= this.birt + d.getFullYear().toString() + "." ;
+
+
           if(localStorage.getItem('role') == 'AppUser')
           {
             

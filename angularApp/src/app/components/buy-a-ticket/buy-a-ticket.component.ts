@@ -38,31 +38,37 @@ export class BuyATicketComponent implements OnInit {
    korisceniEmail: string = "";
    boolZaOtvaranjeForme: boolean = false;
    mailZaSlanje: string = "";
+   boolZaPrikazCena: boolean = false;
 
   constructor(private router: Router,private ticketServ: TicketService, private pricelistServ: PricelistServiceService, private usersService: UserProfileService) {
     ticketServ.getAllTicketTypes().subscribe( data => {
       this.allTicketTypes = data;
-    });
-    this.pricelistServ.getPricelist().subscribe(data => {
-      this.priceList = data; 
-       console.log(data);
-    });
 
-    let ro = localStorage.getItem('role');
-    if(ro)
-    {
-      if(ro == "AppUser")
-      {
-        this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
-        
-          this.user = data;    
-          console.log(this.user); 
-          
-        });
-      }
-    }else {
-      this.neregKupVremKartu = true;
-    }
+      this.pricelistServ.getPricelist().subscribe(data => {
+        this.priceList = data; 
+         console.log(data);
+
+         let ro = localStorage.getItem('role');
+         if(ro)
+         {
+           if(ro == "AppUser")
+           {
+             this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
+             
+               this.user = data;    
+               console.log(this.user); 
+               
+             });
+           }
+         }else {
+           this.neregKupVremKartu = true;
+         }
+
+
+      });
+    });
+    
+
     // this.initConfig();
 
    }
@@ -71,18 +77,20 @@ export class BuyATicketComponent implements OnInit {
     
   }
 
-  SelectedTicketType1(event)
+setradio(sel)
+{
+  this.boolZaPrikazCena = false;
+  this.boolZaOtvaranjeForme = false;
+  this.mailZaSlanje = "";
+  if(sel != 0)
   {
-    if(event.target.value != "" && event.target.value != "0" && this.selecetTT !=parseInt(event.target.value, 10) )
-    {
-      this.selecetTT = parseInt(event.target.value, 10);
-      let bla = new TicketTypeModel(localStorage.getItem('name'), this.selecetTT);
-      this.ticketServ.checkValidity(bla).subscribe(data =>{
-        this.validan = data;
-        if(this.validan)
+    let bla = new TicketTypeModel(localStorage.getItem('name'), sel);
+    this.ticketServ.checkValidity(bla).subscribe(data =>{
+      this.validan = data;
+      if(this.validan)
         {
           this.priceList.TicketPricess.forEach(element => {
-            if(element.TicketTypeId == this.selecetTT)
+            if(element.TicketTypeId == sel)
             {
               this.price = element.Price;
             
@@ -98,45 +106,22 @@ export class BuyATicketComponent implements OnInit {
             this.discount = 0;
             this.priceWDiscount = this.price;
            this.boolZaOtvaranjeForme = true;
+           this.boolZaPrikazCena = true;
             this.initConfig();
           }
         }else{
           window.alert("You are not authorized for this purchase!");
+          this.price = 0;
+          this.priceWDiscount = 0;
+          this.discount = 0;
         }
       })
-    }
-
   }
+}
 
-  // SelectedTicketType(event)
-  // {
-  //   if(event.target.value != "" && event.target.value != "0" && this.selecetTT !=parseInt(event.target.value, 10) )
-  //   {
-  //     this.selecetTT = parseInt(event.target.value, 10);
-  //     //this.prikaziButtonK = true;
-  //     this.priceList.TicketPricess.forEach(element => {
-  //       if(element.TicketTypeId == this.selecetTT)
-  //       {
-  //         this.price = element.Price;
-        
-  //       }
-  //     });
-  //     //let ro = localStorage.getItem('role');
-  //     if(!this.neregKupVremKartu)
-  //     {
-  //         this.CalculateDiscount();
-        
-  //     }else{
-        
-  //       this.discount = 0;
-  //       this.priceWDiscount = this.price;
-      
-  //       this.initConfig();
-  //     }
-     
-  //   }
   
-  // }
+
+  
 
   CalculateDiscount(){
     let uN = localStorage.getItem('name');
@@ -145,6 +130,7 @@ export class BuyATicketComponent implements OnInit {
       this.typeM = data;
       this.discount =  this.typeM.Coefficient * 100;
       this.priceWDiscount = this.price - (this.price * this.typeM.Coefficient) ;
+      this.boolZaPrikazCena = true;
       this.initConfig();
     });
   }
@@ -231,75 +217,75 @@ export class BuyATicketComponent implements OnInit {
   }
 
 
-  buyATicketNew(t:any,form: NgForm){
-    let ticketMod = new TicketModel("",new Date(),0,"",0,0);
-    let b = new Date();
-    b.setHours(b.getHours()+ 2);
-    ticketMod.PurchaseTime = new Date(b);
+  // buyATicketNew(t:any,form: NgForm){
+  //   let ticketMod = new TicketModel("",new Date(),0,"",0,0);
+  //   let b = new Date();
+  //   b.setHours(b.getHours()+ 2);
+  //   ticketMod.PurchaseTime = new Date(b);
     
-    ticketMod.TicketTypeId = this.selecetTT;
-    this.priceList.TicketPricess.forEach(element => {
-      if(element.TicketTypeId == this.selecetTT)
-      {
-        ticketMod.TicketPricesId = element.Id;
-      }
-    });
+  //   ticketMod.TicketTypeId = this.selecetTT;
+  //   this.priceList.TicketPricess.forEach(element => {
+  //     if(element.TicketTypeId == this.selecetTT)
+  //     {
+  //       ticketMod.TicketPricesId = element.Id;
+  //     }
+  //   });
 
-    let ro = localStorage.getItem('role');
-    let ai: any;
-    if(ro)
-    {
-      if(ro == "AppUser")
-      {
-        this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
+  //   let ro = localStorage.getItem('role');
+  //   let ai: any;
+  //   if(ro)
+  //   {
+  //     if(ro == "AppUser")
+  //     {
+  //       this.usersService.getUserData(localStorage.getItem('name')).subscribe(data => {
         
-          ai = data;    
-          console.log(this.user); 
-          ticketMod.ApplicationUserId = ai.Id;
-          this.ticketServ.addTicket(ticketMod).subscribe(data => {
+  //         ai = data;    
+  //         console.log(this.user); 
+  //         ticketMod.ApplicationUserId = ai.Id;
+  //         this.ticketServ.addTicket(ticketMod).subscribe(data => {
            
-            window.alert("Ticket successfully bought!")
-            this.router.navigate(['show_tickets']);
-          },
-          err =>{
-            window.alert(err.error)
-            console.log(err);
-          });
+  //           window.alert("Ticket successfully bought!")
+  //           this.router.navigate(['show_tickets']);
+  //         },
+  //         err =>{
+  //           window.alert(err.error)
+  //           console.log(err);
+  //         });
           
-        });
-      }
-    }else{
-      if(t.Email != "" && t.Email != undefined && t.Email != null){
+  //       });
+  //     }
+  //   }else{
+  //     if(t.Email != "" && t.Email != undefined && t.Email != null){
         
       
-      ticketMod.Name = t.Email;
-      this.ticketServ.addTicket(ticketMod).subscribe(data => {
+  //     ticketMod.Name = t.Email;
+  //     this.ticketServ.addTicket(ticketMod).subscribe(data => {
         
-          this.ticketServ.SendMail(ticketMod).subscribe(resp =>{
-            if(resp == 'Ok'){
-              window.alert("Ticket successfully bought!")
-              this.router.navigateByUrl('/show_tickets');
-            }
-            else{
-              alert("Something went wrong");
-              this.router.navigateByUrl('/home');
-            }
-          });
+  //         this.ticketServ.SendMail(ticketMod).subscribe(resp =>{
+  //           if(resp == 'Ok'){
+  //             window.alert("Ticket successfully bought!")
+  //             this.router.navigateByUrl('/show_tickets');
+  //           }
+  //           else{
+  //             alert("Something went wrong");
+  //             this.router.navigateByUrl('/home');
+  //           }
+  //         });
         
-        // window.alert("Ticket successfully bought!")
-        // this.router.navigate(['home']);
-      },
-      err =>{
-        window.alert(err.error)
-        console.log(err);
-      });
-      }
-      else{
-        window.alert("Email is required!");
-      }
-    }
+  //       // window.alert("Ticket successfully bought!")
+  //       // this.router.navigate(['home']);
+  //     },
+  //     err =>{
+  //       window.alert(err.error)
+  //       console.log(err);
+  //     });
+  //     }
+  //     else{
+  //       window.alert("Email is required!");
+  //     }
+  //   }
 
-  }
+  // }
 
 
 
@@ -393,6 +379,7 @@ export class BuyATicketComponent implements OnInit {
           //   //actions.reject();
           //   return;
           // }
+         
       }
   };
 }

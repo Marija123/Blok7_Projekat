@@ -29,6 +29,9 @@ validPrices: TicketPricesPomModel;
   let bol : boolean = false;
   this.ticketPricesPom.PriceList = pm;
   
+  // pm.StartOfValidity.setHours(23,59,59);
+  // pm.EndOfValidity.setHours(23,59,59);
+
     this.pricelistServ.addPricelist(this.ticketPricesPom).subscribe(data =>
       {
         window.alert("Pricelist successfully added!");

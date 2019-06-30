@@ -87,16 +87,16 @@ namespace WebApp.Controllers
             return Ok("Ticket is valid!");
         }
         [Route("validateTicket")]
-        public string ValidateTicket(ModelHelpTicketValidation tic)
+        public ValidateTicketHelpModel ValidateTicket(ModelHelpTicketValidation tic)
         {
             if(tic.Name == "" || tic.Name == null)
             {
-                return  "You have to fill email adres of user!";
+                return  new ValidateTicketHelpModel(false,"You have to fill email address!");
             }
             Ticket t = unitOfWork.Tickets.GetTicketWithInclude(tic.Id);
             if(t == null)
             {
-                return  "There is not ticket with that id!";
+                return new ValidateTicketHelpModel(false, "There is not ticket with id: " + tic.Id + "!");
             }
 
             
@@ -104,7 +104,7 @@ namespace WebApp.Controllers
             if(tic.Name != t.ApplicationUser.Email )
             {
                 string s = "User with email: " + tic.Name + " did not buy ticket with Id: " + tic.Id;
-                return s;
+                return new ValidateTicketHelpModel(false, s);
             }
             else
             {
@@ -115,11 +115,11 @@ namespace WebApp.Controllers
                     DateTime aa = pr.AddHours(1);
                     if (aa < DateTime.Now)
                     {
-                        return "Ticket is not valid. Time is up!";
+                        return new ValidateTicketHelpModel(false, "Ticket with id " + tic.Id + " is not valid. Time is up!");
                     }
                     else
                     {
-                        return "Ticket is valid!";
+                        return new ValidateTicketHelpModel(true, "Ticket with id " + tic.Id + " is valid!");
                     }
                     
                 }
@@ -128,21 +128,22 @@ namespace WebApp.Controllers
                     
                     if(pr.Year < dt.Year)
                     {
-                        return  "Ticket is not valid. Time is up!";
+                        return new ValidateTicketHelpModel(false, "Ticket with id " + tic.Id + " is not valid. Time is up!");
                     }else if(pr.Year == dt.Year)
                     {
                         if(pr.Month < dt.Month)
                         {
-                            return "Ticket is not valid. Time is up!";
-                        }else if(pr.Month == dt.Month)
+                            return new ValidateTicketHelpModel(false, "Ticket with id " + tic.Id + " is not valid. Time is up!");
+                        }
+                        else if(pr.Month == dt.Month)
                         {
                             if(pr.Day == dt.Day)
                             {
-                                return "Ticket is valid";
+                                return new ValidateTicketHelpModel(true, "Ticket with id " + tic.Id + " is valid!");
                             }
                             else
                             {
-                                return  "Ticket is not valid. Time is up!";
+                                return new ValidateTicketHelpModel(false, "Ticket with id " + tic.Id + " is not valid. Time is up!");
                             }
                         }
                     }
@@ -153,17 +154,17 @@ namespace WebApp.Controllers
                     
                     if (pr.Year < dt.Year)
                     {
-                        return  "Ticket is not valid. Time is up!";
+                        return new ValidateTicketHelpModel(false, "Ticket with id " + tic.Id + " is not valid. Time is up!");
                     }
                     else if (pr.Year == dt.Year)
                     {
                         if (pr.Month == dt.Month)
                         {
-                            return "Ticket is valid";
+                            return new ValidateTicketHelpModel(true, "Ticket with id " + tic.Id + " is valid!");
                         }
                         else
                         {
-                            return "Ticket is not valid. Time is up!";
+                            return new ValidateTicketHelpModel(false, "Ticket with id " + tic.Id + " is not valid. Time is up!");
                         }
                     }
                 }
@@ -172,15 +173,15 @@ namespace WebApp.Controllers
                 {
                     if (pr.Year == dt.Year)
                     {
-                        return "Ticket is valid";
+                        return new ValidateTicketHelpModel(true, "Ticket with id " + tic.Id + " is valid!");
                     }
                     else
                     {
-                        return "Ticket is not valid. Time is up!";
+                        return new ValidateTicketHelpModel(false, "Ticket with id " + tic.Id + " is not valid. Time is up!");
                     }
                 }
 
-                return "Ticket is valid";
+                return new ValidateTicketHelpModel(true, "Ticket with id " + tic.Id + " is valid!");
             }
         }
 

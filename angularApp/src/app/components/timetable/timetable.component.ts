@@ -9,50 +9,60 @@ import { TimetableService } from 'src/app/services/timetableService/timetable.se
 })
 export class TimetableComponent implements OnInit {
   allLines: any = [];
-  allDayTypes: any = [];
+ // allDayTypes: any = [];
   allTimetables: any = [];
   showList: any = [];
   dt: any;
+  dt1: number;
   selectedDay : boolean  = false;
   lineIdChoosen: number;
   boolic: boolean = false;
   stringovi1 : string[] = [];
+  SelectL: string = "None";
+  boolZaOtvaranje: boolean = false;
+
   constructor(private lineServ: LineServiceService, private timetableServ: TimetableService) { 
     this.lineServ.getAllLines().subscribe(data => {
       this.allLines = data;
       console.log(data);
+
+      this.timetableServ.getAllTimetables().subscribe(data => {
+        this.allTimetables = data;
+        console.log(data);
+        this.setradio(1);
+
+        this.boolZaOtvaranje = true;
+      });
+
     });
 
-    this.timetableServ.getAllDayTypes().subscribe(data => {
-      this.allDayTypes = data;
-      console.log(data);
-    });
-    this.timetableServ.getAllTimetables().subscribe(data => {
-      this.allTimetables = data;
-      console.log(data);
-    });
+    
+    
 
-
+    
   }
 
 
   ngOnInit() {
   }
 
-  SelectedDaytype(event: any)
+  setradio(selected): void
   {
-    this.dt = event.target.value;
-    console.log(this.dt);
-    if(this.dt == 0){
+    console.log(selected);
+    this.boolic= false;
+    this.lineIdChoosen = 0;
+    this.SelectL = "None";
+    this.dt1 = selected;
+    if(this.dt1 == 0)
+    {
       this.selectedDay = false;
-    }else{
+    }else {
       this.selectedDay = true;
-      
-        this.GetLineIds();
-      
-     
+      this.GetLineIds();
     }
   }
+
+  
 
   GetLineIds()
   {
@@ -68,7 +78,7 @@ export class TimetableComponent implements OnInit {
      
       this.allTimetables.forEach(element => {
        
-        if(element.DayTypeId == this.dt)
+        if(element.DayTypeId == this.dt1)
         {
           ll.push(element);
         }
@@ -104,13 +114,20 @@ export class TimetableComponent implements OnInit {
 
   SelectedLine(event: any): void
 {
-  this.lineIdChoosen = event.target.value;
-  if(event.target.value != 0){
- 
-    
-    this.boolic = true;
-    
-      this.SplitDepartures();
+  if(this.lineIdChoosen != event.target.value)
+  {
+    this.lineIdChoosen = event.target.value;
+    if(event.target.value != 0){
+   
+      
+      this.boolic = true;
+      
+        this.SplitDepartures();
+    }
+    else
+    {
+      this.boolic = false;
+    }
   }
   
 }
@@ -120,7 +137,7 @@ SplitDepartures(){
   this.stringovi1 = [];
   
   this.allTimetables.forEach(element => {
-    if(element.LineId == this.lineIdChoosen && element.DayTypeId == this.dt)
+    if(element.LineId == this.lineIdChoosen && element.DayTypeId == this.dt1)
     {
       this.stringovi1= element.Departures.split(";");
       this.stringovi1.splice(this.stringovi1.length-1,1);
@@ -129,7 +146,7 @@ SplitDepartures(){
     
   });
 
-  
+  console.log(this.stringovi1);
   
 
 }

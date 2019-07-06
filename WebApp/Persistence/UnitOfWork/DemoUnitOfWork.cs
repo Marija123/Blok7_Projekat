@@ -41,6 +41,9 @@ namespace WebApp.Persistence.UnitOfWork
         [Dependency]
         public ISerialNumberSLRepository SerialNumberSLs { get; set; }
 
+        [Dependency]
+        public IPayPalRepository PayPals { get; set; }
+
         public int Complete()
         {
            // return _context.SaveChanges();

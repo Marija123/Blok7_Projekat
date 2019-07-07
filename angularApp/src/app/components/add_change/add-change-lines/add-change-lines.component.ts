@@ -54,6 +54,7 @@ export class AddChangeLinesComponent implements OnInit {
 
       this.lineServ.getAllLines().subscribe(data => {
         this.allLines = data;
+        this.setradio("Add");
         console.log(data);
       });
   }

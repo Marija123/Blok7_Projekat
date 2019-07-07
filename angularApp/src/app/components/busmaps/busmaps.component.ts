@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
   selector: 'app-busmaps',
   templateUrl: './busmaps.component.html',
   styleUrls: ['./busmaps.component.css'],
-  styles: ['agm-map {height: 500px; width: 700px;}']
+  styles: ['agm-map {height: 500px; width: 750px;}']
 })
 export class BusmapsComponent implements OnInit {
 
@@ -34,15 +34,16 @@ export class BusmapsComponent implements OnInit {
     this.statServ.getAllStations().subscribe(data => {
       this.stati = data;
       console.log(data);
-      }
-    );
 
-      this.lineServ.getAllLines().subscribe(data => {
-        this.allLines = data;
-        console.log(data);
+        this.lineServ.getAllLines().subscribe(data => {
+          this.allLines = data;
+          console.log(data);
+
+          this.showCheckBoxes();
+        });
+
       });
 
-    
       
   }
 

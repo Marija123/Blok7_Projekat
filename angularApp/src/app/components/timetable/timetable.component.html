@@ -19,12 +19,12 @@
 
 
 <br/>
-<div style="align-items:center; width: 100%; text-align: center" *ngIf="selectedDay">
+<div class=" d-flex justify-content-center " style="align-items:center; width: 100%; text-align: center" *ngIf="selectedDay">
   <br/>
   <br/>
   <br/>
 <label style="color:#d7dfde; font-size: 20px; padding-right: 5px" >Choose line: </label>
-<select style="width: 70%" name="lineNumber"  (click)='SelectedLine($event)' [(ngModel)] = "SelectL">
+<select style="width: 50%" name="lineNumber"  (click)='SelectedLine($event)' class="form-control" [(ngModel)] = "SelectL">
     <option value=0 selected>None</option>    
     <option *ngFor="let ln of showList" value={{ln.Id}}  >{{ln.LineNumber}}</option>
   </select>

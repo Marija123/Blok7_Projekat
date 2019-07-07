@@ -12,7 +12,7 @@ import { MarkerInfo } from 'src/app/models/map/marker-info.model';
   selector: 'app-bus-location',
   templateUrl: './bus-location.component.html',
   styleUrls: ['./bus-location.component.css'],
-  styles: ['agm-map {height: 500px; width: 700px;}']
+  styles: ['agm-map {height: 500px; width: 750px;}']
 })
 export class BusLocationComponent implements OnInit {
 
@@ -53,6 +53,7 @@ export class BusLocationComponent implements OnInit {
         this.options1.forEach(element => {
           this.options.push(element.LineNumber);
         });
+        
       });
     //inicijalizacija polyline
     this.polyline = new Polyline([], 'blue', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
@@ -60,6 +61,14 @@ export class BusLocationComponent implements OnInit {
     //za hub
     this.checkConnection();
     this.subscribeForTime();
+      this.stations = [];
+    this.clickService.click(this.stations).subscribe(data =>
+      {
+        
+        console.log("data bus location ", data);
+        
+        
+      });
   }
 
   getStationsByLineNumber(lineNumber : string){
@@ -71,9 +80,13 @@ export class BusLocationComponent implements OnInit {
           this.polyline.addLocation(new GeoLocation(this.stations[i].Latitude, this.stations[i].Longitude));
         }
         console.log(this.stations);
+        
         this.clickService.click(this.stations).subscribe(data =>
           {
+            
             console.log("data bus location ", data);
+            
+            
           });
       }
     });
@@ -89,12 +102,12 @@ export class BusLocationComponent implements OnInit {
       this.isChanged = false;
       this.stations = [];
       this.polyline.path = [];
-      this.stopTimer();
+     // this.stopTimer();
     }else
     {
       this.getStationsByLineNumber(event.target.value);   
     
-      this.notifForBL.StartTimer(); 
+     // this.notifForBL.StartTimer(); 
     }
     
   }
@@ -102,9 +115,9 @@ export class BusLocationComponent implements OnInit {
   private checkConnection(){
     this.notifForBL.startConnection().subscribe(e => {
       this.isConnected = e; 
-        if (e) {
-          this.notifForBL.StartTimer()
-        }
+        // if (e) {
+        //   this.notifForBL.StartTimer()
+        // }
     });
   }  
 
@@ -112,8 +125,6 @@ export class BusLocationComponent implements OnInit {
     this.notifForBL.registerForTimerEvents().subscribe(e => this.onTimeEvent(e));
   }
 
-  position1 : number;
-  position2: number;
 
   public onTimeEvent(pos: number[]){
     this.ngZone.run(() => { 
@@ -121,7 +132,8 @@ export class BusLocationComponent implements OnInit {
        if(this.isChanged){
          this.latitude = pos[0];
           this.longitude = pos[1];
-          
+          console.log("pos: ", this.latitude, this.longitude);
+          //this.isChanged = false;
        }else{
           this.latitude = 0;
           this.longitude = 0;

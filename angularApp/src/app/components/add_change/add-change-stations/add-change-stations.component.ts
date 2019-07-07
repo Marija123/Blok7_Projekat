@@ -31,6 +31,7 @@ export class AddChangeStationsComponent implements OnInit {
   constructor(private ngZone: NgZone, private mapsApiLoader : MapsAPILoader, private statServ: StationServiceService) { 
     this.statServ.getAllStations().subscribe(data => {
     this.stati = data;
+    this.setradio("Add");
     });
   }
 

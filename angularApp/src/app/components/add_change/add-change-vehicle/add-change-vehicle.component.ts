@@ -23,6 +23,7 @@ export class AddChangeVehicleComponent implements OnInit {
       }
       
     });
+    this.selected = "Add";
    }
 
   ngOnInit() {

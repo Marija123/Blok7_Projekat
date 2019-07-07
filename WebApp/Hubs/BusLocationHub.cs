@@ -27,17 +27,35 @@ namespace WebApp.Hubs
 
         public void TimeServerUpdates()
         {
-            if (!timer.Enabled)
-            {
-                timer.Interval = 5000;
-                timer.Start();
+            //if (!timer.Enabled)
+            //{
+                timer.Interval = 4000;
+                //timer.Start();
                 timer.Elapsed += OnTimedEvent;
-            }
+
+                timer.Enabled = true;
+            //}
         }
 
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        private  void OnTimedEvent(object source, ElapsedEventArgs e)
         {
-            GetTime();
+#if DEBUG 
+            (source as Timer).Enabled = false;
+#endif
+            //GetTime();
+            if (stations.Count > 0)
+            {
+                if (cnt >= stations.Count)
+                {
+                    cnt = 0;
+                }
+                double[] niz = { stations[cnt].Latitude, stations[cnt].Longitude };
+                Clients.All.setRealTime(niz);
+                cnt++;
+            }
+#if DEBUG
+            (source as Timer).Enabled = true;
+#endif
         }
 
         public void GetTime()

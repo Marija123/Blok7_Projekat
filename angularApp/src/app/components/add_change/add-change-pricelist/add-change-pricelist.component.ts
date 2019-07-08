@@ -15,6 +15,8 @@ priceList: any;
 ticketPricesPom: TicketPricesPomModel = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(null,null,0, []));
 datumVazenjaBool: boolean = false;
 validPrices: TicketPricesPomModel;
+pocDatum: string = "";
+endDatum: string = "";
 
   constructor( private pricelistServ: PricelistServiceService) { 
     this.refresh();
@@ -72,7 +74,10 @@ validPrices: TicketPricesPomModel;
       
       this.priceList = data; 
        console.log(data);
-      
+       let d : Date = new Date(this.priceList.StartOfValidity);
+       this.pocDatum = d.getDate().toString()+ "." + (d.getMonth() + 1).toString() + "." + d.getFullYear().toString() + ".";
+       let e: Date = new Date(this.priceList.EndOfValidity);
+       this.endDatum = e.getDate().toString() + "." + (e.getMonth() + 1).toString() + "." + e.getFullYear().toString() + ".";
        this.validPrices = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(null,null,0, []))
        if(this.priceList){
        this.priceList.TicketPricess.forEach(element => {

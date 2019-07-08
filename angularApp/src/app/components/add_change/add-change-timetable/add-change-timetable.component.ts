@@ -53,6 +53,8 @@ MyInput: Time;
     this.timetableServ.getAllTimetables().subscribe(data => {
       this.allTimetables = data;
       console.log(data);
+
+      this.setradio("Add");
     });
 
 

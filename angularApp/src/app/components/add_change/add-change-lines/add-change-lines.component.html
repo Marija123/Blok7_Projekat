@@ -53,6 +53,7 @@
           </div>
         
           <button type="submit" class="btn btn-primary btn-lg" *ngIf="isSelected('Add')">Add</button>
+          <br/>
           <button type="submit" class="btn btn-primary btn-lg" *ngIf="isSelected('Change')">Change</button>
           <button type="submit" class="btn btn-primary btn-lg" *ngIf="isSelected('Remove')">Remove</button> 
       </form>
@@ -67,19 +68,22 @@
           
         </div>
 
+        <div *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje">
         <div *ngIf="isSelected('Change')" style="border:2px #5bd6cc solid">
            <br/>
-            <label *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje">Name:  {{markerZaDodavanje.Name}}</label><br/>
-            <label *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje">Address:  {{markerZaDodavanje.Address}}</label><br/>
+            <label *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje" style="padding-right: 7px;color:#d7dfde; ">Name:</label> <label style="color:#5bd6cc;"> {{markerZaDodavanje.Name}}</label><br/>
+            <label *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje" style="padding-right: 7px;color:#d7dfde; ">Address:</label><label style="color:#5bd6cc;">  {{markerZaDodavanje.Address}}</label><br/>
           
             <form  #stationForm1="ngForm" (ngSubmit)="addStationIntoLine(stationForm1.value, stationForm1)">
-              <label for="rBr" *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje">Unesite redni broj stanice: </label>
+              <label for="rBr" *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje"  style="padding-right: 7px;color:#d7dfde; ">Station serial number: </label>
               <input *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje" required type="number" name="rBr" placeholder="" ngModel><br/>
-              <button   class="btn btn-success" type="submit" *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje" >Add station into line</button> <br/>
+              <br/>
+              <button   class="btn btn-primary btn-sm" type="submit" *ngIf="markerZaDodavanje && boolZaMarkerZaDodavanje" >Add station into line</button> <br/>
               
-              <div  style="color:red">{{errorForListStat}}</div>
+              <!-- <div  style="color:red">{{errorForListStat}}</div> -->
             </form>
           </div>
+        </div>
         
         <div *ngIf="isSelected('Change')">
           <br/>

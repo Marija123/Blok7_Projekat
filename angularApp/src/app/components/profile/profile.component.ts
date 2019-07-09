@@ -78,7 +78,7 @@ provera() {
           this.user = data;
           let d : Date = new Date(this.user.Birthday);
           let mesec : number = d.getMonth() + 1;
-          
+          this.birt = "";
           this.birt = this.birt+ d.getDate().toString() + ".";
           this.birt = this.birt+ mesec.toString() + ".";
           this.birt= this.birt + d.getFullYear().toString() + "." ;

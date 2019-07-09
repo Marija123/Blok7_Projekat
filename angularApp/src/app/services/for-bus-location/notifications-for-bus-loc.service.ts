@@ -23,6 +23,10 @@ export class NotificationsForBusLocService {
     this.connection.qs = {"token" : "Bearer "+ localStorage.jwt};
     // create new proxy with the given name 
     this.proxy = this.connection.createHubProxy(this.proxyName); 
+    //this.registerForTimerEvents();
+    //this.startConnection();
+    
+    
    }
 
   public startConnection(): Observable<boolean> { 
@@ -36,6 +40,7 @@ export class NotificationsForBusLocService {
 
             observer.next(true);
             observer.complete();
+            //this.StartTimer();
         })
         .fail((error: any) => {  
             console.log('Could not connect ' + error);
@@ -53,6 +58,7 @@ export class NotificationsForBusLocService {
 
         this.proxy.on('setRealTime', (data: number[]) => {               
             observer.next(data);
+            //console.log("data iz servisa",data);
             //this.notificationReceived.emit(data);
         });  
     });      

@@ -19,6 +19,9 @@ import { element } from 'protractor';
   styles: ['agm-map {height: 500px; width: 700px;}']
 })
 export class AddChangeLinesComponent implements OnInit {
+
+  directionsService :any ;
+  directionsDisplay : any ;
   public polyline: Polyline;
   sl: LineModel = new LineModel(0,"",[],"");
   selektovanaLinijaZaIzmenu: LineModel = new LineModel(0,"",[],"");
@@ -41,6 +44,7 @@ export class AddChangeLinesComponent implements OnInit {
   boolZaAktivanRadio = true;
   boolZaMarkerZaDodavanje : boolean = false;
   LineSelected : string = "none";
+  visibleLine : boolean = true;
   iconPath : any = { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}}
   //validations: AddLinesValidation = new AddLinesValidation();
 
@@ -66,6 +70,9 @@ export class AddChangeLinesComponent implements OnInit {
     this.polyline = new Polyline([], 'blue', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
     this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
 
+    // this.directionsService  = new google.maps.DirectionsService();
+    // this.directionsDisplay = new google.maps.DirectionsRenderer();
+
     this.mapsApiLoader.load().then(() =>{
       google.maps.event.addListener(this.sl, 'positionChanged', (function(selLine, i) {
         return function(event) {
@@ -73,7 +80,10 @@ export class AddChangeLinesComponent implements OnInit {
           alert("WTF");
         }
       }));
+      this.directionsService  = new google.maps.DirectionsService();
+    this.directionsDisplay = new google.maps.DirectionsRenderer();
     });
+    
   }
 
   stationClick( id: number){  //pravjenje linije
@@ -105,16 +115,19 @@ export class AddChangeLinesComponent implements OnInit {
   SelectedLine(event: any): void
   {
     this.selectedL = event.target.value;
-
+    this.visibleLine = false;
     if(this.selectedL == "none" || this.selectedL == "")
     {
       this.sl = new LineModel(0,"",[],"");
       this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
       this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
       this.idForRemove = 0;
+      this.directionsDisplay.setMap(null);
     }
     else 
     {
+      this.directionsDisplay.setMap(null);
+      this.visibleLine = false;
       this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
       this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
       this.allLines.forEach(x => {
@@ -126,6 +139,7 @@ export class AddChangeLinesComponent implements OnInit {
           x.Stations.forEach(stat => {
             this.selLine.addLocation(new GeoLocation(stat.Longitude, stat.Latitude));
           });
+          this.visibleLine= true;
         }
       });
 
@@ -142,6 +156,7 @@ export class AddChangeLinesComponent implements OnInit {
 
   setradio(e: string): void   
   {  
+    this.visibleLine = false;
     this.selektovanaLinijaZaIzmenu = new LineModel(0,"",[],"");
     this.sl = new LineModel(0,"",[],"");
     this.LineSelected = "none";
@@ -262,7 +277,7 @@ export class AddChangeLinesComponent implements OnInit {
       window.alert("Station already exists in line! Choose another station.");
     }else {
        
-      if(i.rBr <= 0 || i.rBr > this.selektovanaLinijaZaIzmenu.Stations.length)
+      if(i.rBr <= 0 || i.rBr > this.selektovanaLinijaZaIzmenu.Stations.length + 1)
       {
         window.alert("Index out of range!");
         form.reset();

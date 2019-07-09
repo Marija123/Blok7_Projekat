@@ -17,6 +17,9 @@ import { Router } from '@angular/router';
 })
 export class BusmapsComponent implements OnInit {
 
+
+   directionsService :any ;
+  directionsDisplay : any ;
   stati: any = [];
   allLines: any = [];
   showLines: any =[];
@@ -74,9 +77,15 @@ export class BusmapsComponent implements OnInit {
       if(element.LineNumber == lNum)
       {
         this.showLines.push(element);
+        console.log(element)
       }
       
     });
+  }
+
+  AddLineToShowLines1(lNum: string)
+  {
+    
   }
 
   RemoveLineFromShowLines(lNum: string)
@@ -107,7 +116,8 @@ export class BusmapsComponent implements OnInit {
     "Jugodrvo" , "" , "http://ftn.uns.ac.rs/691618389/fakultet-tehnickih-nauka");
     this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
    
-    
+  //   this.directionsService  = new google.maps.DirectionsService();
+  // this.directionsDisplay = new google.maps.DirectionsRenderer();
   }
  
   showCheckBoxes(){
@@ -120,36 +130,36 @@ export class BusmapsComponent implements OnInit {
     this.show = true;
   }
 
-  SelectedLine(event: any): void
-  {
-    this.selectedL = event.target.value;
+  // SelectedLine(event: any): void
+  // {
+  //   this.selectedL = event.target.value;
     
-    if(this.selectedL == "none" || this.selectedL == "")
-    {
-    //  this.selectedLines = [];
-      this.sl = new LineModel(0,"",[],"");
-      this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
+  //   if(this.selectedL == "none" || this.selectedL == "")
+  //   {
+  //   //  this.selectedLines = [];
+  //     this.sl = new LineModel(0,"",[],"");
+  //     this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
 
-    }
+  //   }
     
-    else 
-    {
+  //   else 
+  //   {
       
-      this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
-      this.allLines.forEach(x => {
-        if(x.LineNumber == this.selectedL)
-        {
-          this.sl = x;
-          x.Stations.forEach(stat => {
-            this.selLine.addLocation(new GeoLocation(stat.Longitude, stat.Latitude));
-          });
-          console.log(this.selLine);
-        }
-      });
+  //     this.selLine = new Polyline([], 'red', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
+  //     this.allLines.forEach(x => {
+  //       if(x.LineNumber == this.selectedL)
+  //       {
+  //         this.sl = x;
+  //         x.Stations.forEach(stat => {
+  //           this.selLine.addLocation(new GeoLocation(stat.Longitude, stat.Latitude));
+  //         });
+  //         console.log(this.selLine);
+  //       }
+  //     });
 
       
-    }
-  }
+  //   }
+  // }
 
 
 }

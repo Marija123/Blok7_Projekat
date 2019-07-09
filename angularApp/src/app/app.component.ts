@@ -3,6 +3,7 @@ import { NotificationService } from './services/notificationService/notification
 import { NotificationMessage } from './models/notificationMessage';
 import { ToastrService } from 'ngx-toastr';
 import { decode } from 'punycode';
+import { NotificationsForBusLocService } from './services/for-bus-location/notifications-for-bus-loc.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,9 +18,10 @@ export class AppComponent implements AfterViewInit  {
   public canSendMessage: Boolean; 
   
 
-  constructor(private elementRef: ElementRef, private notificationServ: NotificationService, private _ngZone: NgZone, private toastr: ToastrService) {    
+  constructor(private notifForBL: NotificationsForBusLocService, private elementRef: ElementRef, private notificationServ: NotificationService, private _ngZone: NgZone, private toastr: ToastrService) {    
     this.subscribeToEvents();  
     this.canSendMessage = notificationServ.connectionExists; 
+    //this.notifForBL.startConnection().subscribe(data => {});
     //this.sendMessage();
   }
 
@@ -57,6 +59,24 @@ private subscribeToEvents(): void {
   });  
 }  
 
+// public subscribeForTime() {
+//   this.notifForBL.registerForTimerEvents().subscribe(e => this.onTimeEvent(e));
+// }
 
+
+// public onTimeEvent(pos: number[]){
+//   this._ngZone.run(() => { 
+//      this.time = pos; 
+//      if(this.isChanged){
+//        this.latitude = pos[0];
+//         this.longitude = pos[1];
+//         console.log("pos: ", this.latitude, this.longitude);
+//         //this.isChanged = false;
+//      }else{
+//         this.latitude = 0;
+//         this.longitude = 0;
+//      }
+//   });      
+// }  
 
 }

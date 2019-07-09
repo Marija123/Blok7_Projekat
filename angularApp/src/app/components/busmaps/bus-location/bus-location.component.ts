@@ -42,6 +42,9 @@ export class BusLocationComponent implements OnInit {
   constructor(private mapsApiLoader : MapsAPILoader,private notifForBL : NotificationsForBusLocService, private ngZone: NgZone, private lineService : LineServiceService, private clickService : ForBusLocationService) {
     this.isConnected = false;
     this.notifications = [];
+    // this.checkConnection();
+    // //this.startTimer();
+    // this.subscribeForTime();
    }
 
   ngOnInit() {
@@ -59,16 +62,17 @@ export class BusLocationComponent implements OnInit {
     this.polyline = new Polyline([], 'blue', { url:"assets/busicon.png", scaledSize: {width: 50, height: 50}});
   
     //za hub
-    this.checkConnection();
     this.subscribeForTime();
+   this.checkConnection();
+      
       this.stations = [];
-    this.clickService.click(this.stations).subscribe(data =>
-      {
+    // this.clickService.click(this.stations).subscribe(data =>
+    //   {
         
-        console.log("data bus location ", data);
+    //     console.log("data bus location ", data);
         
         
-      });
+    //   });
   }
 
   getStationsByLineNumber(lineNumber : string){
@@ -85,7 +89,7 @@ export class BusLocationComponent implements OnInit {
           {
             
             console.log("data bus location ", data);
-            
+            this.startTimer();
             
           });
       }
@@ -102,9 +106,10 @@ export class BusLocationComponent implements OnInit {
       this.isChanged = false;
       this.stations = [];
       this.polyline.path = [];
-     // this.stopTimer();
+      this.stopTimer();
     }else
     {
+      this.stopTimer();
       this.getStationsByLineNumber(event.target.value);   
     
      // this.notifForBL.StartTimer(); 
@@ -115,9 +120,9 @@ export class BusLocationComponent implements OnInit {
   private checkConnection(){
     this.notifForBL.startConnection().subscribe(e => {
       this.isConnected = e; 
-        // if (e) {
-        //   this.notifForBL.StartTimer()
-        // }
+         if (e) {
+          // this.notifForBL.StartTimer()
+         }
     });
   }  
 

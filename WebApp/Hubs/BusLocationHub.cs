@@ -18,7 +18,7 @@ namespace WebApp.Hubs
 
         private static List<Station> stations = new List<Station>();
 
-        private static Timer timer = new Timer();
+        private static Timer timer = new Timer() ;
         private static int cnt = 0;
 
         public BusLocationHub()
@@ -28,10 +28,15 @@ namespace WebApp.Hubs
         public void TimeServerUpdates()
         {
             //if (!timer.Enabled)
-            //{
+            //{ 
+            //timer = new Timer();
+            if(timer.Interval != 4000)
+            {
+
                 timer.Interval = 4000;
                 //timer.Start();
                 timer.Elapsed += OnTimedEvent;
+            }
 
                 timer.Enabled = true;
             //}
@@ -43,7 +48,7 @@ namespace WebApp.Hubs
             (source as Timer).Enabled = false;
 #endif
             //GetTime();
-            if (stations.Count > 0)
+            if (stations  != null)
             {
                 if (cnt >= stations.Count)
                 {
@@ -51,7 +56,14 @@ namespace WebApp.Hubs
                 }
                 double[] niz = { stations[cnt].Latitude, stations[cnt].Longitude };
                 Clients.All.setRealTime(niz);
+                //Clients.All.SendAsync("setRealTime", niz);
                 cnt++;
+            }
+            else
+            {
+                double[] nizz = { 0, 0 };
+                //Clients.All.SendAsync("setRealTime", nizz);
+                //Clients.All.setRealTime(nizz);
             }
 #if DEBUG
             (source as Timer).Enabled = true;
@@ -67,7 +79,8 @@ namespace WebApp.Hubs
                     cnt = 0;
                 }
                 double[] niz = { stations[cnt].Latitude, stations[cnt].Longitude };
-                Clients.All.setRealTime(niz);
+                //Clients.All.setRealTime(niz);
+                
                 cnt++;
             }
         }
@@ -75,11 +88,14 @@ namespace WebApp.Hubs
         public void StopTimeServerUpdates()
         {
             timer.Stop();
+            stations = null;
         }
 
         public void AddStations(List<Station> stationsBM)
         {
+            stations = new List<Station>();
             stations = stationsBM;
+            //TimeServerUpdates();
         }
     }
 }

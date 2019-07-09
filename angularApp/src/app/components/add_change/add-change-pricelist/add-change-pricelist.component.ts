@@ -73,12 +73,16 @@ endDatum: string = "";
     this.pricelistServ.getPricelist().subscribe(data => {
       
       this.priceList = data; 
-       console.log(data);
-       let d : Date = new Date(this.priceList.StartOfValidity);
-       this.pocDatum = d.getDate().toString()+ "." + (d.getMonth() + 1).toString() + "." + d.getFullYear().toString() + ".";
-       let e: Date = new Date(this.priceList.EndOfValidity);
-       this.endDatum = e.getDate().toString() + "." + (e.getMonth() + 1).toString() + "." + e.getFullYear().toString() + ".";
-       this.validPrices = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(null,null,0, []))
+      if(this.priceList)
+      {
+        console.log(data);
+        let d : Date = new Date(this.priceList.StartOfValidity);
+        this.pocDatum = d.getDate().toString()+ "." + (d.getMonth() + 1).toString() + "." + d.getFullYear().toString() + ".";
+        let e: Date = new Date(this.priceList.EndOfValidity);
+        this.endDatum = e.getDate().toString() + "." + (e.getMonth() + 1).toString() + "." + e.getFullYear().toString() + ".";
+        this.validPrices = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(null,null,0, []))
+      }
+       
        if(this.priceList){
        this.priceList.TicketPricess.forEach(element => {
         if(element.TicketTypeId == 2)
@@ -100,6 +104,10 @@ endDatum: string = "";
         
       });
     }
+    else {
+      this.validPrices = new TicketPricesPomModel(0,0,0,0,0,new PriceListModel(null,null,0, []));
+    }
+
      });
   }
 
